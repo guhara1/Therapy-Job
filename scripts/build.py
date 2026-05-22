@@ -3,8 +3,8 @@ import os, sys, re, json
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(__file__))
-from data import COMPANY, SERVICES, NATIONALITIES, REGIONS, MAGAZINE, DISTRICTS, SAMPLE_JOBS, SHOP_SALES
-from pages_core import build_index, build_about, build_contact, build_pricing, build_reviews, build_policy_privacy, build_policy_terms, build_policy_youth, build_pricing_ads, build_contact_ads, build_shop_sale, build_shop_sale_detail
+from data import COMPANY, SERVICES, NATIONALITIES, REGIONS, MAGAZINE, DISTRICTS, SAMPLE_JOBS, SHOP_SALES, NOTICES
+from pages_core import build_index, build_about, build_contact, build_pricing, build_reviews, build_policy_privacy, build_policy_terms, build_policy_youth, build_pricing_ads, build_contact_ads, build_shop_sale, build_shop_sale_detail, build_notices_hub, build_notice_article
 from pages_hubs import build_jobs_hub, build_job_service, build_seekers_hub, build_seeker_service, build_therapists_hub, build_therapist, build_magazine_hub, build_magazine_article
 from pages_locations import build_locations_hub, build_region_hub, build_district
 from ads import build_ad_detail
@@ -89,6 +89,11 @@ def build_sitemap():
 
     for m in MAGAZINE:
         add(f"/magazine/{m['slug']}/", priority="0.75", changefreq="monthly")
+
+    add("/notices/", priority="0.85", changefreq="weekly")
+    for n in NOTICES:
+        pri = "0.9" if n["priority"] == "긴급" else ("0.85" if n["priority"] == "중요" else "0.75")
+        add(f"/notices/{n['slug']}/", priority=pri, changefreq="monthly")
 
     # 광고 상세 (JobPosting — Google Jobs 노출 우선)
     for j in SAMPLE_JOBS:
@@ -261,6 +266,11 @@ def main():
     write_page("/therapists/", build_therapists_hub(), minify); count += 1
     for n in NATIONALITIES:
         write_page(f"/therapists/{n['slug']}/", build_therapist(n), minify); count += 1
+
+    print(f"→ 공지사항 (1 + {len(NOTICES)})")
+    write_page("/notices/", build_notices_hub(), minify); count += 1
+    for n in NOTICES:
+        write_page(f"/notices/{n['slug']}/", build_notice_article(n), minify); count += 1
 
     print("→ 매거진 (1 + 7)")
     write_page("/magazine/", build_magazine_hub(), minify); count += 1

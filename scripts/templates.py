@@ -294,6 +294,7 @@ def header_html():
     <li><a href="/therapists/" aria-haspopup="true">관리사</a><ul class="submenu">{nat_links}</ul></li>
     <li><a href="/pricing/">급여</a></li>
     <li><a href="/magazine/">매거진</a></li>
+    <li><a href="/notices/">공지사항</a></li>
     <li><a href="/reviews/">사례</a></li>
     <li><a href="/pricing-ads/">광고 상품</a></li>
     <li><a href="/shop-sale/">업소매매</a></li>
@@ -330,6 +331,7 @@ def footer_html():
       <h4>안내</h4>
       <ul>
         <li><a href="/about/">테라피잡 소개</a></li>
+        <li><a href="/notices/">공지사항</a></li>
         <li><a href="/pricing-ads/">광고 상품 안내</a></li>
         <li><a href="/shop-sale/">업소 매매</a></li>
         <li><a href="/pricing/">급여 시세표</a></li>

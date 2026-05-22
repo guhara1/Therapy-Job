@@ -1526,3 +1526,280 @@ def build_shop_sale_detail(shop):
 </section>
 """
     return page(title, desc, f"/shop-sale/{s['id']}/", body, extra_jsonld=extra_ld)
+
+
+# ─────────────────────────────────────────────
+# 공지사항 (/notices/)
+# ─────────────────────────────────────────────
+from data import NOTICES
+
+NOTICE_BODIES = {
+    "southeast-asia-scam": [
+        ("최근 동향 — 동남아 사기 사례 급증",
+         [
+             "2024년 이후 캄보디아 시아누크빌·미얀마 미야와디·라오스 보케오 지역의 \"사기 단지(scam compound)\"로 한국인 노동자를 유인하는 사기 사례가 급증하고 있습니다. 외교부 영사 통계에 따르면 2023년 대비 2025년 신고 건수가 4.7배 증가했습니다.",
+             "마사지·헤어·미용·서비스업 채용을 위장하는 사례가 가장 많으며, 피해자 80% 이상이 20~30대 여성입니다. 입국 후 여권 압수·이동 통제·강제 노동·인신매매로 이어지는 패턴이 확인됩니다.",
+             "본 사이트는 직업안정법 제3조에 따라 해외 취업 알선 자격이 없으므로 동남아 마사지 채용을 일체 게재하지 않습니다. 그럼에도 사칭 사이트·SNS DM·텔레그램 채널을 통한 접근이 빈번해, 본 공지를 발행합니다.",
+         ]),
+        ("사기 모집의 공통 패턴 — 다음 신호는 99% 사기",
+         [
+             "<strong>① 비현실적 고액 일급 약속</strong> — 일급 50만원·월 1,500만원 등 국내 평균 대비 2~3배 약속. 현지 시세상 불가능한 수치입니다.",
+             "<strong>② 항공권·숙소 무료 제공</strong> — 정상 채용은 본인 부담이 원칙. 무료 제공은 \"빚\"으로 잡혀 출국 통제 수단이 됩니다.",
+             "<strong>③ 즉시 출국 요구</strong> — \"이번 주 출국 가능?\" 압박. 정상 채용은 비자·계약 검토 시간을 줍니다.",
+             "<strong>④ 여권 사진·신분증 사전 제출 요구</strong> — 모집 단계에서 신분증 사진을 요구하는 곳은 대부분 사기.",
+             "<strong>⑤ 사업자등록증·실 사무실 주소 미공개</strong> — 정상 회사는 사업자등록증을 즉시 공개합니다.",
+             "<strong>⑥ 한국어가 어색한 모집책 / SNS·텔레그램만 사용</strong> — 정상 채용 회사는 본인 명의 도메인 이메일·유선 전화를 사용합니다.",
+             "<strong>⑦ \"마사지샵\"이라면서 시술 교육·자격 검증 절차 없음</strong> — 실 마사지 업체라면 시술 경력·자격을 반드시 검증합니다.",
+         ]),
+        ("이미 접촉했다면 — 즉시 해야 할 일",
+         [
+             "출국 전이라면 <strong>외교부 영사콜센터 (+82-2-3210-0404)</strong>에 즉시 신고하고, 채용 회사 정보·연락처·약속받은 조건을 모두 정리해 알려주세요. 출국 자체를 막아드립니다.",
+             "출국 후 현지에서 위협을 느끼신다면 <strong>현지 한국 대사관 또는 영사관</strong>으로 즉시 연락하세요. 캄보디아 +855-23-211-901, 미얀마 +95-1-527-142, 라오스 +856-21-352-031.",
+             "긴급한 경우 한국에서 가족·지인이 <strong>경찰청 112</strong> 또는 <strong>국정원 111</strong>로 신고해도 외교부와 협력해 구조 요청이 가능합니다.",
+             "본 사이트 운영팀에도 제보 부탁드립니다 — 의심 채용 정보를 받으셨다면 캡처·연락처와 함께 <a href=\"/contact-ads/\" style=\"color:var(--blue-1);font-weight:700\">고객센터</a>로 알려주시면 운영팀이 외교부에 추가 신고 처리해드립니다.",
+         ]),
+        ("본 사이트가 게재하는 모든 채용 공고의 검증 기준",
+         [
+             "테라피잡은 <strong>국내 마사지 업종 로드샵(매장 상주)</strong>만 게재합니다. 해외 채용·해외 출장·해외 파견은 일체 게재하지 않습니다.",
+             "모든 등록 샵은 사업자등록증·통신판매업 신고·운영 시간 정보를 사전 검증 후에만 노출됩니다.",
+             "동남아 채용을 \"테라피잡\"이라는 상호로 사칭한 정황을 발견하시면 즉시 <a href=\"/contact-ads/\" style=\"color:var(--blue-1);font-weight:700\">고객센터</a>로 제보해주세요. 사칭 사이트는 사이버 수사대(112)에 동시 신고됩니다.",
+         ]),
+        ("참고 자료 · 신고 채널",
+         [
+             "<strong>외교부 영사콜센터</strong>: 1599-0404 (국내) / +82-2-3210-0404 (해외)",
+             "<strong>외교부 해외안전여행</strong>: <a href=\"https://www.0404.go.kr\" rel=\"noopener\" target=\"_blank\" style=\"color:var(--blue-1)\">www.0404.go.kr</a>",
+             "<strong>경찰청 사이버범죄 신고</strong>: 112 (긴급) / <a href=\"https://ecrm.police.go.kr\" rel=\"noopener\" target=\"_blank\" style=\"color:var(--blue-1)\">ecrm.police.go.kr</a>",
+             "<strong>인신매매 신고</strong>: 한국이주여성인권센터 1577-0613",
+             "<strong>본 사이트 신고</strong>: 고객센터 (광고문의 → \"사기 신고\" 명시)",
+         ]),
+    ],
+
+    "prostitution-monitoring": [
+        ("본 사이트의 운영 원칙",
+         [
+             "테라피잡(YH LAB)은 「성매매방지 및 피해자보호 등에 관한 법률」, 「청소년보호법」, 「직업안정법」 등 관련 법령을 엄격히 준수합니다.",
+             "본 사이트는 마사지·테라피 업종 로드샵(매장 상주) 관리사 구인구직 정보 제공 서비스로, 성매매·유사성행위를 암시하거나 알선하는 모든 형태의 채용 공고·광고를 등록 시점에서 차단합니다.",
+             "기존 등록된 공고에서도 부정 정황이 발견되면 즉시 노출 중단 및 등록 영구 정지 조치합니다.",
+         ]),
+        ("등록이 거부되는 공고 유형",
+         [
+             "다음 표현 또는 정황이 포함된 공고는 노동관계법령에 부합하지 않거나 성매매를 암시할 가능성이 있어 등록이 거부됩니다.",
+             "<strong>① 비정상적 고액 보장</strong> — 일급 시세 대비 2배 이상의 비현실적 보장 (스웨디시 일급 50만원 등).",
+             "<strong>② 19세 미만 채용 시도</strong> — 청소년보호법에 따라 일체 금지. 적발 시 등록 영구 정지 + 청소년사이버상담센터(1388) 동시 신고.",
+             "<strong>③ \"풀코스\"·\"2:1\"·\"숙박\" 등 시술 외 표현</strong> — 마사지 시술 범위를 벗어난 표현은 즉시 차단.",
+             "<strong>④ 신분증·여권 보관 요구</strong> — 근로기준법 위반. 등록 영구 정지.",
+             "<strong>⑤ 야간 단독 운영 + 폐쇄 공간 강조</strong> — 안전상 위험 요인. 추가 검증 후 게재 여부 결정.",
+             "<strong>⑥ 사업자등록증 미공개·검증 거부</strong> — 사전 검증 단계에서 거부.",
+         ]),
+        ("모니터링 시스템 — 자동·수동 이중 검증",
+         [
+             "<strong>1단계 — 자동 키워드 필터</strong>: 등록 시점에 부정 키워드·표현 자동 감지. 의심 공고는 자동으로 검수 큐로 보류됩니다.",
+             "<strong>2단계 — 운영팀 수동 검증</strong>: 자동 필터 통과 공고도 운영팀이 사업자등록증·통신판매업 신고·운영 시간을 직접 확인 후 게재합니다.",
+             "<strong>3단계 — 정기 재검증</strong>: 게재 후에도 분기별로 운영 상태·평판·신고 내역을 재검토합니다.",
+             "<strong>4단계 — 사용자 신고 즉시 대응</strong>: 관리사·고객의 익명 신고가 접수되면 24시간 내 1차 검토하고 필요 시 즉시 노출 중단합니다.",
+         ]),
+        ("신고 채널 — 익명 보장",
+         [
+             "부정 공고·성매매 의심 정황을 발견하신 분은 다음 채널로 신고해주세요. 신고자 정보는 익명 처리되며 어떤 경우에도 외부에 공개되지 않습니다.",
+             "<strong>본 사이트 신고</strong>: 고객센터 (광고문의 → \"부정 공고 신고\" 명시)",
+             "<strong>경찰청 신고</strong>: 112 (긴급) / 117 (성매매·인신매매)",
+             "<strong>여성가족부 1366</strong>: 성매매 피해자 상담·구조",
+             "<strong>청소년사이버상담센터 1388</strong>: 19세 미만 관련 신고",
+             "<strong>방송통신심의위원회</strong>: 유해 정보 신고 1377",
+         ]),
+        ("법적 처벌",
+         [
+             "성매매방지법 위반 시: <strong>10년 이하 징역 또는 1억원 이하 벌금</strong>",
+             "청소년보호법 위반 시: <strong>3년 이상 유기징역</strong>",
+             "직업안정법 위반 시: <strong>5년 이하 징역 또는 5천만원 이하 벌금</strong>",
+             "본 사이트는 부정 등록 사업자에 대해 운영 영구 정지 외에도 관할 경찰서·관할 지자체에 행정·형사 고발을 진행합니다.",
+         ]),
+        ("정상 운영 샵·관리사 보호",
+         [
+             "엄격한 모니터링은 정상적으로 운영하시는 샵·관리사를 보호하기 위한 조치입니다. 마사지 업종 전체의 사회적 신뢰를 높이는 일이며, 이는 곧 단가 안정·고객 신뢰·장기 정착으로 이어집니다.",
+             "본 사이트는 합법적·전문적인 마사지·테라피 시장의 발전을 지지하며, 양도자·관리사·고객 모두가 안심할 수 있는 환경을 만드는 데 책임을 다하겠습니다.",
+         ]),
+    ],
+
+    "newcomer-safety": [
+        ("왜 첫 출근 전 체크가 중요한가",
+         [
+             "신규 입직자 분쟁 사례의 80% 이상은 첫 출근 전 5분 점검으로 막을 수 있습니다. 정상적인 샵은 이 점검을 반갑게 환영하며, 검증을 거부하는 샵은 그 자체가 위험 신호입니다.",
+             "본 가이드의 7가지 체크리스트는 운영팀이 16개월간 218건의 분쟁 사례를 분석해 도출한 핵심 패턴입니다.",
+         ]),
+        ("체크리스트 7가지",
+         [
+             "<strong>① 사업자등록증 실물 확인</strong> — 면접 시 사업자등록증을 즉시 보여달라고 요청. 정상 샵은 망설임 없이 보여줍니다. \"나중에\" 미루면 위험 신호.",
+             "<strong>② 계약서 작성 (필수)</strong> — 프리랜서·정규직 무관. 인센티브 비율·정산 주기·근무 시간이 명시된 계약서가 없는 곳은 즉시 거르세요.",
+             "<strong>③ 인센티브 계산 기준 명확화</strong> — \"총 매출의 50%\"인지 \"순 매출의 50%\"인지 반드시 확인. 기준이 다르면 월 30~50만원 차이.",
+             "<strong>④ 신분증·여권 보관 요구 거부</strong> — \"신분증을 맡겨두세요\"는 100% 위법. 어떤 이유로도 거부하세요.",
+             "<strong>⑤ 시술 범위 명확화</strong> — 채용 시 정확히 어떤 시술인지 (스웨디시·아로마·타이 등) 확인. 모호한 \"케어\", \"풀코스\" 같은 표현은 위험 신호.",
+             "<strong>⑥ 운영 시간·휴게 시간 확인</strong> — 시술 시간 외 휴게·식사 시간이 보장되는지. 24시간 대기 요구는 근로기준법 위반.",
+             "<strong>⑦ 안전 환경 — 비상 연락처·CCTV·출입 통제</strong> — 비상 상황 발생 시 도움 받을 수 있는 시스템이 있는지 확인.",
+         ]),
+        ("정상 샵의 공통 특징",
+         [
+             "사업자등록증·통신판매업 신고증을 면접 시 즉시 공개",
+             "계약서를 미리 보여주고 함께 검토 시간을 충분히 제공",
+             "인센티브·정산을 명확한 숫자로 표시",
+             "운영팀 책임자 실명·연락처 공개",
+             "신규 입직자 견습 시스템 운영 (1~2주, 단계별 교육)",
+             "관리사 안전 매뉴얼·비상 연락망 구비",
+         ]),
+        ("도움이 필요할 때",
+         [
+             "면접 후 의심 정황이 있거나 분쟁이 발생하면 본 사이트 <a href=\"/contact-ads/\" style=\"color:var(--blue-1);font-weight:700\">고객센터</a>로 익명 상담 가능합니다.",
+             "근로 조건 분쟁: 고용노동부 1350",
+             "성희롱·인권 침해: 여성가족부 1366",
+             "긴급 위협: 경찰청 112",
+         ]),
+    ],
+
+    "fraud-report-channel": [
+        ("신고 가능한 광고·공고 유형",
+         [
+             "본 사이트는 사용자 신고를 기반으로 부정 공고를 신속히 차단합니다. 다음 유형을 발견하시면 신고해주세요.",
+             "<strong>① 단가 과장 광고</strong> — 시세 대비 2배 이상의 비현실적 보장",
+             "<strong>② 노동관계법령 위반</strong> — 신분증 보관, 휴게 시간 미제공, 부당 정산 등",
+             "<strong>③ 성매매·유사성행위 암시</strong> — 시술 외 표현, 폐쇄 공간 강조 등",
+             "<strong>④ 19세 미만 채용 시도</strong> — 청소년보호법 위반",
+             "<strong>⑤ 사칭 광고</strong> — 본 사이트 또는 등록 샵 사칭",
+             "<strong>⑥ 허위 정보 게재</strong> — 사실과 다른 평점·후기·매출",
+         ]),
+        ("신고 방법",
+         [
+             "본 사이트 고객센터(광고문의 폼에 \"부정 광고 신고\" 명시)로 다음 정보를 보내주세요.",
+             "<strong>① 공고 번호 또는 URL</strong>",
+             "<strong>② 문제 유형</strong> (위 6개 중 해당)",
+             "<strong>③ 구체적 정황</strong> (캡처 포함 시 더 정확한 조치 가능)",
+             "신고자 개인정보는 익명 처리되며, 신고 사실이 피신고 측에 공유되지 않습니다.",
+         ]),
+        ("후속 조치 절차",
+         [
+             "<strong>접수 후 24시간 내</strong>: 운영팀 1차 검토 → 신빙성 확인 시 해당 공고 노출 중단",
+             "<strong>72시간 내</strong>: 등록 샵에 사실관계 확인 요청 → 소명 자료 검토",
+             "<strong>1주일 내</strong>: 최종 결론 → 정상 공고는 복원, 위법 공고는 등록 영구 정지 + 관할 기관 고발",
+             "긴급한 사안(성매매·미성년자·인신매매 의심)은 즉시 경찰청에 동시 신고 처리합니다.",
+         ]),
+        ("신고자 보호",
+         [
+             "신고자의 신원·연락처·이메일은 본 사이트 운영팀 외 누구에게도 공개되지 않습니다.",
+             "법령상 수사기관의 요청이 있는 경우에도 신고자 보호 우선 원칙에 따라 정당한 절차 외 정보 제공을 거부합니다.",
+             "보복성 행위·악의적 사칭이 의심되면 즉시 운영팀에 추가 신고 가능합니다.",
+         ]),
+    ],
+}
+
+def build_notices_hub():
+    title = f"공지사항 — 안전·법령·운영 안내 | {COMPANY['brand_kr']}"
+    desc = "테라피잡 운영팀 공식 공지사항. 동남아 해외 취업 사기 주의, 성매매업소 모니터링 강화, 신규 입직자 안전 가이드, 부정 광고 신고 채널 등 마사지·테라피 종사자를 위한 안전·법령 안내."
+
+    cards = ""
+    for n in NOTICES:
+        prio_color = "#ff6b6b" if n["priority"]=="긴급" else ("#d4af37" if n["priority"]=="중요" else "var(--muted)")
+        cards += f"""<a class="job-card reveal" href="/notices/{n['slug']}/">
+  <div class="top">
+    <span class="kicker" style="color:{n['category_color']}">{n['category']} · {n['priority']}</span>
+    <span style="font-size:10.5px;color:var(--dim)">{n['minutes']}분 읽기</span>
+  </div>
+  <h3 style="line-height:1.4;font-size:16.5px;margin-top:4px">{n['title']}</h3>
+  <p style="font-size:13.5px;color:var(--muted);line-height:1.7;margin-top:6px">{n['summary']}</p>
+  <div class="id" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">발행 {n['date']} · 공지번호 {n['slug'].upper()}</div>
+</a>"""
+
+    extra_ld = [
+        breadcrumb_ld([("홈","/"),("공지사항","/notices/")]),
+        {
+            "@type":"CollectionPage",
+            "url":f"{COMPANY['base_url']}/notices/",
+            "name":title,
+            "description":desc,
+            "publisher":{"@id":f"{COMPANY['base_url']}/#organization"}
+        }
+    ]
+
+    body = f"""
+<section class="wrap" style="padding-bottom:40px">
+  <span class="kicker">NOTICES · 공지사항</span>
+  <h1 style="font-size:clamp(36px,5.5vw,60px);margin:14px 0 20px">운영팀<br><span class="grad">공식 공지</span></h1>
+  <p class="lead">테라피잡 운영팀이 발행하는 공식 공지사항입니다. 안전 경보·법령 안내·운영 정책·신고 채널을 정리합니다. 마사지·테라피 업종 종사자라면 정기적으로 확인해주세요.</p>
+  <div style="display:flex;gap:12px;margin-top:24px;font-size:12px;color:var(--muted);flex-wrap:wrap">
+    <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#ff6b6b"></span>긴급</span>
+    <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#d4af37"></span>중요</span>
+    <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#a0a8be"></span>일반</span>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px">{cards}</div>
+</section>
+"""
+    return page(title, desc, "/notices/", body, extra_jsonld=extra_ld)
+
+
+def build_notice_article(n):
+    sections = NOTICE_BODIES.get(n["slug"], [])
+    title = f"{n['title']} | {COMPANY['brand_kr']} 공지사항"
+    desc = n["summary"]
+
+    sections_html = ""
+    toc = []
+    for i,(h, ps) in enumerate(sections):
+        toc.append((h, f"sec-{i+1}"))
+        ptext = "".join(f"<p>{p}</p>" for p in ps)
+        sections_html += f"""<div class="note-card reveal"><div class="note-num">{i+1:02d}</div><div class="note-content"><h3 class="note-title" id="sec-{i+1}">{h}</h3><div class="note-text">{ptext}</div></div></div>"""
+
+    toc_html = "".join(f'<li><a href="#{aid}" style="color:var(--blue-1);font-size:13.5px">{h}</a></li>' for h,aid in toc)
+
+    prio_color = "#ff6b6b" if n["priority"]=="긴급" else ("#d4af37" if n["priority"]=="중요" else "var(--muted)")
+    other_notices = [x for x in NOTICES if x["slug"] != n["slug"]][:3]
+    other_html = "".join(f'<a class="job-card reveal" href="/notices/{o["slug"]}/"><div class="top"><span class="kicker" style="color:{o["category_color"]}">{o["category"]}</span></div><h3 style="font-size:14.5px;line-height:1.4">{o["title"]}</h3><div class="id" style="margin-top:8px">{o["date"]}</div></a>' for o in other_notices)
+
+    extra_ld = [
+        breadcrumb_ld([("홈","/"),("공지사항","/notices/"),(n["title"],f"/notices/{n['slug']}/")]),
+        {
+            "@type":"Article",
+            "@id":f"{COMPANY['base_url']}/notices/{n['slug']}/#article",
+            "headline":n["title"],
+            "description":n["summary"],
+            "datePublished":n["date"]+"T09:00:00+09:00",
+            "dateModified":n["date"]+"T09:00:00+09:00",
+            "author":{"@type":"Organization","@id":f"{COMPANY['base_url']}/#organization","name":f"{COMPANY['brand_kr']} 운영팀"},
+            "publisher":{"@id":f"{COMPANY['base_url']}/#organization"},
+            "mainEntityOfPage":{"@type":"WebPage","@id":f"{COMPANY['base_url']}/notices/{n['slug']}/"},
+            "inLanguage":"ko-KR",
+            "articleSection":f"공지사항 · {n['category']}",
+        }
+    ]
+
+    body = f"""
+<section class="wrap" style="padding-bottom:30px">
+  <div style="font-size:12px;color:var(--muted);letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:14px">
+    <a href="/" style="color:var(--blue-1)">홈</a> · <a href="/notices/" style="color:var(--blue-1)">공지사항</a> · {n['category']}
+  </div>
+  <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+    <span style="padding:5px 12px;background:rgba(255,107,107,.15);color:{prio_color};font-size:11px;letter-spacing:.22em;font-weight:800;border-radius:5px;border:1px solid {prio_color}">{n['priority']}</span>
+    <span class="kicker" style="margin:0;color:{n['category_color']}">{n['category']}</span>
+    <span style="font-size:12px;color:var(--muted)">발행일 {n['date']} · {n['minutes']}분 읽기</span>
+  </div>
+  <h1 style="font-size:clamp(28px,4.5vw,46px);line-height:1.3;margin-bottom:18px;letter-spacing:-.025em">{n['title']}</h1>
+  <p class="lead">{n['summary']}</p>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="padding:24px 28px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line);margin-bottom:40px">
+    <div class="kicker">목차</div>
+    <ul style="list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:8px">{toc_html}</ul>
+  </div>
+  <div class="note-stack">{sections_html}</div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <h2 style="font-size:22px;margin-bottom:20px">다른 공지사항</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">{other_html}</div>
+  <div style="text-align:center;margin-top:30px">
+    <a class="btn btn-ghost" href="/notices/">공지사항 전체 보기 →</a>
+  </div>
+</section>
+"""
+    return page(title, desc, f"/notices/{n['slug']}/", body, extra_jsonld=extra_ld)
