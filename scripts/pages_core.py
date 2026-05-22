@@ -694,7 +694,7 @@ def build_pricing_ads():
     <h2 style="margin-top:8px">광고 등록 절차</h2>
   </div>
   <div class="note-stack">
-    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">상담 신청</h3><div class="note-text"><p>고객센터 <a href="tel:{COMPANY['tel']}" style="color:var(--blue-1);font-weight:700">{COMPANY['tel']}</a> 또는 이메일 <a href="mailto:{COMPANY['email']}" style="color:var(--blue-1);font-weight:700">{COMPANY['email']}</a>로 광고 등록 의사를 전달해주세요.</p><p>희망 등급·기간·게재 시작일을 함께 알려주시면 진행이 빨라집니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">상담 신청</h3><div class="note-text"><p><a href="/contact-ads/" style="color:var(--blue-1);font-weight:700">광고문의</a> 폼 또는 고객센터 <a href="tel:{COMPANY['tel']}" style="color:var(--blue-1);font-weight:700">{COMPANY['tel']}</a>로 광고 등록 의사를 전달해주세요.</p><p>희망 등급·기간·게재 시작일을 함께 알려주시면 진행이 빨라집니다.</p></div></div></div>
     <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">소재 검수</h3><div class="note-text"><p>샵 정보(상호·사업자등록증), 공고 내용(제목·근무 조건·연락처), 로고·배너 이미지(선택)를 제출해주세요.</p><p>검수는 평균 1영업일 이내 완료됩니다. 노동관계법령에 어긋나는 공고는 등록이 거부됩니다.</p></div></div></div>
     <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">결제·계약</h3><div class="note-text"><p>세금계산서 발행 후 계좌이체로 결제 완료. 결제 확인 시점부터 광고 노출이 시작됩니다.</p><p>장기 계약(6·12개월) 시 분납도 협의 가능합니다.</p></div></div></div>
     <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">게재·리포트</h3><div class="note-text"><p>광고는 메인·업종·지역 페이지에 자동 노출되며, 광고 상세 페이지(/ad/공고번호/)도 함께 생성됩니다.</p><p>VVIP는 분기별 효과 리포트, VIP·프리미엄은 요청 시 월 1회 간이 리포트를 무료 제공합니다.</p></div></div></div>

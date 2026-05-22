@@ -370,8 +370,6 @@ def build_region_hub(r):
 {render_region_seo(r)}
 
 {single_tier_block("premium", jobs_for_region_tier(r, "premium"))}
-
-{shop_promo_banner()}
 """
     return page(title, desc, f"/locations/{r['slug']}/", body, extra_jsonld=extra_ld)
 
@@ -577,9 +575,7 @@ def build_district(region, district_slug, district_kr):
   <div class="note-stack" style="margin-top:30px">{review_cards}</div>
 </section>
 
-{shop_promo_banner()}
-
-<section class="wrap" style="padding-top:20px">
+<section class="wrap" style="padding-top:40px">
   <div style="padding:50px 40px;border-radius:22px;background:linear-gradient(135deg,rgba(91,155,255,.1),rgba(44,84,168,.04));border:1px solid rgba(123,176,255,.18);text-align:center">
     <h2 style="margin-bottom:14px">{district_kr} 채용 상담 받기</h2>
     <p class="lead" style="margin:0 auto 24px">{district_kr} 권역 전담 매칭이 가능합니다.</p>
