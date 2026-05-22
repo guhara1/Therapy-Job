@@ -542,8 +542,8 @@ def build_pricing_ads():
   <div style="padding:24px 26px;flex:1;display:flex;flex-direction:column;gap:12px">
     <div style="font-size:13.5px;color:var(--muted);line-height:1.7">메인화면·업종·지역 페이지 노출</div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
-      <div style="padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:9px;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center">PC 광고 위치 <span style="color:var(--dim)">›</span></div>
-      <div style="padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:9px;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center">모바일 광고 위치 <span style="color:var(--dim)">›</span></div>
+      <a href="#ad-positions" style="padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:9px;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center;transition:.18s;text-decoration:none" onmouseover="this.style.background='rgba(123,176,255,.08)';this.style.borderColor='rgba(123,176,255,.32)'" onmouseout="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='var(--line)'">PC 광고 위치 <span style="color:var(--dim)">›</span></a>
+      <a href="#ad-positions" style="padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:9px;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center;transition:.18s;text-decoration:none" onmouseover="this.style.background='rgba(123,176,255,.08)';this.style.borderColor='rgba(123,176,255,.32)'" onmouseout="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='var(--line)'">모바일 광고 위치 <span style="color:var(--dim)">›</span></a>
       <div style="padding:11px 14px;background:rgba(255,255,255,.05);border:1px solid {p['border']};border-radius:9px;font-size:13px;color:{p['color']};text-align:center;font-weight:700">{order}</div>
     </div>
     <div style="margin-top:10px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);text-align:center">최대 {slot}</div>
@@ -650,6 +650,267 @@ def build_pricing_ads():
     <p class="lead" style="margin:14px auto 0">3개 등급의 노출 위치·입점 제한·정렬 방식을 한눈에 비교하세요.</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px">{compare_cards}</div>
+</section>
+
+<section class="wrap" style="padding-top:0;padding-bottom:40px" id="ad-positions">
+  <div style="text-align:center;max-width:760px;margin:0 auto 40px">
+    <span class="kicker">AD POSITIONS · 노출 위치</span>
+    <h2 style="margin-top:8px">광고 노출 위치 상세 안내</h2>
+    <p class="lead" style="margin:14px auto 0">등급별 PC·모바일 노출 위치를 실제 화면 구조 그대로 시각화했습니다. 클릭 한 번 거리(스크롤 없이)에서 노출되는 VVIP부터, 페이지 하단의 프리미엄까지 차이를 한눈에 확인하세요.</p>
+  </div>
+
+  <style>
+    .pos-card{{padding:32px;border-radius:18px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--line);margin-bottom:24px}}
+    .pos-card-head{{display:flex;align-items:center;gap:14px;margin-bottom:24px;flex-wrap:wrap}}
+    .pos-tier-badge{{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:800;letter-spacing:.06em}}
+    .pos-card-head h3{{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.3;flex:1;min-width:200px}}
+    .pos-mockups{{display:grid;grid-template-columns:1.4fr 1fr;gap:32px;align-items:start}}
+    .pos-mockup{{display:flex;flex-direction:column;gap:14px}}
+    .pos-mockup-label{{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--blue-1);letter-spacing:.06em}}
+    .pos-mockup-svg{{background:#0a0e1a;border:1px solid var(--line);border-radius:10px;padding:14px;overflow:hidden}}
+    .pos-mockup-svg svg{{width:100%;height:auto;display:block;border-radius:6px}}
+    .pos-details{{margin-top:8px;display:flex;flex-direction:column;gap:8px;font-size:13px;color:#c8ccda;line-height:1.65}}
+    .pos-details li{{padding-left:14px;position:relative}}
+    .pos-details li::before{{content:"●";position:absolute;left:0;color:var(--blue-1);font-size:8px;top:5px}}
+    @media(max-width:880px){{.pos-mockups{{grid-template-columns:1fr}}.pos-card{{padding:22px}}}}
+  </style>
+
+  <!-- VVIP -->
+  <div class="pos-card">
+    <div class="pos-card-head">
+      <span class="pos-tier-badge" style="background:linear-gradient(135deg,#d4af37,#f4d29c);color:#1a1410">VVIP</span>
+      <h3 style="color:#f4d29c">최상단 단독 노출 — Hero 직하 단독 영역</h3>
+    </div>
+    <div class="pos-mockups">
+      <div class="pos-mockup">
+        <div class="pos-mockup-label">💻 PC 화면 (1200px ~)</div>
+        <div class="pos-mockup-svg">
+          <svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gold1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#d4af37"/><stop offset="100%" stop-color="#f4d29c"/></linearGradient>
+            </defs>
+            <rect width="600" height="380" fill="#0a0e1a"/>
+            <rect x="0" y="0" width="600" height="22" fill="#1a1a23"/>
+            <circle cx="12" cy="11" r="3.5" fill="#ff5f57"/><circle cx="24" cy="11" r="3.5" fill="#ffbd2e"/><circle cx="36" cy="11" r="3.5" fill="#28c940"/>
+            <rect x="20" y="34" width="560" height="26" rx="4" fill="#1a2236"/>
+            <text x="30" y="51" font-family="sans-serif" font-size="9" fill="#7bb0ff" font-weight="700">테라피잡</text>
+            <text x="500" y="51" font-family="sans-serif" font-size="8" fill="#a0a8be">메뉴 · 광고문의</text>
+            <rect x="20" y="72" width="560" height="62" rx="6" fill="#1a2236" opacity=".7"/>
+            <text x="300" y="108" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#a0a8be">HERO 섹션</text>
+            <rect x="20" y="146" width="560" height="90" rx="8" fill="url(#gold1)" stroke="#d4af37" stroke-width="2"/>
+            <text x="300" y="180" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1a1410" font-weight="800" letter-spacing="1">★ VVIP 광고 영역 ★</text>
+            <text x="300" y="200" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#1a1410">Hero 직하 단독 노출 · 최대 4건</text>
+            <text x="300" y="218" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#1a1410" opacity=".7">스크롤 없이 즉시 보임</text>
+            <rect x="20" y="248" width="270" height="50" rx="4" fill="#1a1a23"/>
+            <rect x="310" y="248" width="270" height="50" rx="4" fill="#1a1a23"/>
+            <text x="300" y="280" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#6c7490">콘텐츠 영역</text>
+            <rect x="20" y="310" width="560" height="20" rx="3" fill="#1a1a23" opacity=".5"/>
+            <rect x="20" y="335" width="560" height="20" rx="3" fill="#1a1a23" opacity=".5"/>
+          </svg>
+        </div>
+        <ul class="pos-details">
+          <li>Hero 섹션 바로 아래, <strong style="color:#f4d29c">단독 영역</strong> 노출 (다른 등급 광고와 분리)</li>
+          <li>1행 최대 4열 그리드 — 골드 톤 대형 카드</li>
+          <li>방문자가 페이지 진입 즉시 보는 위치 (above-the-fold)</li>
+          <li>모든 페이지 적용: 메인 / 업종 / 광역·행정구 / 매물 페이지</li>
+        </ul>
+      </div>
+      <div class="pos-mockup">
+        <div class="pos-mockup-label">📱 모바일 (375px ~)</div>
+        <div class="pos-mockup-svg">
+          <svg viewBox="0 0 220 380" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gold2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d4af37"/><stop offset="100%" stop-color="#c98a6b"/></linearGradient>
+            </defs>
+            <rect width="220" height="380" rx="20" fill="#1a1a23" stroke="#2a2a2a"/>
+            <rect x="14" y="14" width="192" height="352" rx="14" fill="#0a0e1a"/>
+            <rect x="20" y="22" width="180" height="22" rx="4" fill="#1a2236"/>
+            <text x="28" y="38" font-family="sans-serif" font-size="8" fill="#7bb0ff" font-weight="700">테라피잡</text>
+            <text x="180" y="38" text-anchor="end" font-family="sans-serif" font-size="9" fill="#a0a8be">☰</text>
+            <rect x="20" y="52" width="180" height="48" rx="6" fill="#1a2236" opacity=".7"/>
+            <text x="110" y="80" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#a0a8be">HERO</text>
+            <rect x="20" y="108" width="180" height="48" rx="6" fill="url(#gold2)" stroke="#d4af37" stroke-width="1.5"/>
+            <text x="110" y="130" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#1a1410" font-weight="800">★ VVIP 광고 #1</text>
+            <text x="110" y="144" text-anchor="middle" font-family="sans-serif" font-size="6" fill="#1a1410">최상단 노출</text>
+            <rect x="20" y="162" width="180" height="48" rx="6" fill="url(#gold2)" stroke="#d4af37" stroke-width="1.5" opacity=".85"/>
+            <text x="110" y="190" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#1a1410" font-weight="800">★ VVIP 광고 #2</text>
+            <rect x="20" y="216" width="180" height="48" rx="6" fill="url(#gold2)" opacity=".7"/>
+            <text x="110" y="244" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#1a1410" font-weight="700">VVIP #3</text>
+            <rect x="20" y="270" width="180" height="48" rx="6" fill="url(#gold2)" opacity=".55"/>
+            <text x="110" y="298" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#1a1410" font-weight="700">VVIP #4</text>
+            <rect x="20" y="326" width="180" height="28" rx="4" fill="#1a1a23"/>
+            <text x="110" y="343" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#6c7490">콘텐츠</text>
+          </svg>
+        </div>
+        <ul class="pos-details">
+          <li>Hero 직하 1열 풀와이드 — 4건 세로로 순차 배치</li>
+          <li>한 화면에 1~2건 노출, 첫 화면 점유율 가장 높음</li>
+          <li>모바일 사용자 80% 이상이 광고를 한 번 이상 봄</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIP -->
+  <div class="pos-card">
+    <div class="pos-card-head">
+      <span class="pos-tier-badge" style="background:linear-gradient(135deg,#7bb0ff,#2c54a8);color:#fff">VIP</span>
+      <h3 style="color:#7bb0ff">우선 노출 — First Content Break (콘텐츠 1개 직후)</h3>
+    </div>
+    <div class="pos-mockups">
+      <div class="pos-mockup">
+        <div class="pos-mockup-label">💻 PC 화면 (1200px ~)</div>
+        <div class="pos-mockup-svg">
+          <svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="blue1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7bb0ff"/><stop offset="100%" stop-color="#2c54a8"/></linearGradient>
+            </defs>
+            <rect width="600" height="380" fill="#0a0e1a"/>
+            <rect x="0" y="0" width="600" height="22" fill="#1a1a23"/>
+            <circle cx="12" cy="11" r="3.5" fill="#ff5f57"/><circle cx="24" cy="11" r="3.5" fill="#ffbd2e"/><circle cx="36" cy="11" r="3.5" fill="#28c940"/>
+            <rect x="20" y="34" width="560" height="20" rx="3" fill="#1a2236"/>
+            <rect x="20" y="62" width="560" height="40" rx="5" fill="#1a2236" opacity=".5"/>
+            <text x="300" y="86" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#6c7490">HERO</text>
+            <rect x="20" y="110" width="560" height="32" rx="5" fill="rgba(212,175,55,.2)" stroke="rgba(212,175,55,.5)"/>
+            <text x="300" y="130" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#d4af37" font-weight="700">VVIP 광고 (위)</text>
+            <rect x="20" y="150" width="270" height="38" rx="4" fill="#1a1a23"/>
+            <rect x="310" y="150" width="270" height="38" rx="4" fill="#1a1a23"/>
+            <text x="300" y="174" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#6c7490">콘텐츠 블록 1 (업종별·지역별 카드 등)</text>
+            <rect x="20" y="198" width="560" height="92" rx="8" fill="url(#blue1)" stroke="#7bb0ff" stroke-width="2" opacity=".9"/>
+            <text x="300" y="232" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#fff" font-weight="800" letter-spacing="1">★ VIP 광고 영역 ★</text>
+            <text x="300" y="252" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#fff">First Content Break · 최대 12건</text>
+            <text x="300" y="270" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#fff" opacity=".8">사용자 신뢰 형성 직후 = 클릭률 최고 구간</text>
+            <rect x="20" y="304" width="560" height="20" rx="3" fill="#1a1a23" opacity=".5"/>
+            <rect x="20" y="332" width="560" height="20" rx="3" fill="#1a1a23" opacity=".5"/>
+            <rect x="20" y="360" width="560" height="14" rx="2" fill="#1a1a23" opacity=".3"/>
+          </svg>
+        </div>
+        <ul class="pos-details">
+          <li><strong style="color:#7bb0ff">First Content Break</strong> — 첫 콘텐츠 블록 직후의 골든 슬롯</li>
+          <li>사용자가 첫 콘텐츠를 읽고 \"신뢰\"가 형성된 직후 노출</li>
+          <li>업계 평균 CTR 2.6%로 VVIP 다음으로 높음</li>
+          <li>1행 4~6열 그리드 · 블루 톤 중형 카드 · 최대 12건</li>
+        </ul>
+      </div>
+      <div class="pos-mockup">
+        <div class="pos-mockup-label">📱 모바일 (375px ~)</div>
+        <div class="pos-mockup-svg">
+          <svg viewBox="0 0 220 380" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="blue2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7bb0ff"/><stop offset="100%" stop-color="#2c54a8"/></linearGradient>
+            </defs>
+            <rect width="220" height="380" rx="20" fill="#1a1a23" stroke="#2a2a2a"/>
+            <rect x="14" y="14" width="192" height="352" rx="14" fill="#0a0e1a"/>
+            <rect x="20" y="22" width="180" height="20" rx="3" fill="#1a2236"/>
+            <text x="180" y="35" text-anchor="end" font-family="sans-serif" font-size="9" fill="#a0a8be">☰</text>
+            <rect x="20" y="50" width="180" height="34" rx="4" fill="#1a2236" opacity=".5"/>
+            <text x="110" y="71" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#6c7490">HERO</text>
+            <rect x="20" y="90" width="180" height="22" rx="3" fill="rgba(212,175,55,.2)" stroke="rgba(212,175,55,.5)" stroke-width=".7"/>
+            <text x="110" y="105" text-anchor="middle" font-family="sans-serif" font-size="6" fill="#d4af37" font-weight="700">VVIP 광고</text>
+            <rect x="20" y="118" width="180" height="36" rx="4" fill="#1a1a23"/>
+            <text x="110" y="140" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#6c7490">콘텐츠 블록 1</text>
+            <rect x="20" y="160" width="180" height="42" rx="5" fill="url(#blue2)" stroke="#7bb0ff" stroke-width="1.5"/>
+            <text x="110" y="183" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#fff" font-weight="800">★ VIP 광고 #1</text>
+            <text x="110" y="196" text-anchor="middle" font-family="sans-serif" font-size="6" fill="#fff">First Content Break</text>
+            <rect x="20" y="208" width="180" height="42" rx="5" fill="url(#blue2)" stroke="#7bb0ff" stroke-width="1.5" opacity=".85"/>
+            <text x="110" y="232" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#fff" font-weight="700">VIP 광고 #2</text>
+            <rect x="20" y="256" width="180" height="40" rx="5" fill="url(#blue2)" opacity=".7"/>
+            <text x="110" y="280" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#fff" font-weight="700">VIP #3 ~ #12</text>
+            <rect x="20" y="304" width="180" height="20" rx="3" fill="#1a1a23"/>
+            <rect x="20" y="330" width="180" height="20" rx="3" fill="#1a1a23"/>
+            <text x="110" y="343" text-anchor="middle" font-family="sans-serif" font-size="6" fill="#6c7490">콘텐츠 블록 2</text>
+          </svg>
+        </div>
+        <ul class="pos-details">
+          <li>첫 콘텐츠 블록 직후 1열 풀와이드 노출</li>
+          <li>12건 세로 스크롤 — 평균 노출 시간 18초</li>
+          <li>모바일 사용자가 페이지 가치를 인지한 후 자연스럽게 도달</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 프리미엄 -->
+  <div class="pos-card">
+    <div class="pos-card-head">
+      <span class="pos-tier-badge" style="background:linear-gradient(135deg,#a0a8be,#6c7490);color:#0a0e1a">PREMIUM</span>
+      <h3 style="color:#a0a8be">기본 노출 — 페이지 하단 영역 (등록 제한 없음)</h3>
+    </div>
+    <div class="pos-mockups">
+      <div class="pos-mockup">
+        <div class="pos-mockup-label">💻 PC 화면 (1200px ~)</div>
+        <div class="pos-mockup-svg">
+          <svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg">
+            <rect width="600" height="380" fill="#0a0e1a"/>
+            <rect x="0" y="0" width="600" height="22" fill="#1a1a23"/>
+            <circle cx="12" cy="11" r="3.5" fill="#ff5f57"/><circle cx="24" cy="11" r="3.5" fill="#ffbd2e"/><circle cx="36" cy="11" r="3.5" fill="#28c940"/>
+            <rect x="20" y="34" width="560" height="18" rx="3" fill="#1a2236"/>
+            <rect x="20" y="58" width="560" height="28" rx="4" fill="#1a2236" opacity=".4"/>
+            <text x="300" y="76" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#6c7490">HERO</text>
+            <rect x="20" y="92" width="560" height="22" rx="3" fill="rgba(212,175,55,.18)"/>
+            <text x="300" y="107" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#d4af37" opacity=".7">VVIP 광고</text>
+            <rect x="20" y="120" width="560" height="28" rx="4" fill="#1a1a23"/>
+            <text x="300" y="138" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#6c7490">콘텐츠 블록 1</text>
+            <rect x="20" y="154" width="560" height="22" rx="3" fill="rgba(91,155,255,.18)"/>
+            <text x="300" y="169" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#7bb0ff" opacity=".7">VIP 광고</text>
+            <rect x="20" y="182" width="560" height="28" rx="4" fill="#1a1a23"/>
+            <text x="300" y="200" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#6c7490">콘텐츠 블록 2</text>
+            <rect x="20" y="216" width="560" height="100" rx="8" fill="#1a2236" stroke="#a0a8be" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <text x="300" y="246" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#a0a8be" font-weight="800">▢ PREMIUM 광고 영역</text>
+            <text x="300" y="266" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#a0a8be">페이지 하단 그리드 (1행 5~6열)</text>
+            <text x="300" y="284" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#a0a8be" opacity=".75">등록 제한 없음 · 가성비 슬롯</text>
+            <text x="300" y="302" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#6c7490">평균 12건 · 페이지 가치 검증 후 노출</text>
+            <rect x="20" y="328" width="560" height="14" rx="2" fill="#1a1a23" opacity=".4"/>
+            <rect x="20" y="350" width="560" height="22" rx="3" fill="#070a14"/>
+            <text x="300" y="365" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#6c7490">FOOTER</text>
+          </svg>
+        </div>
+        <ul class="pos-details">
+          <li>페이지 하단 영역 — 모든 콘텐츠를 읽은 후 도달하는 위치</li>
+          <li>1행 5~6열 그리드 · 컴팩트 카드</li>
+          <li>등록 제한 없음, 가성비 가장 좋은 슬롯</li>
+          <li>방문자가 페이지 가치를 충분히 인지한 후 노출 → 의사결정형 클릭</li>
+        </ul>
+      </div>
+      <div class="pos-mockup">
+        <div class="pos-mockup-label">📱 모바일 (375px ~)</div>
+        <div class="pos-mockup-svg">
+          <svg viewBox="0 0 220 380" xmlns="http://www.w3.org/2000/svg">
+            <rect width="220" height="380" rx="20" fill="#1a1a23" stroke="#2a2a2a"/>
+            <rect x="14" y="14" width="192" height="352" rx="14" fill="#0a0e1a"/>
+            <rect x="20" y="22" width="180" height="18" rx="3" fill="#1a2236"/>
+            <rect x="20" y="46" width="180" height="22" rx="3" fill="#1a2236" opacity=".5"/>
+            <text x="110" y="61" text-anchor="middle" font-family="sans-serif" font-size="6" fill="#6c7490">HERO</text>
+            <rect x="20" y="74" width="180" height="16" rx="2" fill="rgba(212,175,55,.18)"/>
+            <text x="110" y="85" text-anchor="middle" font-family="sans-serif" font-size="5" fill="#d4af37">VVIP</text>
+            <rect x="20" y="96" width="180" height="20" rx="3" fill="#1a1a23"/>
+            <rect x="20" y="122" width="180" height="16" rx="2" fill="rgba(91,155,255,.18)"/>
+            <text x="110" y="133" text-anchor="middle" font-family="sans-serif" font-size="5" fill="#7bb0ff">VIP</text>
+            <rect x="20" y="144" width="180" height="20" rx="3" fill="#1a1a23"/>
+            <rect x="20" y="170" width="180" height="32" rx="4" fill="#1a2236" stroke="#a0a8be" stroke-dasharray="2 2"/>
+            <text x="110" y="190" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#a0a8be" font-weight="700">▢ PREMIUM #1</text>
+            <rect x="20" y="208" width="180" height="32" rx="4" fill="#1a2236" stroke="#a0a8be" stroke-dasharray="2 2" opacity=".85"/>
+            <text x="110" y="228" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#a0a8be" font-weight="700">▢ PREMIUM #2</text>
+            <rect x="20" y="246" width="180" height="32" rx="4" fill="#1a2236" stroke="#a0a8be" stroke-dasharray="2 2" opacity=".7"/>
+            <text x="110" y="266" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#a0a8be">PREMIUM #3 ~</text>
+            <rect x="20" y="284" width="180" height="14" rx="2" fill="#1a1a23"/>
+            <rect x="20" y="304" width="180" height="14" rx="2" fill="#1a1a23"/>
+            <rect x="20" y="332" width="180" height="22" rx="3" fill="#070a14"/>
+            <text x="110" y="347" text-anchor="middle" font-family="sans-serif" font-size="6" fill="#6c7490">FOOTER</text>
+          </svg>
+        </div>
+        <ul class="pos-details">
+          <li>페이지 하단 1열 세로 스크롤 카드</li>
+          <li>스크롤 도달 시 자동 노출 (lazy load 적용)</li>
+          <li>모바일 사용자 35% 이상이 1건 이상 클릭 경험</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:20px 24px;border-radius:12px;background:var(--grad-soft);border:1px solid var(--line);font-size:12.5px;color:var(--muted);line-height:1.7;margin-top:8px">
+    <strong style="color:var(--blue-1)">📊 위치별 노출 데이터 (월 평균)</strong> · VVIP 42,000~58,000회 / VIP 22,000~32,000회 / 프리미엄 8,000~14,000회 · 본 사이트 자체 운영 데이터(2025.01~2026.05) 기준. 실제 노출은 광고 등록 시점·경쟁 등록 수·페이지 트래픽에 따라 변동.
+  </div>
 </section>
 
 <section class="wrap" style="padding-top:0">
