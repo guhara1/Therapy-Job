@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#0a0e1a"/>
+<stop offset="100%" stop-color="#1b3a78"/>
+</linearGradient>
+<linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#7bb0ff"/>
+<stop offset="50%" stop-color="#5b9bff"/>
+<stop offset="100%" stop-color="#2c54a8"/>
+</linearGradient>
+</defs>
+<rect width="1200" height="630" fill="url(#bg)"/>
+<circle cx="980" cy="120" r="280" fill="url(#grad)" opacity=".18"/>
+<circle cx="160" cy="500" r="180" fill="url(#grad)" opacity=".14"/>
+<g transform="translate(80,180)">
+<rect width="100" height="100" rx="24" fill="url(#grad)"/>
+<text x="50" y="72" text-anchor="middle" font-family="Georgia,serif" font-size="62" font-weight="700" font-style="italic" fill="#fff">T</text>
+</g>
+<text x="80" y="370" font-family="-apple-system,Pretendard,Apple SD Gothic Neo,sans-serif" font-size="64" font-weight="800" fill="#eef2fb" letter-spacing="-2">테라피잡</text>
+<text x="80" y="430" font-family="-apple-system,Pretendard,Apple SD Gothic Neo,sans-serif" font-size="34" font-weight="500" fill="#a0a8be" letter-spacing="-1">전국 마사지 구인구직 1번지</text>
+<text x="80" y="490" font-family="-apple-system,Pretendard,Apple SD Gothic Neo,sans-serif" font-size="22" font-weight="400" fill="#7bb0ff" letter-spacing="-.5">therapyjob.co.kr · 82개 행정구 풀커버</text>
+<line x1="80" y1="540" x2="1120" y2="540" stroke="#7bb0ff" stroke-opacity=".24" stroke-width="1"/>
+<text x="80" y="580" font-family="-apple-system,Pretendard,Apple SD Gothic Neo,sans-serif" font-size="18" font-weight="600" fill="#a0a8be" letter-spacing="2">SWEDISH · AROMA · THAI · LOMI LOMI · SPORTS</text>
+</svg>
