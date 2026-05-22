@@ -208,8 +208,11 @@ def shop_promo_banner():
     """샵 운영자 광고 등록 안내 — 지역 페이지 하단 배너"""
     return f"""
 <section class="wrap" style="padding-top:40px;padding-bottom:20px">
-  <a href="/pricing-ads/" aria-label="샵 운영자 광고 등록 — VVIP 월 44만원부터, 4개 업체 한정. 상세는 광고 상품 안내 페이지 참고" style="display:block;border-radius:20px;overflow:hidden;border:1px solid rgba(123,176,255,.22);transition:transform .25s,box-shadow .25s,border-color .25s">
-    <img src="/assets/ads/shop-banner.svg" alt="샵 운영자라면 여기에 광고하세요 — VVIP 월 44만원부터 · 4개 업체 한정" width="1200" height="400" loading="lazy" decoding="async" style="width:100%;height:auto;display:block">
+  <a href="/pricing-ads/" aria-label="샵 운영자 광고 등록 안내 — 광고 상품 페이지로 이동" style="display:block;border-radius:20px;overflow:hidden;border:1px solid rgba(123,176,255,.22);transition:transform .25s,box-shadow .25s,border-color .25s">
+    <picture>
+      <source type="image/webp" srcset="/assets/ads/shop-banner.webp 1x, /assets/ads/shop-banner@2x.webp 2x">
+      <img src="/assets/ads/shop-banner.jpg" alt="샵 운영자라면 여기에 광고하세요 — 광고 상품 안내" width="1200" height="400" loading="lazy" decoding="async" style="width:100%;height:auto;display:block">
+    </picture>
   </a>
   <style>
     section.wrap > a[aria-label^="샵 운영자"]:hover{{transform:translateY(-3px);box-shadow:0 18px 44px rgba(91,155,255,.18);border-color:rgba(123,176,255,.5)}}
