@@ -913,10 +913,10 @@ def build_pricing_ads():
   </div>
 </section>
 
-<section class="wrap" style="padding-top:0">
+<section class="wrap" id="recruitment-pricing" style="padding-top:0;scroll-margin-top:80px">
   <div style="text-align:center;max-width:760px;margin:0 auto 36px">
-    <span class="kicker">PRICING TABLE</span>
-    <h2 style="margin-top:8px">상품별 가격 안내</h2>
+    <span class="kicker">PRICING TABLE · 채용공고 광고</span>
+    <h2 style="margin-top:8px">채용공고 광고 가격 안내</h2>
     <p class="lead" style="margin:14px auto 0">모든 가격은 부가세 별도이며, 사업자 세금계산서가 발행됩니다. 장기 계약 시 월 환산 단가가 큰 폭으로 절감됩니다.</p>
   </div>
   <div>{detail_blocks}</div>
@@ -962,9 +962,9 @@ def build_pricing_ads():
   </div>
 </section>
 
-<section class="wrap" style="padding-top:0">
+<section class="wrap" id="shop-sale-pricing" style="padding-top:0;scroll-margin-top:80px">
   <div style="text-align:center;max-width:760px;margin:0 auto 40px">
-    <span class="kicker" style="color:#d4af37">SHOP SALE PRICING · 업소매매</span>
+    <span class="kicker" style="color:#d4af37">SHOP SALE PRICING · 업소매매 광고</span>
     <h2 style="margin-top:8px">업소매매 매물 등록 가격</h2>
     <p class="lead" style="margin:14px auto 0">샵 양도를 원하시는 분을 위한 매물 등록 상품입니다. 익명 게재로 운영 중인 영업에 지장이 없으며, 매수 의향자는 운영팀이 1:1 매칭으로 연결합니다.</p>
   </div>
