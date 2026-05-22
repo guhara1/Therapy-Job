@@ -728,3 +728,255 @@ def build_pricing_ads():
 </section>
 """
     return page(title, desc, "/pricing-ads/", body, extra_jsonld=extra_ld)
+
+
+# ─────────────────────────────────────────────
+# 광고문의 (/contact-ads/) — 폼 + Telegram 전송
+# ─────────────────────────────────────────────
+def build_contact_ads():
+    title = f"광고문의 — 마사지샵 광고 등록 신청 | {COMPANY['brand_kr']}"
+    desc = "테라피잡 광고 등록 신청 폼. 성명·연락처·지역·메시지를 입력하시면 평일 1영업일 내 담당 매니저가 연락드립니다. 카드·세금계산서 결제, 6·12개월 분납 협의 가능."
+
+    region_opts = "".join(f'<option value="{r["kr"]}">{r["kr"]}</option>' for r in REGIONS)
+
+    faqs = [
+        ("문의 후 답변까지 얼마나 걸리나요?",
+         "평일 영업시간(10:00~19:00) 내 신청은 평균 1~3시간 안에, 야간·주말 신청은 다음 영업일 오전에 회신해드립니다. 급한 사안은 고객센터 전화로 별도 연락 주세요."),
+        ("어떤 정보를 미리 준비하면 좋나요?",
+         "샵 상호·사업자등록번호·운영 지역·희망 광고 등급(VVIP/VIP/프리미엄)·희망 게재 시작일을 미리 정리해주시면 상담이 빨라집니다. 사업자등록증 사진은 결제 단계에서 추가로 요청드립니다."),
+        ("문의만 해도 비용이 발생하나요?",
+         "광고 상담·견적·노출 시뮬레이션 모두 100% 무료입니다. 실제 게재 결정·결제 시점부터 비용이 발생하며, 사전 합의 없는 자동 결제는 일체 없습니다."),
+        ("VVIP 슬롯이 마감이면 어떻게 되나요?",
+         "VVIP 4슬롯이 모두 계약 중이면 대기 명단에 무료로 등록해드리며, 기존 계약 만료·해지 시 우선 안내드립니다. 대기 동안 VIP·프리미엄으로 우선 시작했다가 추후 VVIP로 전환하는 패턴도 가능합니다."),
+        ("입력한 개인정보는 어떻게 처리되나요?",
+         f"본 폼으로 수집한 정보는 광고 상담 응대 목적으로만 사용되며, 응대 종료 후 30일 이내 자동 파기됩니다. 본인 동의 없이 제3자에게 제공되지 않으며 자세한 사항은 <a href=\"/policy/privacy/\" style=\"color:var(--blue-1)\">개인정보처리방침</a>에서 확인하실 수 있습니다."),
+        ("다른 연락 방법은 없나요?",
+         f"고객센터 전화 <a href=\"tel:{COMPANY['tel']}\" style=\"color:var(--blue-1);font-weight:700\">{COMPANY['tel']}</a> 또는 이메일 <a href=\"mailto:{COMPANY['email']}\" style=\"color:var(--blue-1);font-weight:700\">{COMPANY['email']}</a>로도 동일한 상담이 가능합니다. 본 폼은 야간·주말에도 등록 가능하다는 점이 장점입니다."),
+    ]
+
+    extra_ld = [
+        breadcrumb_ld([("홈","/"),("광고문의","/contact-ads/")]),
+        faq_ld(faqs),
+        {
+            "@type":"ContactPage",
+            "url":f"{COMPANY['base_url']}/contact-ads/",
+            "name":title,
+            "description":desc,
+            "mainEntity":{
+                "@type":"Organization",
+                "@id":f"{COMPANY['base_url']}/#organization",
+                "contactPoint":{
+                    "@type":"ContactPoint",
+                    "telephone":COMPANY["tel_intl"],
+                    "email":COMPANY["email"],
+                    "contactType":"광고 영업",
+                    "areaServed":"KR",
+                    "availableLanguage":"Korean",
+                    "hoursAvailable":{
+                        "@type":"OpeningHoursSpecification",
+                        "dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],
+                        "opens":"10:00","closes":"19:00"
+                    }
+                }
+            }
+        }
+    ]
+
+    # 폼 + JS (Cloudflare Worker로 POST → Telegram 전송)
+    body = f"""
+<style>
+.adq-form{{padding:36px 40px;border-radius:22px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid rgba(123,176,255,.22)}}
+.adq-grid{{display:grid;grid-template-columns:1fr 1fr;gap:18px}}
+.adq-field{{display:flex;flex-direction:column;gap:7px}}
+.adq-field.full{{grid-column:1/-1}}
+.adq-label{{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}}
+.adq-label .req{{color:#d4af37;margin-left:4px}}
+.adq-input,.adq-select,.adq-text{{font-family:inherit;font-size:14.5px;color:var(--text);padding:13px 16px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;transition:.2s;outline:none;width:100%}}
+.adq-input:focus,.adq-select:focus,.adq-text:focus{{border-color:rgba(123,176,255,.5);background:rgba(255,255,255,.05);box-shadow:0 0 0 3px rgba(91,155,255,.12)}}
+.adq-input::placeholder,.adq-text::placeholder{{color:var(--dim)}}
+.adq-select{{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a0a8be' d='M6 8 0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 18px center;padding-right:40px}}
+.adq-text{{min-height:130px;resize:vertical;line-height:1.7}}
+.adq-honey{{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}}
+.adq-submit{{display:flex;align-items:center;justify-content:center;gap:8px;padding:16px 28px;background:linear-gradient(135deg,#d4af37,#f4d29c);color:#1a1410;border:0;border-radius:999px;font-weight:800;font-size:15px;letter-spacing:-.01em;cursor:pointer;transition:.2s;width:100%}}
+.adq-submit:hover:not(:disabled){{transform:translateY(-1px);box-shadow:0 12px 30px rgba(212,175,55,.36)}}
+.adq-submit:disabled{{opacity:.6;cursor:wait}}
+.adq-result{{padding:14px 18px;border-radius:10px;font-size:13.5px;line-height:1.7;margin-top:14px;display:none}}
+.adq-result.ok{{background:rgba(91,200,140,.12);border:1px solid rgba(91,200,140,.4);color:#9fd9b8;display:block}}
+.adq-result.err{{background:rgba(255,100,100,.10);border:1px solid rgba(255,100,100,.36);color:#ffacac;display:block}}
+.adq-privacy{{font-size:12px;color:var(--dim);line-height:1.65;margin-top:10px;padding-top:14px;border-top:1px solid var(--line)}}
+.adq-privacy a{{color:var(--blue-1)}}
+@media(max-width:680px){{.adq-grid{{grid-template-columns:1fr}}.adq-form{{padding:28px 22px}}}}
+</style>
+
+<section class="wrap" style="padding-bottom:30px">
+  <span class="kicker" style="color:#d4af37">AD INQUIRY · 광고문의</span>
+  <h1 style="font-size:clamp(32px,4.5vw,52px);margin:14px 0 16px">광고 등록<br><span class="grad">신청서</span></h1>
+  <p class="lead">신청서를 제출하시면 담당 매니저가 평일 1영업일 내(평일 영업시간 신청은 1~3시간 내)에 직접 연락드립니다. VVIP·VIP·프리미엄 3개 등급 중 어떤 상품이 적합한지 무료 진단해드리며, 견적과 노출 위치 시뮬레이션을 함께 제공합니다.</p>
+</section>
+
+<section class="wrap" style="padding-top:0;padding-bottom:30px">
+  <form id="adqForm" class="adq-form" novalidate>
+    <div class="adq-grid">
+      <div class="adq-field">
+        <label class="adq-label" for="adq-name">성명 <span class="req">*</span></label>
+        <input id="adq-name" name="name" class="adq-input" type="text" required minlength="2" maxlength="20" autocomplete="name" placeholder="홍길동">
+      </div>
+      <div class="adq-field">
+        <label class="adq-label" for="adq-phone">연락처 <span class="req">*</span></label>
+        <input id="adq-phone" name="phone" class="adq-input" type="tel" required pattern="[0-9\\-+\\s()]{{8,20}}" autocomplete="tel" placeholder="010-1234-5678">
+      </div>
+      <div class="adq-field">
+        <label class="adq-label" for="adq-region">지역 <span class="req">*</span></label>
+        <select id="adq-region" name="region" class="adq-select" required>
+          <option value="">— 선택해주세요 —</option>
+          {region_opts}
+          <option value="기타">기타·전국</option>
+        </select>
+      </div>
+      <div class="adq-field">
+        <label class="adq-label" for="adq-tier">희망 광고 등급 (선택)</label>
+        <select id="adq-tier" name="tier" class="adq-select">
+          <option value="">— 추천 받기 —</option>
+          <option value="VVIP">VVIP · 월 44만원~</option>
+          <option value="VIP">VIP · 월 20만원~</option>
+          <option value="프리미엄">프리미엄 · 월 13만원~</option>
+          <option value="미정">상담 후 결정</option>
+        </select>
+      </div>
+      <div class="adq-field full">
+        <label class="adq-label" for="adq-message">전달 메시지 <span class="req">*</span></label>
+        <textarea id="adq-message" name="message" class="adq-text" required minlength="5" maxlength="1000" placeholder="샵 상호, 운영 지역, 희망 게재 시작일, 궁금한 점 등을 자유롭게 작성해주세요."></textarea>
+      </div>
+      <input type="text" name="website" class="adq-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="adq-field full">
+        <button id="adqBtn" class="adq-submit" type="submit">
+          <span class="btn-label">광고문의 보내기 →</span>
+          <span class="btn-spinner" style="display:none">전송 중...</span>
+        </button>
+        <div id="adqResult" class="adq-result"></div>
+        <p class="adq-privacy">제출하시면 <a href="/policy/privacy/">개인정보처리방침</a>에 동의하신 것으로 간주됩니다. 입력한 정보는 광고 상담 응대 목적으로만 사용되며, 응대 종료 후 30일 이내 자동 파기됩니다.</p>
+      </div>
+    </div>
+  </form>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">왜 이 폼인가요?</span>
+    <h2 style="margin-top:8px">광고문의 폼의 장점</h2>
+    <p class="lead" style="margin:14px auto 0">전화·이메일과 동일한 상담이 가능하면서, 야간·주말에도 시점 제약 없이 접수 가능합니다.</p>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">24시간 접수</h3><div class="note-text"><p>평일 영업시간 외에도 신청서를 제출할 수 있어, 본인의 업무 일정에 맞게 활용 가능합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">사전 정리된 상담</h3><div class="note-text"><p>샵 정보·희망 등급·메시지를 미리 정리해 제출하므로, 첫 통화에서 바로 견적·일정 협의가 가능합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">기록 보존</h3><div class="note-text"><p>모든 신청 내역은 운영팀 내부 시스템에 기록되어 응대 누락이 발생하지 않습니다. 추후 동일 사안 재문의 시 이력을 그대로 이어 안내드립니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">100% 무료</h3><div class="note-text"><p>광고 상담·견적·노출 위치 시뮬레이션 모두 무료입니다. 실제 게재 결정 후에만 비용이 발생합니다.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">신청 후 절차</span>
+    <h2 style="margin-top:8px">접수부터 광고 게재까지</h2>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">신청서 접수 (즉시)</h3><div class="note-text"><p>신청서 제출 즉시 운영팀 텔레그램으로 자동 전달됩니다. 평일 영업시간 내 신청은 1~3시간, 야간·주말 신청은 다음 영업일 오전에 회신됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">맞춤 견적 안내 (1영업일)</h3><div class="note-text"><p>샵 정보·지역·희망 등급을 바탕으로 가장 적합한 광고 상품을 무료 진단합니다. 노출 위치 시뮬레이션과 예상 효과 데이터(노출 수·CTR·전환율)를 함께 안내드립니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">결제·계약 (2~3영업일)</h3><div class="note-text"><p>세금계산서 발행 후 계좌이체. 6·12개월 장기 계약 시 분납 협의 가능합니다. 카드 결제도 별도 협의 후 가능합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">광고 게재 (결제 후 1영업일)</h3><div class="note-text"><p>결제 확인 시점부터 광고가 메인·업종·지역 페이지에 자동 노출되며, 광고 상세 페이지(/ad/공고번호/)도 함께 생성됩니다. 구글 채용 검색 색인 등록까지 자동 완료됩니다.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">FAQ</span>
+    <h2 style="margin-top:8px">자주 묻는 질문</h2>
+  </div>
+  <div style="max-width:860px;margin:0 auto">
+"""
+    for q,a in faqs:
+        body += f'<details><summary>{q}<span>+</span></summary><div>{a}</div></details>'
+    body += f"""
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:30px">
+  <div style="padding:40px;border-radius:22px;background:linear-gradient(135deg,rgba(212,175,55,.08),rgba(91,155,255,.04));border:1px solid rgba(212,175,55,.25);text-align:center">
+    <span class="kicker" style="color:#d4af37">자세한 가격은</span>
+    <h2 style="margin:10px 0 14px">광고 상품 안내에서 확인하세요</h2>
+    <p class="lead" style="margin:0 auto 24px">VVIP·VIP·프리미엄 3등급의 상세 단가와 노출 위치를 한 페이지에서 비교할 수 있습니다.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn btn-primary" href="/pricing-ads/">광고 상품 안내 →</a>
+      <a class="btn btn-ghost" href="tel:{COMPANY['tel']}">{COMPANY['tel']} 전화</a>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){{
+  // === Cloudflare Worker 엔드포인트 (배포 후 교체) ===
+  var WORKER_URL = "https://therapyjob-contact.workers.dev/";
+
+  var form = document.getElementById('adqForm');
+  var btn = document.getElementById('adqBtn');
+  var btnLabel = btn.querySelector('.btn-label');
+  var btnSpin = btn.querySelector('.btn-spinner');
+  var result = document.getElementById('adqResult');
+
+  function setBusy(b){{
+    btn.disabled = b;
+    btnLabel.style.display = b ? 'none' : 'inline';
+    btnSpin.style.display = b ? 'inline' : 'none';
+  }}
+  function show(cls, msg){{
+    result.className = 'adq-result ' + cls;
+    result.innerHTML = msg;
+  }}
+
+  form.addEventListener('submit', function(e){{
+    e.preventDefault();
+    if(!form.checkValidity()){{
+      form.reportValidity();
+      return;
+    }}
+    // honeypot
+    if(form.website && form.website.value){{ return; }}
+
+    var data = {{
+      name: form.name.value.trim(),
+      phone: form.phone.value.trim(),
+      region: form.region.value,
+      tier: form.tier.value,
+      message: form.message.value.trim(),
+      page: location.pathname,
+      referrer: document.referrer || '',
+      ts: new Date().toISOString()
+    }};
+
+    setBusy(true);
+    show('', '');
+
+    fetch(WORKER_URL, {{
+      method: 'POST',
+      headers: {{'Content-Type':'application/json'}},
+      body: JSON.stringify(data)
+    }})
+    .then(function(r){{ return r.json().catch(function(){{ return {{ok:r.ok}}; }}); }})
+    .then(function(j){{
+      setBusy(false);
+      if(j && j.ok){{
+        show('ok', '✓ 광고문의가 정상 접수되었습니다.<br>담당 매니저가 평일 1영업일 내(영업시간 신청은 1~3시간 내)에 연락드립니다. 입력하신 연락처를 다시 한 번 확인해주세요.');
+        form.reset();
+      }} else {{
+        show('err', '전송에 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주시거나, 전화 <a href="tel:{COMPANY["tel"]}" style="color:#ffacac;font-weight:700">{COMPANY["tel"]}</a> 또는 이메일 <a href="mailto:{COMPANY["email"]}" style="color:#ffacac;font-weight:700">{COMPANY["email"]}</a>로 직접 문의 부탁드립니다.');
+      }}
+    }})
+    .catch(function(){{
+      setBusy(false);
+      show('err', '네트워크 오류가 발생했습니다. 인터넷 연결을 확인하시거나 전화 <a href="tel:{COMPANY["tel"]}" style="color:#ffacac;font-weight:700">{COMPANY["tel"]}</a>로 직접 문의 부탁드립니다.');
+    }});
+  }});
+}})();
+</script>
+"""
+    return page(title, desc, "/contact-ads/", body, extra_jsonld=extra_ld)

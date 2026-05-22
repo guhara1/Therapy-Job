@@ -56,6 +56,8 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,14,26,.78);backdrop-
 .submenu a:hover{background:rgba(91,155,255,.12);color:var(--blue-1)}
 .cta-pill{background:var(--grad);color:#fff!important;padding:10px 18px!important;border-radius:999px;font-weight:700!important;font-size:13.5px!important;transition:.2s}
 .cta-pill:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(91,155,255,.32)}
+.cta-gold{background:linear-gradient(135deg,#d4af37,#f4d29c);color:#1a1410!important;padding:10px 16px!important;border-radius:999px;font-weight:800!important;font-size:13px!important;letter-spacing:-.01em;transition:.2s}
+.cta-gold:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(212,175,55,.36)}
 .toggle{display:none;font-size:24px;padding:6px 10px}
 @media(max-width:1100px){
   .toggle{display:inline-block}
@@ -284,6 +286,7 @@ def header_html():
     <li><a href="/magazine/">매거진</a></li>
     <li><a href="/reviews/">사례</a></li>
     <li><a href="/pricing-ads/">광고 상품</a></li>
+    <li><a class="cta-gold" href="/contact-ads/">광고문의</a></li>
     <li><a class="cta-pill" href="tel:{COMPANY['tel']}">{COMPANY['tel']}</a></li>
   </ul>
 </nav>
