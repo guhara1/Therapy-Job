@@ -914,8 +914,8 @@ def build_contact_ads():
 
 <script>
 (function(){{
-  // === Cloudflare Worker 엔드포인트 (배포 후 교체) ===
-  var WORKER_URL = "https://therapyjob-contact.workers.dev/";
+  // Cloudflare Pages Function — same-origin endpoint (자동 배포)
+  var WORKER_URL = "/api/contact-ads";
 
   var form = document.getElementById('adqForm');
   var btn = document.getElementById('adqBtn');
