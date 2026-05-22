@@ -151,28 +151,41 @@ def single_tier_block(tier, jobs, include_css=False, padding_top=30):
 </section>"""
 
 def jobs_for_service_tier(service, tier):
-    """업종별 카테고리 페이지용 — 업종 매칭 광고 (선등록순)"""
-    return sorted(
+    """업종별 카테고리 페이지용 — 1순위 업종 매칭 → 2순위 타 업종 보충 (선등록순)"""
+    same = sorted(
         [j for j in SAMPLE_JOBS if j.get("service")==service and j.get("tier")==tier],
         key=lambda j: j.get("registered","")
     )
+    other = sorted(
+        [j for j in SAMPLE_JOBS if j.get("service")!=service and j.get("tier")==tier],
+        key=lambda j: j.get("registered","")
+    )
+    max_c = next(t["max"] for t in AD_TIERS if t["slug"]==tier)
+    return (same + other)[:max_c]
 
 def jobs_for_region_tier(region, tier):
-    """광역 페이지용 — 광역 내 모든 행정구 광고 (선등록순)"""
+    """광역 페이지용 — 1순위 광역 매칭 → 2순위 타 광역 보충 (선등록순). 등급 슬롯 만큼 보장."""
     district_slugs = {slug for slug,_ in DISTRICTS[region["slug"]]}
-    return sorted(
+    same = sorted(
         [j for j in SAMPLE_JOBS if j.get("region_slug") in district_slugs and j.get("tier")==tier],
         key=lambda j: j.get("registered","")
     )
+    other = sorted(
+        [j for j in SAMPLE_JOBS if j.get("region_slug") not in district_slugs and j.get("tier")==tier],
+        key=lambda j: j.get("registered","")
+    )
+    max_c = next(t["max"] for t in AD_TIERS if t["slug"]==tier)
+    return (same + other)[:max_c]
 
 def jobs_for_district_tier(region, district_slug, tier):
-    """행정구 페이지용 — 1순위 행정구 매칭 → 2순위 같은 광역 보충 (선등록순)"""
+    """행정구 페이지용 — 1순위 행정구 → 2순위 같은 광역 → 3순위 타 광역 (선등록순). 등급 슬롯 만큼 보장."""
     district_slugs = {slug for slug,_ in DISTRICTS[region["slug"]]}
-    region_jobs = [j for j in SAMPLE_JOBS if j.get("region_slug") in district_slugs and j.get("tier")==tier]
-    local = sorted([j for j in region_jobs if j.get("region_slug")==district_slug], key=lambda j: j.get("registered",""))
-    backup = sorted([j for j in region_jobs if j.get("region_slug")!=district_slug], key=lambda j: j.get("registered",""))
+    same_region = [j for j in SAMPLE_JOBS if j.get("region_slug") in district_slugs and j.get("tier")==tier]
+    local = sorted([j for j in same_region if j.get("region_slug")==district_slug], key=lambda j: j.get("registered",""))
+    region_backup = sorted([j for j in same_region if j.get("region_slug")!=district_slug], key=lambda j: j.get("registered",""))
+    other_region = sorted([j for j in SAMPLE_JOBS if j.get("region_slug") not in district_slugs and j.get("tier")==tier], key=lambda j: j.get("registered",""))
     max_c = next(t["max"] for t in AD_TIERS if t["slug"]==tier)
-    return (local + backup)[:max_c]
+    return (local + region_backup + other_region)[:max_c]
 
 
 # ─────────────────────────────────────────────
