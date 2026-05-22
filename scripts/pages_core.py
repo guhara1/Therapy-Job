@@ -1740,97 +1740,41 @@ def build_notices_hub():
 # 공지 글 하단 내부 링크 데이터
 NOTICE_INTERNAL = {
     "southeast-asia-scam":{
-        "h2":"안전한 국내 마사지 채용 정보 — 검증된 권역·업종",
-        "intro":"본 사이트는 국내 로드샵 채용만 게재합니다. 해외 채용 정보가 필요한 분도 다음 국내 정상 채용 정보부터 확인하세요.",
-        "groups":[
-            ("검증된 국내 권역 채용",[
-                ("서울 25개 자치구 마사지 채용","/locations/seoul/"),
-                ("경기 31개 시·군 마사지 구인","/locations/gyeonggi/"),
-                ("인천 10개 구·군 채용","/locations/incheon/"),
-                ("부산 16개 구·군 채용","/locations/busan/"),
-            ]),
-            ("국내 정상 업종별 구인",[
-                ("스웨디시 마사지 구인공고","/jobs/swedish/"),
-                ("아로마 마사지 채용","/jobs/aroma/"),
-                ("타이마사지 구인","/jobs/thai/"),
-                ("로미로미 프리미엄 채용","/jobs/lomilomi/"),
-                ("스포츠 마사지 자격 우대","/jobs/sports/"),
-            ]),
-            ("관련 안전 자료",[
-                ("성매매업소 모니터링 강화 안내","/notices/prostitution-monitoring/"),
-                ("부정 광고 신고 채널","/notices/fraud-report-channel/"),
-                ("신규 입직자 안전 가이드","/notices/newcomer-safety/"),
-                ("안전한 일터 고르는 법 (매거진)","/magazine/safe-workplace/"),
-            ]),
-        ]
+        "h2":"안전한 국내 마사지 채용 — 검증된 권역 확인하기",
+        "intro":"본 사이트는 국내 로드샵만 게재합니다. 검증된 정상 채용 정보를 확인하세요.",
+        "links":[
+            ("서울 25개 자치구 마사지 채용","/locations/seoul/"),
+            ("부정 광고 신고 채널 안내","/notices/fraud-report-channel/"),
+            ("안전한 일터 찾는 7가지 위험 신호","/magazine/safe-workplace/"),
+        ],
     },
     "prostitution-monitoring":{
-        "h2":"건전한 마사지 시장 — 운영 원칙·법령·정책 모음",
-        "intro":"본 사이트의 운영 원칙과 신뢰 시스템을 한자리에서 확인할 수 있습니다.",
-        "groups":[
-            ("운영·신뢰 정책",[
-                ("개인정보처리방침","/policy/privacy/"),
-                ("이용약관","/policy/terms/"),
-                ("청소년 보호정책","/policy/youth/"),
-                ("테라피잡 소개·운영팀","/about/"),
-            ]),
-            ("관련 안전 공지",[
-                ("동남아 해외 취업 사기 주의보","/notices/southeast-asia-scam/"),
-                ("부정 광고 신고 채널","/notices/fraud-report-channel/"),
-                ("신규 입직자 안전 가이드","/notices/newcomer-safety/"),
-            ]),
-            ("관련 매거진·시장 정보",[
-                ("안전한 일터 찾는 7가지 위험 신호","/magazine/safe-workplace/"),
-                ("프리랜서 계약 체크리스트","/magazine/contract-checklist/"),
-                ("2026 마사지 관리사 급여 가이드","/magazine/salary-guide-2026/"),
-            ]),
-        ]
+        "h2":"건전한 마사지 시장 — 운영 원칙·정책 모음",
+        "intro":"본 사이트의 신뢰 시스템과 안전 정책을 함께 확인하세요.",
+        "links":[
+            ("동남아 해외 취업 사기 주의 (긴급)","/notices/southeast-asia-scam/"),
+            ("부정 광고 신고 채널","/notices/fraud-report-channel/"),
+            ("청소년 보호정책","/policy/youth/"),
+        ],
     },
     "newcomer-safety":{
-        "h2":"신규 마사지 관리사가 함께 봐야 할 가이드 모음",
-        "intro":"첫 출근 전후로 챙겨야 할 정보를 업종·면접·계약·정착 순서로 정리했습니다.",
-        "groups":[
-            ("업종 선택 가이드",[
-                ("스웨디시 구직 가이드 (신규 입문 적합)","/seekers/swedish/"),
-                ("아로마 마사지 구직","/seekers/aroma/"),
-                ("타이마사지 구직 가이드","/seekers/thai/"),
-                ("로미로미 프리미엄 구직","/seekers/lomilomi/"),
-                ("스포츠 마사지 구직 (자격 우대)","/seekers/sports/"),
-            ]),
-            ("정착·면접·계약 매거진",[
-                ("면접 95% 합격자의 7가지 공통점","/magazine/interview-tips/"),
-                ("프리랜서 계약 체크리스트 9가지","/magazine/contract-checklist/"),
-                ("신규 입직 30일 정착 로드맵","/magazine/newbie-roadmap/"),
-                ("안전한 일터 위험 신호 7가지","/magazine/safe-workplace/"),
-            ]),
-            ("관련 안전 공지",[
-                ("동남아 해외 취업 사기 주의 (긴급)","/notices/southeast-asia-scam/"),
-                ("성매매업소 모니터링 강화","/notices/prostitution-monitoring/"),
-                ("부정 광고 신고 채널 안내","/notices/fraud-report-channel/"),
-            ]),
-        ]
+        "h2":"신규 마사지 관리사가 함께 봐야 할 가이드",
+        "intro":"첫 출근 전후로 챙겨야 할 핵심 자료입니다.",
+        "links":[
+            ("면접 95% 합격자의 공통점 7가지","/magazine/interview-tips/"),
+            ("프리랜서 계약 체크리스트 9가지","/magazine/contract-checklist/"),
+            ("안전한 일터 찾는 7가지 위험 신호","/magazine/safe-workplace/"),
+            ("부정 광고 신고 채널 안내","/notices/fraud-report-channel/"),
+        ],
     },
     "fraud-report-channel":{
-        "h2":"마사지 채용 시장 신뢰 시스템 — 운영 원칙",
-        "intro":"부정 광고 신고는 건전한 시장을 만드는 출발점입니다. 본 사이트의 검증·신뢰 자료를 함께 확인하세요.",
-        "groups":[
-            ("운영·신뢰 정책",[
-                ("이용약관 (광고 게재 규정)","/policy/terms/"),
-                ("개인정보처리방침","/policy/privacy/"),
-                ("청소년 보호정책","/policy/youth/"),
-                ("테라피잡 소개 — 운영팀 실명","/about/"),
-            ]),
-            ("관련 안전 공지",[
-                ("동남아 해외 취업 사기 주의보","/notices/southeast-asia-scam/"),
-                ("성매매업소 모니터링 강화","/notices/prostitution-monitoring/"),
-                ("신규 입직자 안전 가이드","/notices/newcomer-safety/"),
-            ]),
-            ("검증된 권역·관련 매거진",[
-                ("서울 25개 자치구 정상 채용","/locations/seoul/"),
-                ("경기 31개 시·군 정상 채용","/locations/gyeonggi/"),
-                ("안전한 일터 찾는 법 (매거진)","/magazine/safe-workplace/"),
-            ]),
-        ]
+        "h2":"마사지 채용 시장 신뢰 시스템 — 관련 자료",
+        "intro":"본 사이트의 검증 시스템과 안전 정책을 함께 확인하세요.",
+        "links":[
+            ("동남아 해외 취업 사기 주의보","/notices/southeast-asia-scam/"),
+            ("성매매업소 모니터링 강화 안내","/notices/prostitution-monitoring/"),
+            ("안전한 일터 찾는 법 (매거진)","/magazine/safe-workplace/"),
+        ],
     },
 }
 
@@ -1839,7 +1783,7 @@ def _notice_link_block(slug):
     data = NOTICE_INTERNAL.get(slug)
     if not data:
         return ""
-    return internal_link_section(data["h2"], data["intro"], data["groups"])
+    return internal_link_section(data["h2"], data["intro"], data["links"])
 
 
 def build_notice_article(n):
