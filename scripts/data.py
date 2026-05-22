@@ -14,7 +14,7 @@ COMPANY = {
     "tel": "0508-202-4690",
     "tel_intl": "+82-508-202-4690",
     "tel_hours": "평일 10:00 ~ 19:00",
-    "email": "support@therapyjob.co.kr",
+    "email": "help@therapyjob.club",
     "privacy_officer": "김수환",
     "domain": "therapyjob.co.kr",
     "base_url": "https://therapyjob.co.kr",
