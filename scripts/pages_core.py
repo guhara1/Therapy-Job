@@ -1740,7 +1740,7 @@ def build_notices_hub():
 # 공지 글 하단 내부 링크 데이터
 NOTICE_INTERNAL = {
     "southeast-asia-scam":{
-        "h2":"안전한 국내 마사지 채용 — 검증된 권역 확인하기",
+        "h2":"동남아 마사지 사기 피하고 안전한 국내 채용 찾기 — 검증된 권역 안내",
         "intro":"본 사이트는 국내 로드샵만 게재합니다. 검증된 정상 채용 정보를 확인하세요.",
         "links":[
             ("서울 25개 자치구 마사지 채용","/locations/seoul/"),
@@ -1749,7 +1749,7 @@ NOTICE_INTERNAL = {
         ],
     },
     "prostitution-monitoring":{
-        "h2":"건전한 마사지 시장 — 운영 원칙·정책 모음",
+        "h2":"성매매 없는 건전한 마사지 시장 — 본 사이트 운영 원칙·법령 신뢰 시스템",
         "intro":"본 사이트의 신뢰 시스템과 안전 정책을 함께 확인하세요.",
         "links":[
             ("동남아 해외 취업 사기 주의 (긴급)","/notices/southeast-asia-scam/"),
@@ -1758,7 +1758,7 @@ NOTICE_INTERNAL = {
         ],
     },
     "newcomer-safety":{
-        "h2":"신규 마사지 관리사가 함께 봐야 할 가이드",
+        "h2":"마사지 관리사 첫 출근 전 필독 — 면접·계약·안전 자료 종합 모음",
         "intro":"첫 출근 전후로 챙겨야 할 핵심 자료입니다.",
         "links":[
             ("면접 95% 합격자의 공통점 7가지","/magazine/interview-tips/"),
@@ -1768,7 +1768,7 @@ NOTICE_INTERNAL = {
         ],
     },
     "fraud-report-channel":{
-        "h2":"마사지 채용 시장 신뢰 시스템 — 관련 자료",
+        "h2":"부정 광고 신고로 만드는 건전한 마사지 채용 시장 — 신뢰 시스템 안내",
         "intro":"본 사이트의 검증 시스템과 안전 정책을 함께 확인하세요.",
         "links":[
             ("동남아 해외 취업 사기 주의보","/notices/southeast-asia-scam/"),

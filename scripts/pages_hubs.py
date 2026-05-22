@@ -11,7 +11,7 @@ from ads import render_all_tiers, single_tier_block, jobs_for_service_tier
 # ─────────────────────────────────────────────
 MAGAZINE_INTERNAL = {
     "salary-guide-2026": {
-        "h2":"지역·업종별 마사지 관리사 급여 시세 자세히 보기",
+        "h2":"마사지 관리사 월급 얼마? 강남·분당·해운대 권역별 일급 시세 2026 비교",
         "intro":"권역·업종에 따라 단가가 크게 달라집니다. 본인 조건에 맞는 시세를 확인하세요.",
         "links":[
             ("서울 강남구 마사지 관리사 시세","/locations/seoul/gangnam/"),
@@ -21,7 +21,7 @@ MAGAZINE_INTERNAL = {
         ],
     },
     "interview-tips": {
-        "h2":"마사지샵 면접 합격을 위한 추가 가이드",
+        "h2":"마사지샵 면접 질문 95% 합격자 답변 BEST 7 + 30일 정착 로드맵",
         "intro":"면접 통과 후 정착·계약까지 한 번에 챙기는 핵심 자료.",
         "links":[
             ("신규 입직 30일 정착 로드맵","/magazine/newbie-roadmap/"),
@@ -30,7 +30,7 @@ MAGAZINE_INTERNAL = {
         ],
     },
     "contract-checklist": {
-        "h2":"프리랜서 계약 분쟁 예방 — 추가 자료",
+        "h2":"마사지 프리랜서 계약서 분쟁 218건 분석 — 정산·세금·인센티브 9가지 체크",
         "intro":"계약 분쟁의 80%는 사전 정보로 막을 수 있습니다. 함께 보면 좋은 자료입니다.",
         "links":[
             ("2026 마사지 관리사 급여 가이드","/magazine/salary-guide-2026/"),
@@ -39,7 +39,7 @@ MAGAZINE_INTERNAL = {
         ],
     },
     "newbie-roadmap": {
-        "h2":"신규 마사지 관리사를 위한 추가 가이드",
+        "h2":"마사지 관리사 첫 출근 30일 — 단골 5명 만들기 + 안전 가이드 정리",
         "intro":"입직 30일 동안 챙겨야 할 면접·계약·안전 정보입니다.",
         "links":[
             ("면접 95% 합격자의 공통점 7가지","/magazine/interview-tips/"),
@@ -48,7 +48,7 @@ MAGAZINE_INTERNAL = {
         ],
     },
     "shop-vs-freelance": {
-        "h2":"샵 소속 vs 출장 프리랜서 — 추가 비교 자료",
+        "h2":"마사지샵 소속 vs 출장 프리랜서 — 수입·세금·안정성 5가지 비교 2026",
         "intro":"수입·세금·안정성 측면의 더 깊은 비교는 다음 자료를 참고하세요.",
         "links":[
             ("2026 마사지 관리사 급여 가이드","/magazine/salary-guide-2026/"),
@@ -57,7 +57,7 @@ MAGAZINE_INTERNAL = {
         ],
     },
     "safe-workplace": {
-        "h2":"안전한 마사지 일터 찾기 — 안전 자료",
+        "h2":"안전한 마사지 일터 고르는 법 — 위험 신호 7가지 + 운영팀 안전 공지",
         "intro":"운영팀 공식 안전 공지와 함께 보시면 더 정확한 판단이 가능합니다.",
         "links":[
             ("동남아 해외 취업 사기 주의보 (긴급)","/notices/southeast-asia-scam/"),
@@ -67,7 +67,7 @@ MAGAZINE_INTERNAL = {
         ],
     },
     "newcomer-shop-guide": {
-        "h2":"신축 마사지샵 채용 정보 더 보기",
+        "h2":"2026 신축 마사지샵 채용 — 성수동·동탄·송도 권역 트렌드 분석",
         "intro":"신축 강세 권역과 신규 입직 가이드를 함께 확인하세요.",
         "links":[
             ("서울 성수동 신흥 트렌드 권역","/locations/seoul/seongdong/"),
