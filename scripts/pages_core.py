@@ -1,6 +1,6 @@
 """핵심 페이지 생성 — 메인, About, Contact, Pricing, Reviews, Policy"""
 from templates import page, breadcrumb_ld, faq_ld, COMPANY
-from data import SERVICES, NATIONALITIES, REGIONS, MAGAZINE, SAMPLE_JOBS, TEAM, DISTRICTS
+from data import SERVICES, NATIONALITIES, REGIONS, MAGAZINE, SAMPLE_JOBS, TEAM, DISTRICTS, AD_TIERS
 
 # ─────────────────────────────────────────────
 # 메인 페이지
@@ -9,17 +9,48 @@ def build_index():
     title = f"{COMPANY['brand_kr']} — 전국 마사지 구인구직 1번지 | 스웨디시·아로마·타이·로미로미·스포츠"
     desc = f"마사지 관리사 구인구직 · 전국 82개 행정구 · 5,820여건 채용 공고 · 매일 업데이트. 샵·관리사 연결 평균 47시간. 직업정보제공사업 신고 {COMPANY['job_info_reg']}."
 
-    job_cards = ""
-    for j in SAMPLE_JOBS:
-        svc = next(s for s in SERVICES if s["slug"]==j["service"])
-        badge = f'<span class="badge {j["badge"]}">{j["badge"]}</span>' if j["badge"] else ""
-        job_cards += f"""<a class="job-card reveal" href="/jobs/{j['service']}/">
-  <div class="top"><span class="kicker">{svc['kicker']}</span>{badge}</div>
-  <h3>{j['title']}</h3>
-  <div class="meta"><span>📍 {j['region']}</span></div>
-  <div class="pay">{j['pay']}</div>
-  <div class="id">공고 #{j['id']}</div>
+    # ─── 광고 3단계 (VVIP / VIP / 프리미엄) ───
+    # 같은 등급 내 선등록순 (registered 오름차순 → 먼저 등록된 공고가 위)
+    def tier_cards(tier_slug, layout="grid"):
+        tier = next(t for t in AD_TIERS if t["slug"]==tier_slug)
+        jobs = sorted(
+            [j for j in SAMPLE_JOBS if j.get("tier")==tier_slug],
+            key=lambda x: x["registered"]
+        )[:tier["max"]]
+        cards = ""
+        for idx, j in enumerate(jobs):
+            svc = next(s for s in SERVICES if s["slug"]==j["service"])
+            perks = "".join(f'<span class="ad-perk">{p}</span>' for p in j.get("perks",[]))
+            if tier_slug == "vvip":
+                cards += f"""<a class="ad-card ad-vvip reveal" href="/jobs/{j['service']}/">
+  <div class="ad-rank">#{idx+1:02d}</div>
+  <div class="ad-tier-label">VVIP</div>
+  <div class="ad-body">
+    <div class="ad-meta-top"><span class="kicker">{svc['kicker']}</span><span class="ad-id">공고 #{j['id']}</span></div>
+    <h3 class="ad-title">{j['title']}</h3>
+    <div class="ad-shop">{j['shop']}</div>
+    <div class="ad-meta-row"><span>📍 {j['region']}</span></div>
+    <div class="ad-perks">{perks}</div>
+    <div class="ad-pay-row"><span class="ad-pay">{j['pay']}</span><span class="ad-arrow">상세 →</span></div>
+  </div>
 </a>"""
+            elif tier_slug == "vip":
+                cards += f"""<a class="ad-card ad-vip reveal" href="/jobs/{j['service']}/">
+  <div class="ad-rank-sm">#{idx+1:02d}</div>
+  <div class="ad-meta-top"><span class="kicker">{svc['kicker']}</span><span class="ad-tier-label-sm">VIP</span></div>
+  <h3 class="ad-title-sm">{j['title']}</h3>
+  <div class="ad-shop-sm">{j['shop']} · {j['region']}</div>
+  <div class="ad-perks">{perks}</div>
+  <div class="ad-pay-row"><span class="ad-pay-sm">{j['pay']}</span><span class="ad-id">#{j['id']}</span></div>
+</a>"""
+            else:  # premium
+                cards += f"""<a class="ad-card ad-premium reveal" href="/jobs/{j['service']}/">
+  <div class="ad-meta-top"><span class="kicker" style="font-size:10px">{svc['kicker'].split(' · ')[0]}</span><span class="ad-tier-label-xs">PREMIUM</span></div>
+  <h3 class="ad-title-xs">{j['title']}</h3>
+  <div class="ad-meta-row"><span>{j['region']}</span></div>
+  <div class="ad-pay-row"><span class="ad-pay-xs">{j['pay']}</span><span class="ad-id">#{j['id']}</span></div>
+</a>"""
+        return cards
 
     svc_cards = ""
     for s in SERVICES:
@@ -136,14 +167,86 @@ def build_index():
   <style>@keyframes scroll{{to{{transform:translateX(-50%)}}}}</style>
 </section>
 
-<section class="wrap">
-  <div style="text-align:center;max-width:760px;margin:0 auto 60px">
-    <span class="kicker">FEATURED LISTINGS</span>
-    <h2>오늘의 추천 공고</h2>
-    <p class="lead" style="margin:18px auto 0">전국에서 새로 등록된 마사지 채용 공고 중, 단가·근무 조건이 검증된 8건을 선별했습니다.</p>
+<style>
+.ad-card{{display:block;border-radius:18px;padding:24px 26px;transition:.25s;position:relative;overflow:hidden}}
+.ad-card:hover{{transform:translateY(-3px)}}
+.ad-perk{{display:inline-block;padding:3px 9px;border-radius:6px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:11px;color:var(--muted);margin-right:6px;margin-top:4px}}
+.ad-pay-row{{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}}
+.ad-arrow{{font-size:12px;color:var(--blue-1);font-weight:700}}
+.ad-id{{font-size:10.5px;color:var(--dim);letter-spacing:.06em}}
+.ad-meta-top{{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}}
+.ad-meta-row{{font-size:12.5px;color:var(--muted);margin-top:4px}}
+/* VVIP — 골드, 대형 */
+.ad-vvip{{background:linear-gradient(135deg,#1a1410 0%,#2a1f12 100%);border:1px solid rgba(212,175,55,.35);box-shadow:0 8px 28px rgba(0,0,0,.4)}}
+.ad-vvip::before{{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:linear-gradient(90deg,#d4af37,#f4d29c,#d4af37)}}
+.ad-vvip:hover{{border-color:rgba(212,175,55,.7);box-shadow:0 14px 38px rgba(212,175,55,.18)}}
+.ad-vvip .ad-rank{{position:absolute;top:18px;right:22px;font-family:"Cormorant Garamond",serif;font-size:38px;font-style:italic;font-weight:300;color:rgba(212,175,55,.5);line-height:1}}
+.ad-vvip .ad-tier-label{{display:inline-block;padding:5px 12px;background:linear-gradient(135deg,#d4af37,#f4d29c);color:#1a1410;font-size:10.5px;letter-spacing:.22em;font-weight:800;border-radius:5px;margin-bottom:14px}}
+.ad-vvip .ad-title{{font-size:20px;font-weight:800;letter-spacing:-.022em;line-height:1.35;margin-bottom:6px;color:#f4d29c}}
+.ad-vvip .ad-shop{{font-size:13.5px;color:#d4af37;font-weight:600;margin-bottom:8px}}
+.ad-vvip .ad-pay{{font-size:18px;font-weight:800;color:#f4d29c}}
+.ad-vvip .kicker{{color:#d4af37}}
+/* VIP — 블루, 중형 */
+.ad-vip{{background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid rgba(123,176,255,.32)}}
+.ad-vip::before{{content:"";position:absolute;left:0;top:0;right:0;height:2px;background:var(--grad)}}
+.ad-vip:hover{{border-color:rgba(123,176,255,.6);box-shadow:0 12px 32px rgba(91,155,255,.15)}}
+.ad-vip .ad-rank-sm{{position:absolute;top:18px;right:22px;font-family:"Cormorant Garamond",serif;font-size:28px;font-style:italic;font-weight:300;color:rgba(123,176,255,.45);line-height:1}}
+.ad-vip .ad-tier-label-sm{{display:inline-block;padding:3px 10px;background:var(--grad);color:#fff;font-size:10px;letter-spacing:.2em;font-weight:800;border-radius:4px}}
+.ad-vip .ad-title-sm{{font-size:17px;font-weight:800;letter-spacing:-.02em;line-height:1.4;margin:8px 0 4px}}
+.ad-vip .ad-shop-sm{{font-size:12.5px;color:var(--muted);margin-bottom:6px}}
+.ad-vip .ad-pay-sm{{font-size:15px;font-weight:800;color:var(--blue-1)}}
+/* 프리미엄 — 그레이, 컴팩트 */
+.ad-premium{{background:var(--surface);border:1px solid var(--line);padding:18px 20px}}
+.ad-premium:hover{{border-color:rgba(160,168,190,.4)}}
+.ad-premium .ad-tier-label-xs{{font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--dim);padding:2px 7px;border:1px solid var(--line);border-radius:4px}}
+.ad-premium .ad-title-xs{{font-size:14.5px;font-weight:700;line-height:1.4;margin:6px 0 4px;color:var(--text)}}
+.ad-premium .ad-pay-xs{{font-size:13.5px;font-weight:700;color:var(--text)}}
+.ad-premium .ad-pay-row{{margin-top:10px;padding-top:10px}}
+/* 등급 섹션 헤더 */
+.ad-section-head{{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:30px;flex-wrap:wrap;gap:14px}}
+.ad-section-head h2{{margin-bottom:6px}}
+.ad-section-sub{{font-size:13px;color:var(--muted);letter-spacing:.06em}}
+.ad-section-order{{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}}
+</style>
+
+<section class="wrap" style="padding-bottom:30px">
+  <div class="ad-section-head">
+    <div>
+      <span class="kicker" style="color:#d4af37">VVIP · 최상단 노출</span>
+      <h2>VVIP 채용정보</h2>
+      <div class="ad-section-sub">메인 페이지 최상단 단독 영역 · 등록 순서대로 노출</div>
+    </div>
+    <span class="ad-section-order" style="color:#d4af37;border-color:rgba(212,175,55,.4)">선등록순 정렬</span>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px">{job_cards}</div>
-  <div style="text-align:center;margin-top:44px"><a class="btn btn-ghost" href="/jobs/">전체 공고 보기 →</a></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px">{tier_cards("vvip")}</div>
+</section>
+
+<section class="wrap" style="padding-top:0;padding-bottom:30px">
+  <div class="ad-section-head">
+    <div>
+      <span class="kicker" style="color:var(--blue-1)">VIP · 우선 노출</span>
+      <h2>VIP 채용정보</h2>
+      <div class="ad-section-sub">메인 페이지 두 번째 영역 · 등록 순서대로 노출</div>
+    </div>
+    <span class="ad-section-order" style="color:var(--blue-1);border-color:rgba(123,176,255,.4)">선등록순 정렬</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">{tier_cards("vip")}</div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div class="ad-section-head">
+    <div>
+      <span class="kicker" style="color:var(--muted)">PREMIUM · 기본 노출</span>
+      <h2>프리미엄 채용정보</h2>
+      <div class="ad-section-sub">메인 페이지 세 번째 영역 · 등록 제한 없음</div>
+    </div>
+    <span class="ad-section-order">등록 제한 없음</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">{tier_cards("premium")}</div>
+  <div style="text-align:center;margin-top:44px">
+    <a class="btn btn-ghost" href="/jobs/">전체 공고 보기 →</a>
+    <a class="btn btn-primary" href="/contact/" style="margin-left:8px">광고 등록 문의 →</a>
+  </div>
 </section>
 
 <section class="wrap" style="padding-top:0">

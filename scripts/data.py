@@ -495,17 +495,68 @@ MAGAZINE = [
 ]
 
 # ─────────────────────────────────────────────
-# 샘플 구인공고 (메인·허브 노출용)
+# 광고 공고 — 3단계 (VVIP / VIP / 프리미엄)
+# 같은 등급 내에서는 선등록순 정렬 (등록일 오름차순)
 # ─────────────────────────────────────────────
 SAMPLE_JOBS = [
-    {"id":"J26-3801","title":"강남 프리미엄 스웨디시샵 정규 관리사","region":"서울 강남구 역삼동","service":"swedish","pay":"일 18만~24만원","badge":"FAST"},
-    {"id":"J26-3812","title":"분당 판교 아로마 전문 관리사 모집","region":"경기 성남시 판교동","service":"aroma","pay":"일 16만~22만원","badge":"NEW"},
-    {"id":"J26-3825","title":"해운대 마린시티 로미로미 채용","region":"부산 해운대구 우동","service":"lomilomi","pay":"일 20만~28만원","badge":"BEST"},
-    {"id":"J26-3833","title":"잠실 송파 타이마사지 경력 우대","region":"서울 송파구 잠실동","service":"thai","pay":"일 17만~26만원","badge":""},
-    {"id":"J26-3841","title":"성수동 신축 스포츠케어 관리사","region":"서울 성동구 성수동","service":"sports","pay":"일 19만~28만원","badge":"NEW"},
-    {"id":"J26-3855","title":"송도 국제도시 스웨디시 정규","region":"인천 연수구 송도동","service":"swedish","pay":"일 15만~22만원","badge":""},
-    {"id":"J26-3868","title":"홍대 합정 야간 아로마 관리사","region":"서울 마포구 합정동","service":"aroma","pay":"일 18만~25만원","badge":"FAST"},
-    {"id":"J26-3877","title":"청담동 럭셔리 스파 로미로미","region":"서울 강남구 청담동","service":"lomilomi","pay":"일 22만~30만원","badge":"BEST"},
+    # ─── VVIP (최상단, 대형 카드, 최대 4건) ───
+    {"id":"J26-3801","tier":"vvip","registered":"2026-05-18","title":"강남 프리미엄 스웨디시샵 정규 관리사","region":"서울 강남구 역삼동","service":"swedish","pay":"일 18만~24만원","shop":"라움 스파","perks":["인센티브 55%","주 5일 · 야간","숙소 지원"]},
+    {"id":"J26-3812","tier":"vvip","registered":"2026-05-19","title":"청담동 럭셔리 스파 로미로미 채용","region":"서울 강남구 청담동","service":"lomilomi","pay":"일 22만~30만원","shop":"엘리시안 스파","perks":["인센티브 50%","주간 전담","교통비 별도"]},
+    {"id":"J26-3825","tier":"vvip","registered":"2026-05-20","title":"해운대 마린시티 로미로미","region":"부산 해운대구 우동","service":"lomilomi","pay":"일 20만~28만원","shop":"오션 테라피","perks":["일정산","외국인 고객 라인","숙소 지원"]},
+    {"id":"J26-3833","tier":"vvip","registered":"2026-05-21","title":"분당 판교 아로마 전문 관리사","region":"경기 성남시 판교동","service":"aroma","pay":"일 19만~26만원","shop":"파인 아로마","perks":["인센티브 52%","주정산","평일 낮 강세"]},
+
+    # ─── VIP (중단, 중형 카드, 6~8건) ───
+    {"id":"J26-3841","tier":"vip","registered":"2026-05-15","title":"잠실 송파 타이마사지 경력 우대","region":"서울 송파구 잠실동","service":"thai","pay":"일 17만~26만원","shop":"실론 타이","perks":["인센티브 50%","주 5일"]},
+    {"id":"J26-3848","tier":"vip","registered":"2026-05-16","title":"성수동 신축 스포츠케어 관리사","region":"서울 성동구 성수동","service":"sports","pay":"일 19만~28만원","shop":"리얼 리커버리","perks":["KSPO 우대","주간 라인"]},
+    {"id":"J26-3855","tier":"vip","registered":"2026-05-17","title":"송도 국제도시 스웨디시 정규","region":"인천 연수구 송도동","service":"swedish","pay":"일 15만~22만원","shop":"송도 웰니스","perks":["외국인 응대","주 5일"]},
+    {"id":"J26-3863","tier":"vip","registered":"2026-05-18","title":"홍대 합정 야간 아로마 관리사","region":"서울 마포구 합정동","service":"aroma","pay":"일 18만~25만원","shop":"문라이트 아로마","perks":["야간 전담","교통비 별도"]},
+    {"id":"J26-3871","tier":"vip","registered":"2026-05-19","title":"서면 부산진 스웨디시 즉시 출근","region":"부산 부산진구 부전동","service":"swedish","pay":"일 16만~23만원","shop":"부산 라움","perks":["일정산","숙소 지원"]},
+    {"id":"J26-3878","tier":"vip","registered":"2026-05-20","title":"수원 영통 신축 프리미엄 라인","region":"경기 수원시 영통동","service":"swedish","pay":"일 17만~24만원","shop":"광교 스파","perks":["주간 전담","주 5일"]},
+
+    # ─── 프리미엄 (하단, 컴팩트 카드, 등록 제한 없음) ───
+    {"id":"J26-3902","tier":"premium","registered":"2026-05-10","title":"강서 화곡 스웨디시 주간 근무","region":"서울 강서구 화곡동","service":"swedish","pay":"일 14만~20만원","shop":"화곡 테라피","perks":["주간"]},
+    {"id":"J26-3908","tier":"premium","registered":"2026-05-11","title":"부평 산곡 타이 경력 우대","region":"인천 부평구 산곡동","service":"thai","pay":"일 15만~22만원","shop":"부평 타이","perks":["주 5일"]},
+    {"id":"J26-3914","tier":"premium","registered":"2026-05-12","title":"일산 백석 아로마 관리사","region":"경기 고양시 백석동","service":"aroma","pay":"일 14만~21만원","shop":"일산 아로마","perks":["주간"]},
+    {"id":"J26-3919","tier":"premium","registered":"2026-05-13","title":"동래 온천동 스웨디시","region":"부산 동래구 온천동","service":"swedish","pay":"일 13만~20만원","shop":"온천 스파","perks":["단골 인수"]},
+    {"id":"J26-3923","tier":"premium","registered":"2026-05-14","title":"노원 상계 야간 라인","region":"서울 노원구 상계동","service":"swedish","pay":"일 15만~21만원","shop":"상계 테라피","perks":["야간"]},
+    {"id":"J26-3927","tier":"premium","registered":"2026-05-15","title":"안양 평촌 스포츠 케어","region":"경기 안양시 평촌동","service":"sports","pay":"일 16만~22만원","shop":"평촌 스포츠","perks":["주간"]},
+    {"id":"J26-3931","tier":"premium","registered":"2026-05-16","title":"용산 한남 외국인 라인","region":"서울 용산구 한남동","service":"aroma","pay":"일 17만~24만원","shop":"한남 부티크","perks":["외국인 응대"]},
+    {"id":"J26-3935","tier":"premium","registered":"2026-05-17","title":"중구 명동 호텔 출장","region":"서울 중구 명동","service":"swedish","pay":"일 16만~22만원","shop":"명동 스파","perks":["출장 라인"]},
+    {"id":"J26-3939","tier":"premium","registered":"2026-05-18","title":"광안리 수영 아로마","region":"부산 수영구 광안동","service":"aroma","pay":"일 14만~21만원","shop":"광안 아로마","perks":["주간"]},
+    {"id":"J26-3943","tier":"premium","registered":"2026-05-19","title":"미사 하남 신축 샵","region":"경기 하남시 미사동","service":"swedish","pay":"일 15만~21만원","shop":"미사 웰니스","perks":["신축"]},
+    {"id":"J26-3947","tier":"premium","registered":"2026-05-20","title":"구로 디지털단지 퇴근 라인","region":"서울 구로구 구로동","service":"swedish","pay":"일 14만~20만원","shop":"구로 라움","perks":["야간"]},
+    {"id":"J26-3951","tier":"premium","registered":"2026-05-21","title":"동탄 신도시 프리미엄","region":"경기 화성시 동탄동","service":"aroma","pay":"일 16만~22만원","shop":"동탄 아로마","perks":["신축"]},
+]
+
+# 광고 등급 정의
+AD_TIERS = [
+    {
+        "slug":"vvip","name":"VVIP 채용정보",
+        "kicker":"TOP TIER · 최상단 노출",
+        "desc":"메인 페이지 최상단 단독 노출 · 모든 페이지 헤더 배너 · PC·모바일 전용 위치",
+        "order":"선등록순",
+        "accent_color":"#d4af37",
+        "border_color":"rgba(212,175,55,.4)",
+        "max":4,
+    },
+    {
+        "slug":"vip","name":"VIP 채용정보",
+        "kicker":"PRIORITY · 우선 노출",
+        "desc":"메인 페이지 두 번째 영역 노출 · PC·모바일 광고 위치 · 카테고리 페이지 상단",
+        "order":"선등록순",
+        "accent_color":"#7bb0ff",
+        "border_color":"rgba(123,176,255,.4)",
+        "max":8,
+    },
+    {
+        "slug":"premium","name":"프리미엄 채용정보",
+        "kicker":"STANDARD · 기본 노출",
+        "desc":"메인 페이지 세 번째 영역 노출 · PC·모바일 광고 위치 · 등록 제한 없음",
+        "order":"등록 제한 없음",
+        "accent_color":"#a0a8be",
+        "border_color":"rgba(160,168,190,.3)",
+        "max":12,
+    },
 ]
 
 # ─────────────────────────────────────────────

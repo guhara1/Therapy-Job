@@ -1,6 +1,6 @@
 """허브·서브 페이지 — 구인공고, 구직 가이드, 관리사, 매거진"""
 from templates import page, breadcrumb_ld, faq_ld, COMPANY
-from data import SERVICES, NATIONALITIES, REGIONS, MAGAZINE, SAMPLE_JOBS, DISTRICTS
+from data import SERVICES, NATIONALITIES, REGIONS, MAGAZINE, SAMPLE_JOBS, DISTRICTS, AD_TIERS
 
 # ─────────────────────────────────────────────
 # 구인공고 허브
@@ -18,10 +18,15 @@ def build_jobs_hub():
   <div class="pay">{s['pay_range']}</div>
 </a>"""
 
+    # 광고 등급 순(VVIP→VIP→Premium) → 같은 등급 내 선등록순
+    tier_order = {"vvip":0,"vip":1,"premium":2}
+    sorted_jobs = sorted(SAMPLE_JOBS, key=lambda j:(tier_order.get(j.get("tier"),9), j.get("registered","")))
+    tier_labels = {"vvip":("VVIP","#d4af37"),"vip":("VIP","#7bb0ff"),"premium":("PREMIUM","#a0a8be")}
     job_cards = ""
-    for j in SAMPLE_JOBS:
+    for j in sorted_jobs:
         svc = next(s for s in SERVICES if s["slug"]==j["service"])
-        badge = f'<span class="badge {j["badge"]}">{j["badge"]}</span>' if j["badge"] else ""
+        tlbl, tcol = tier_labels.get(j.get("tier","premium"))
+        badge = f'<span class="badge" style="background:rgba(123,176,255,.18);color:{tcol};font-size:9.5px;letter-spacing:.2em;font-weight:800;padding:3px 8px;border-radius:4px">{tlbl}</span>'
         job_cards += f"""<a class="job-card reveal" href="/jobs/{j['service']}/">
   <div class="top"><span class="kicker">{svc['kicker']}</span>{badge}</div>
   <h3>{j['title']}</h3>
