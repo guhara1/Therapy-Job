@@ -1196,7 +1196,7 @@ def build_shop_sale():
 
   <div class="shop-count">
     <span><strong id="shop-result-count">{len(SHOP_SALES)}</strong>건의 매물</span>
-    <span style="color:var(--dim);font-size:11.5px;letter-spacing:.08em">SAMPLE LISTINGS · 매수 문의는 <a href="/contact-ads/" style="color:var(--blue-1)">광고문의</a>로</span>
+    <span style="color:var(--dim);font-size:11.5px;letter-spacing:.08em">SAMPLE LISTINGS · 매수 문의 <a href="tel:{COMPANY['tel']}" style="color:var(--blue-1);font-weight:700">{COMPANY['tel']}</a></span>
   </div>
 
   <div class="shop-grid" id="shop-grid">{shop_cards}</div>
@@ -1315,13 +1315,14 @@ def build_shop_sale():
 
 <section class="wrap" style="padding-top:40px">
   <div style="padding:50px 40px;border-radius:22px;background:linear-gradient(135deg,rgba(212,175,55,.08),rgba(91,155,255,.04));border:1px solid rgba(212,175,55,.25);text-align:center">
-    <span class="kicker" style="color:#d4af37">매물 등록 문의</span>
-    <h2 style="margin:10px 0 14px">검증된 매수자와 1:1 매칭</h2>
-    <p class="lead" style="margin:0 auto 24px">광고문의 폼에 \"업소 매매 등록\"을 명시해 신청해주시면 평일 1영업일 내 담당자가 연락드립니다.</p>
+    <span class="kicker" style="color:#d4af37">매수·매도 문의</span>
+    <h2 style="margin:10px 0 14px">고객센터로 바로 연결됩니다</h2>
+    <p class="lead" style="margin:0 auto 24px">매수 의향·매물 등록 모두 고객센터 전화로 직접 상담드립니다. 평일 영업시간 내 즉시 연결, 야간·주말은 다음 영업일 회신.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <a class="btn btn-primary" href="/contact-ads/">광고문의 폼 →</a>
-      <a class="btn btn-ghost" href="tel:{COMPANY['tel']}">{COMPANY['tel']} 전화</a>
+      <a class="btn btn-primary" href="tel:{COMPANY['tel']}">{COMPANY['tel']} 전화</a>
+      <a class="btn btn-ghost" href="mailto:{COMPANY['email']}?subject=업소 매매 문의">이메일 문의</a>
     </div>
+    <p style="font-size:12px;color:var(--dim);margin-top:18px">{COMPANY['tel_hours']}</p>
   </div>
 </section>
 """

@@ -385,18 +385,18 @@ idle(function(){
 """
 
 def global_banner(path):
-    """모든 페이지 하단에 노출되는 광고문의 배너. /contact-ads/ 페이지에서는 자기 자신을 가리키므로 노출 제외."""
+    """모든 페이지 하단 배너 — 클릭 시 고객센터 전화 연결. /contact-ads/ 페이지는 자체 폼이 있어 제외."""
     if path.startswith("/contact-ads"):
         return ""
-    return """
+    return f"""
 <section style="max-width:1240px;margin:60px auto 0;padding:0 24px">
-  <a href="/contact-ads/" aria-label="광고문의 — 마사지 구인구직 광고 등록 신청 페이지로 이동" style="display:block;border-radius:20px;overflow:hidden;border:1px solid rgba(123,176,255,.22);transition:transform .25s,box-shadow .25s,border-color .25s">
+  <a href="tel:{COMPANY['tel']}" aria-label="고객센터 {COMPANY['tel']} 전화 — 매수·매매·광고 문의" style="display:block;border-radius:20px;overflow:hidden;border:1px solid rgba(123,176,255,.22);transition:transform .25s,box-shadow .25s,border-color .25s">
     <picture>
       <source type="image/webp" srcset="/assets/ads/shop-banner.webp 1x, /assets/ads/shop-banner@2x.webp 2x">
       <img src="/assets/ads/shop-banner.jpg" alt="마사지 구인구직 — therapyjob.club · 지금 확인하기" width="1200" height="400" loading="lazy" decoding="async" style="width:100%;height:auto;display:block">
     </picture>
   </a>
-  <style>section > a[aria-label^="광고문의"]:hover{transform:translateY(-3px);box-shadow:0 20px 48px rgba(91,155,255,.20);border-color:rgba(123,176,255,.5)}</style>
+  <style>section > a[aria-label^="고객센터"]:hover{{transform:translateY(-3px);box-shadow:0 20px 48px rgba(91,155,255,.20);border-color:rgba(123,176,255,.5)}}</style>
 </section>
 """
 
