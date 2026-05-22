@@ -560,6 +560,121 @@ AD_TIERS = [
 ]
 
 # ─────────────────────────────────────────────
+# 업소 매매 샘플 매물 (/shop-sale/)
+# ─────────────────────────────────────────────
+SHOP_SALES = [
+    {
+        "id":"S26-001","status":"매매중","title":"강남 역삼동 프리미엄 스웨디시 스파 양도",
+        "region_slug":"seoul","region_kr":"서울","district_slug":"gangnam","district_kr":"강남구",
+        "location_sub":"역삼역 3번 출구 도보 5분",
+        "service":"swedish","service_kr":"스웨디시",
+        "size_pyeong":52,"deposit":5000,"key_money":8000,"total":13000,"rent":220,
+        "monthly_revenue":"4,500 ~ 5,200만원","monthly_profit":"1,800 ~ 2,200만원",
+        "registered":"2026-05-15","feature":"신규 인테리어 · 단골 65%",
+    },
+    {
+        "id":"S26-002","status":"매매중","title":"홍대 합정 야간 아로마샵 양도",
+        "region_slug":"seoul","region_kr":"서울","district_slug":"mapo","district_kr":"마포구",
+        "location_sub":"합정역 7번 출구 도보 3분",
+        "service":"aroma","service_kr":"아로마",
+        "size_pyeong":38,"deposit":3000,"key_money":5000,"total":8000,"rent":180,
+        "monthly_revenue":"3,200 ~ 3,800만원","monthly_profit":"1,200 ~ 1,500만원",
+        "registered":"2026-05-16","feature":"야간 단골 유지 · 권리 보장",
+    },
+    {
+        "id":"S26-003","status":"상담중","title":"잠실 송파 스포츠 케어샵 매매",
+        "region_slug":"seoul","region_kr":"서울","district_slug":"songpa","district_kr":"송파구",
+        "location_sub":"잠실새내역 인근 오피스권",
+        "service":"sports","service_kr":"스포츠",
+        "size_pyeong":42,"deposit":4000,"key_money":6000,"total":10000,"rent":200,
+        "monthly_revenue":"3,800 ~ 4,200만원","monthly_profit":"1,500 ~ 1,800만원",
+        "registered":"2026-05-12","feature":"KSPO 자격 트레이너 인계 가능",
+    },
+    {
+        "id":"S26-004","status":"매매중","title":"분당 판교 IT단지 스웨디시 양도",
+        "region_slug":"gyeonggi","region_kr":"경기","district_slug":"seongnam","district_kr":"성남시",
+        "location_sub":"판교역 7번 출구 도보 7분",
+        "service":"swedish","service_kr":"스웨디시",
+        "size_pyeong":48,"deposit":3500,"key_money":5500,"total":9000,"rent":195,
+        "monthly_revenue":"3,500 ~ 4,200만원","monthly_profit":"1,400 ~ 1,700만원",
+        "registered":"2026-05-14","feature":"IT 단골 비중 70% · 평일 강세",
+    },
+    {
+        "id":"S26-005","status":"매매중","title":"수원 영통 신축 아로마샵 양도",
+        "region_slug":"gyeonggi","region_kr":"경기","district_slug":"suwon","district_kr":"수원시",
+        "location_sub":"영통역 2번 출구 인근",
+        "service":"aroma","service_kr":"아로마",
+        "size_pyeong":35,"deposit":2500,"key_money":4000,"total":6500,"rent":150,
+        "monthly_revenue":"2,800 ~ 3,300만원","monthly_profit":"1,100 ~ 1,300만원",
+        "registered":"2026-05-13","feature":"신축 1년차 · 인테리어 양호",
+    },
+    {
+        "id":"S26-006","status":"매매중","title":"송도 국제도시 로미로미 프리미엄 스파",
+        "region_slug":"incheon","region_kr":"인천","district_slug":"yeonsu","district_kr":"연수구",
+        "location_sub":"송도 센트럴파크 도보 5분",
+        "service":"lomilomi","service_kr":"로미로미",
+        "size_pyeong":55,"deposit":5000,"key_money":7000,"total":12000,"rent":230,
+        "monthly_revenue":"4,200 ~ 5,000만원","monthly_profit":"1,700 ~ 2,100만원",
+        "registered":"2026-05-11","feature":"외국인 단골 40% · 영어 응대",
+    },
+    {
+        "id":"S26-007","status":"매매중","title":"해운대 마린시티 럭셔리 스파 매매",
+        "region_slug":"busan","region_kr":"부산","district_slug":"haeundae","district_kr":"해운대구",
+        "location_sub":"센텀시티역 인근 오션뷰",
+        "service":"swedish","service_kr":"스웨디시",
+        "size_pyeong":44,"deposit":5000,"key_money":7500,"total":12500,"rent":240,
+        "monthly_revenue":"4,500 ~ 5,500만원","monthly_profit":"1,800 ~ 2,300만원",
+        "registered":"2026-05-10","feature":"호텔 인접 · 외국인 고객",
+    },
+    {
+        "id":"S26-008","status":"상담중","title":"서면 부산진 타이마사지샵 양도",
+        "region_slug":"busan","region_kr":"부산","district_slug":"busanjin","district_kr":"부산진구",
+        "location_sub":"서면역 2번 출구 도보 4분",
+        "service":"thai","service_kr":"타이",
+        "size_pyeong":32,"deposit":2000,"key_money":3500,"total":5500,"rent":130,
+        "monthly_revenue":"2,200 ~ 2,800만원","monthly_profit":"900 ~ 1,200만원",
+        "registered":"2026-05-09","feature":"야간 라인 · 회전율 우수",
+    },
+    {
+        "id":"S26-009","status":"매매중","title":"강서 화곡 주간 스웨디시샵 양도",
+        "region_slug":"seoul","region_kr":"서울","district_slug":"gangseo","district_kr":"강서구",
+        "location_sub":"화곡역 4번 출구 도보 6분",
+        "service":"swedish","service_kr":"스웨디시",
+        "size_pyeong":28,"deposit":1500,"key_money":3000,"total":4500,"rent":120,
+        "monthly_revenue":"2,000 ~ 2,500만원","monthly_profit":"800 ~ 1,000만원",
+        "registered":"2026-05-08","feature":"주간 단골 안정 · 1인 운영 가능",
+    },
+    {
+        "id":"S26-010","status":"매매중","title":"일산 백석 아로마샵 양도",
+        "region_slug":"gyeonggi","region_kr":"경기","district_slug":"goyang","district_kr":"고양시",
+        "location_sub":"백석역 1번 출구 도보 5분",
+        "service":"aroma","service_kr":"아로마",
+        "size_pyeong":36,"deposit":2500,"key_money":4000,"total":6500,"rent":145,
+        "monthly_revenue":"2,500 ~ 3,000만원","monthly_profit":"1,000 ~ 1,250만원",
+        "registered":"2026-05-07","feature":"1기 신도시 단골 안정",
+    },
+    {
+        "id":"S26-011","status":"매매중","title":"부평 구월 발마사지 전문점 양도",
+        "region_slug":"incheon","region_kr":"인천","district_slug":"bupyeong","district_kr":"부평구",
+        "location_sub":"부평역 6번 출구 도보 3분",
+        "service":"thai","service_kr":"타이·발마사지",
+        "size_pyeong":24,"deposit":1500,"key_money":2500,"total":4000,"rent":100,
+        "monthly_revenue":"1,800 ~ 2,200만원","monthly_profit":"750 ~ 950만원",
+        "registered":"2026-05-06","feature":"환승 결절지 · 회전 빠름",
+    },
+    {
+        "id":"S26-012","status":"매매중","title":"성수동 신축 로미로미 부티크 매매",
+        "region_slug":"seoul","region_kr":"서울","district_slug":"seongdong","district_kr":"성동구",
+        "location_sub":"성수역 2번 출구 도보 4분",
+        "service":"lomilomi","service_kr":"로미로미",
+        "size_pyeong":40,"deposit":4000,"key_money":6500,"total":10500,"rent":210,
+        "monthly_revenue":"3,800 ~ 4,400만원","monthly_profit":"1,500 ~ 1,800만원",
+        "registered":"2026-05-05","feature":"신축 6개월차 · 트렌드 권역",
+    },
+]
+
+
+# ─────────────────────────────────────────────
 # 광고 상품 가격표 (/pricing-ads/)
 # ─────────────────────────────────────────────
 PRICING_ADS = [

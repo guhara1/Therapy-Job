@@ -1,6 +1,6 @@
 """핵심 페이지 생성 — 메인, About, Contact, Pricing, Reviews, Policy"""
 from templates import page, breadcrumb_ld, faq_ld, COMPANY
-from data import SERVICES, NATIONALITIES, REGIONS, MAGAZINE, SAMPLE_JOBS, TEAM, DISTRICTS, AD_TIERS, PRICING_ADS
+from data import SERVICES, NATIONALITIES, REGIONS, MAGAZINE, SAMPLE_JOBS, TEAM, DISTRICTS, AD_TIERS, PRICING_ADS, SHOP_SALES
 from ads import render_all_tiers, AD_CSS, filter_jobs, render_card, render_tier_section, single_tier_block
 
 # ─────────────────────────────────────────────
@@ -989,10 +989,66 @@ def build_contact_ads():
 # 업소 매매 안내 (/shop-sale/)
 # ─────────────────────────────────────────────
 def build_shop_sale():
-    title = f"마사지샵 업소 매매 — 권리금·매매 매물 등록 안내 2026 | {COMPANY['brand_kr']}"
-    desc = "테라피잡 업소 매매 매물 등록 안내. 1개월 10만원·2개월 15만원·1년 33만원. 권리금·매출·운영 정보를 검증된 매수자에게만 노출하는 익명 매물 게재 서비스."
+    title = f"마사지샵 업소 매매 — 권리금·월매출·매물 정보 2026 | {COMPANY['brand_kr']}"
+    desc = "전국 마사지샵 업소 매매 매물. 지역·업종별 검색 가능. 권리금·총금액·월세·월매출까지 한 번에 확인. 등록 1개월 10만원·2개월 15만원·1년 33만원."
 
     def num(n): return f"{n:,}원"
+    def manwon(n): return f"{n:,}"  # 만원 단위로 표시 (콤마 포함)
+
+    # 업종 색상 매핑
+    svc_colors = {
+        "swedish":("#7bb0ff","rgba(123,176,255,.15)","rgba(123,176,255,.32)"),
+        "aroma":("#c39bff","rgba(195,155,255,.15)","rgba(195,155,255,.32)"),
+        "thai":("#ffa46b","rgba(255,164,107,.15)","rgba(255,164,107,.32)"),
+        "lomilomi":("#f4d29c","rgba(244,210,156,.15)","rgba(244,210,156,.32)"),
+        "sports":("#9fd9b8","rgba(159,217,184,.15)","rgba(159,217,184,.32)"),
+    }
+    status_styles = {
+        "매매중":("#5b9bff","rgba(91,155,255,.18)"),
+        "상담중":("#d4af37","rgba(212,175,55,.18)"),
+        "매매완료":("#6c7490","rgba(160,168,190,.14)"),
+    }
+
+    # 행정구 카스케이딩 JSON (JS에서 사용)
+    import json
+    districts_json = {r["slug"]: [(d[0], d[1]) for d in DISTRICTS[r["slug"]]] for r in REGIONS}
+    districts_js = json.dumps(districts_json, ensure_ascii=False)
+
+    # 매물 카드 생성
+    shop_cards = ""
+    for s in SHOP_SALES:
+        scolor = svc_colors.get(s["service"], ("#7bb0ff","rgba(123,176,255,.15)","rgba(123,176,255,.32)"))
+        stcol, stbg = status_styles.get(s["status"], status_styles["매매중"])
+        shop_cards += f"""<a class="shop-card reveal" href="#" data-region="{s['region_slug']}" data-district="{s['district_slug']}" data-service="{s['service']}" data-status="{s['status']}">
+  <div class="shop-img" style="background:linear-gradient(135deg,{scolor[1]},{scolor[2]})">
+    <div class="shop-img-icon">{s['service_kr'][:2]}</div>
+    <div class="shop-img-tag">샘플 이미지</div>
+  </div>
+  <div class="shop-body">
+    <div class="shop-badges">
+      <span class="badge-status" style="color:{stcol};background:{stbg}">● {s['status']}</span>
+      <span class="badge-tag">{s['service_kr']}</span>
+      <span class="badge-tag">{s['size_pyeong']}평</span>
+    </div>
+    <h3 class="shop-title">{s['title']}</h3>
+    <div class="shop-loc">{s['region_kr']} {s['district_kr']} · {s['location_sub']}</div>
+    <div class="shop-prices">
+      <div class="pp"><span class="pl">권리금</span><span class="pv">{manwon(s['key_money'])}</span></div>
+      <div class="pp"><span class="pl">총금액</span><span class="pv pv-blue">{manwon(s['total'])}</span></div>
+      <div class="pp"><span class="pl">월세</span><span class="pv">{manwon(s['rent'])}</span></div>
+      <div class="pp"><span class="pl">보증금</span><span class="pv">{manwon(s['deposit'])}</span></div>
+    </div>
+    <div class="shop-rev">
+      <div class="rev-row"><span>월매출</span><span class="rev-val">{s['monthly_revenue']}</span></div>
+      <div class="rev-row"><span>월 순익</span><span class="rev-val">{s['monthly_profit']}</span></div>
+    </div>
+    <div class="shop-feat">{s['feature']}</div>
+    <div class="shop-id">매물 #{s['id']} · {s['registered']}</div>
+  </div>
+</a>"""
+
+    region_opts = "".join(f'<option value="{r["slug"]}">{r["kr"]}</option>' for r in REGIONS)
+    service_opts = "".join(f'<option value="{sv["slug"]}">{sv["kr"]}</option>' for sv in SERVICES)
 
     pricing = [
         {"period":"1개월","price":100000,"per_month":100000,"label":"단기 매물","sub":"빠른 매수자 매칭이 목표일 때"},
@@ -1074,10 +1130,121 @@ def build_shop_sale():
     ]
 
     body = f"""
+<style>
+.shop-filter{{display:grid;grid-template-columns:1.2fr 1.2fr 1.2fr auto;gap:10px;padding:14px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--line);border-radius:14px;margin-bottom:28px}}
+.shop-filter select{{appearance:none;-webkit-appearance:none;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--text);padding:13px 38px 13px 16px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color-scheme:dark;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a0a8be' d='M6 8 0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;transition:.2s}}
+.shop-filter select:hover{{border-color:rgba(123,176,255,.4)}}
+.shop-filter select:focus{{outline:none;border-color:rgba(123,176,255,.6);background-color:rgba(255,255,255,.06)}}
+.shop-filter select option{{background:#1a2236;color:#eef2fb;font-weight:500;padding:8px}}
+.shop-filter select option[value=""]{{color:#a0a8be}}
+.shop-filter-reset{{padding:0 18px;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.35);color:#d4af37;border-radius:10px;font-size:13.5px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap}}
+.shop-filter-reset:hover{{background:rgba(212,175,55,.2)}}
+.shop-count{{font-size:13px;color:var(--muted);margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}}
+.shop-count strong{{color:var(--blue-1);font-weight:700}}
+.shop-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}}
+.shop-card{{display:flex;flex-direction:column;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:.25s}}
+.shop-card:hover{{transform:translateY(-3px);border-color:rgba(123,176,255,.35);box-shadow:0 16px 40px rgba(0,0,0,.32)}}
+.shop-img{{height:160px;position:relative;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}}
+.shop-img-icon{{font-size:36px;font-weight:800;color:rgba(255,255,255,.78);letter-spacing:-.04em;text-shadow:0 2px 12px rgba(0,0,0,.3)}}
+.shop-img-tag{{position:absolute;bottom:10px;right:12px;font-size:10px;color:rgba(255,255,255,.55);letter-spacing:.15em;font-weight:600}}
+.shop-body{{padding:18px 20px;flex:1;display:flex;flex-direction:column;gap:10px}}
+.shop-badges{{display:flex;flex-wrap:wrap;gap:6px}}
+.badge-status,.badge-tag{{padding:4px 9px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.03em}}
+.badge-status{{font-weight:800}}
+.badge-tag{{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--line)}}
+.shop-title{{font-size:15px;font-weight:800;line-height:1.4;letter-spacing:-.02em;color:var(--text);margin:2px 0 0}}
+.shop-loc{{font-size:12px;color:var(--muted);line-height:1.5}}
+.shop-prices{{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}}
+.shop-prices .pp{{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px}}
+.shop-prices .pl{{color:var(--muted)}}
+.shop-prices .pv{{color:var(--text);font-weight:700}}
+.shop-prices .pv-blue{{color:var(--blue-1)}}
+.shop-rev{{display:flex;flex-direction:column;gap:6px;padding:10px 12px;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.18);border-radius:8px}}
+.shop-rev .rev-row{{display:flex;justify-content:space-between;font-size:12px}}
+.shop-rev .rev-row span:first-child{{color:#a0a8be}}
+.shop-rev .rev-val{{color:#f4d29c;font-weight:700}}
+.shop-feat{{font-size:11.5px;color:var(--muted);padding:2px 0;line-height:1.5}}
+.shop-id{{font-size:10.5px;color:var(--dim);letter-spacing:.06em;margin-top:2px}}
+.shop-empty{{padding:60px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px;font-size:14px}}
+@media(max-width:640px){{
+  .shop-filter{{grid-template-columns:1fr 1fr;}}
+  .shop-filter-reset{{grid-column:1/-1}}
+}}
+</style>
+
 <section class="wrap" style="padding-bottom:30px">
   <span class="kicker">SHOP SALE · 업소 매매</span>
   <h1 style="font-size:clamp(36px,5.5vw,60px);margin:14px 0 20px">마사지샵<br><span class="grad">업소 매매</span> <span class="serif">매물.</span></h1>
-  <p class="lead">운영 중인 마사지샵을 새 운영자에게 양도하시거나, 검증된 매물을 인수받고 싶으신 분을 위한 매물 게재 서비스입니다. 익명 게재로 운영 중인 영업에 지장이 없으며, 매수 의향자만 운영팀이 1:1로 연결합니다.</p>
+  <p class="lead">전국 마사지샵 매매 매물을 지역·업종별로 검색하실 수 있습니다. 권리금·총금액·월세·월매출까지 한 번에 확인 가능하며, 매수 의향자는 운영팀이 1:1 매칭으로 연결합니다. 양도자는 익명 게재로 운영 중인 영업에 지장이 없습니다.</p>
+</section>
+
+<section class="wrap" style="padding-top:0;padding-bottom:30px">
+  <form class="shop-filter" onsubmit="return false">
+    <select id="filter-region" aria-label="지역 선택">
+      <option value="">전체 지역</option>
+      {region_opts}
+    </select>
+    <select id="filter-district" aria-label="구·시·군 선택">
+      <option value="">전체 구·시·군</option>
+    </select>
+    <select id="filter-service" aria-label="업종 선택">
+      <option value="">전체 업종</option>
+      {service_opts}
+    </select>
+    <button type="button" class="shop-filter-reset" onclick="resetShopFilter()">초기화</button>
+  </form>
+
+  <div class="shop-count">
+    <span><strong id="shop-result-count">{len(SHOP_SALES)}</strong>건의 매물</span>
+    <span style="color:var(--dim);font-size:11.5px;letter-spacing:.08em">SAMPLE LISTINGS · 매수 문의는 <a href="/contact-ads/" style="color:var(--blue-1)">광고문의</a>로</span>
+  </div>
+
+  <div class="shop-grid" id="shop-grid">{shop_cards}</div>
+  <div class="shop-empty" id="shop-empty" style="display:none">선택하신 조건에 맞는 매물이 없습니다. 필터를 조정하시거나 <a href="/contact-ads/" style="color:var(--blue-1);font-weight:700">광고문의</a>로 매수 의사를 등록해주세요.</div>
+
+  <script>
+  (function(){{
+    var DISTRICTS = {districts_js};
+    var rs = document.getElementById('filter-region');
+    var ds = document.getElementById('filter-district');
+    var ss = document.getElementById('filter-service');
+    var grid = document.getElementById('shop-grid');
+    var empty = document.getElementById('shop-empty');
+    var count = document.getElementById('shop-result-count');
+
+    function populateDistricts() {{
+      var r = rs.value;
+      ds.innerHTML = '<option value="">전체 구·시·군</option>';
+      if (r && DISTRICTS[r]) {{
+        DISTRICTS[r].forEach(function(d) {{
+          var o = document.createElement('option');
+          o.value = d[0]; o.textContent = d[1];
+          ds.appendChild(o);
+        }});
+      }}
+    }}
+    function applyFilter() {{
+      var r = rs.value, d = ds.value, s = ss.value;
+      var visible = 0;
+      grid.querySelectorAll('.shop-card').forEach(function(c) {{
+        var m = (!r || c.dataset.region === r) && (!d || c.dataset.district === d) && (!s || c.dataset.service === s);
+        c.style.display = m ? '' : 'none';
+        if (m) visible++;
+      }});
+      count.textContent = visible;
+      empty.style.display = visible === 0 ? '' : 'none';
+      grid.style.display = visible === 0 ? 'none' : '';
+    }}
+    rs.addEventListener('change', function() {{ populateDistricts(); applyFilter(); }});
+    ds.addEventListener('change', applyFilter);
+    ss.addEventListener('change', applyFilter);
+    window.resetShopFilter = function() {{
+      rs.value = ''; ss.value = '';
+      populateDistricts();
+      applyFilter();
+    }};
+  }})();
+  </script>
 </section>
 
 <section class="wrap" style="padding-top:0;padding-bottom:40px">
