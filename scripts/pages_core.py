@@ -542,8 +542,8 @@ def build_pricing_ads():
   <div style="padding:24px 26px;flex:1;display:flex;flex-direction:column;gap:12px">
     <div style="font-size:13.5px;color:var(--muted);line-height:1.7">메인화면·업종·지역 페이지 노출</div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
-      <a href="#ad-positions" style="padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:9px;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center;transition:.18s;text-decoration:none" onmouseover="this.style.background='rgba(123,176,255,.08)';this.style.borderColor='rgba(123,176,255,.32)'" onmouseout="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='var(--line)'">PC 광고 위치 <span style="color:var(--dim)">›</span></a>
-      <a href="#ad-positions" style="padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:9px;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center;transition:.18s;text-decoration:none" onmouseover="this.style.background='rgba(123,176,255,.08)';this.style.borderColor='rgba(123,176,255,.32)'" onmouseout="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='var(--line)'">모바일 광고 위치 <span style="color:var(--dim)">›</span></a>
+      <a href="#position-{p['slug']}" style="padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:9px;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center;transition:.18s;text-decoration:none" onmouseover="this.style.background='rgba(123,176,255,.08)';this.style.borderColor='rgba(123,176,255,.32)'" onmouseout="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='var(--line)'">PC 광고 위치 <span style="color:var(--dim)">›</span></a>
+      <a href="#position-{p['slug']}" style="padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:9px;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center;transition:.18s;text-decoration:none" onmouseover="this.style.background='rgba(123,176,255,.08)';this.style.borderColor='rgba(123,176,255,.32)'" onmouseout="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='var(--line)'">모바일 광고 위치 <span style="color:var(--dim)">›</span></a>
       <div style="padding:11px 14px;background:rgba(255,255,255,.05);border:1px solid {p['border']};border-radius:9px;font-size:13px;color:{p['color']};text-align:center;font-weight:700">{order}</div>
     </div>
     <div style="margin-top:10px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);text-align:center">최대 {slot}</div>
@@ -676,7 +676,7 @@ def build_pricing_ads():
   </style>
 
   <!-- VVIP -->
-  <div class="pos-card">
+  <div class="pos-card" id="position-vvip" style="scroll-margin-top:80px">
     <div class="pos-card-head">
       <span class="pos-tier-badge" style="background:linear-gradient(135deg,#d4af37,#f4d29c);color:#1a1410">VVIP</span>
       <h3 style="color:#f4d29c">최상단 단독 노출 — Hero 직하 단독 영역</h3>
@@ -752,7 +752,7 @@ def build_pricing_ads():
   </div>
 
   <!-- VIP -->
-  <div class="pos-card">
+  <div class="pos-card" id="position-vip" style="scroll-margin-top:80px">
     <div class="pos-card-head">
       <span class="pos-tier-badge" style="background:linear-gradient(135deg,#7bb0ff,#2c54a8);color:#fff">VIP</span>
       <h3 style="color:#7bb0ff">우선 노출 — First Content Break (콘텐츠 1개 직후)</h3>
@@ -831,7 +831,7 @@ def build_pricing_ads():
   </div>
 
   <!-- 프리미엄 -->
-  <div class="pos-card">
+  <div class="pos-card" id="position-premium" style="scroll-margin-top:80px">
     <div class="pos-card-head">
       <span class="pos-tier-badge" style="background:linear-gradient(135deg,#a0a8be,#6c7490);color:#0a0e1a">PREMIUM</span>
       <h3 style="color:#a0a8be">기본 노출 — 페이지 하단 영역 (등록 제한 없음)</h3>
