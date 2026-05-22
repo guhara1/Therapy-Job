@@ -285,11 +285,8 @@ def header_html():
     <li><a href="/pricing/">급여</a></li>
     <li><a href="/magazine/">매거진</a></li>
     <li><a href="/reviews/">사례</a></li>
-    <li><a href="/pricing-ads/" aria-haspopup="true">상품안내</a>
-      <ul class="submenu">
-        <li><a href="/pricing-ads/">광고 상품</a></li>
-        <li><a href="/shop-sale/">업소 매매</a></li>
-      </ul></li>
+    <li><a href="/pricing-ads/">광고 상품</a></li>
+    <li><a href="/shop-sale/">업소매매</a></li>
     <li><a class="cta-gold" href="/contact-ads/">광고문의</a></li>
   </ul>
 </nav>
