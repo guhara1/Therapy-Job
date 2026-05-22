@@ -280,9 +280,8 @@ def build_region_hub(r):
     for slug, kr in DISTRICTS[r["slug"]]:
         char = DISTRICT_CHARACTER.get(slug, ("", ""))
         district_cards += f"""<a class="job-card reveal" href="/locations/{r['slug']}/{slug}/">
-  <div class="top"><span class="kicker">{kr}</span></div>
-  <h3>{kr} 마사지 구인</h3>
-  <p style="font-size:13.5px;color:var(--muted);line-height:1.7;margin-top:4px">{char[1] if char[1] else '권역 채용 정보를 확인하세요.'}</p>
+  <h3 style="font-size:22px;color:var(--blue-1);font-weight:800;letter-spacing:-.025em;line-height:1.2;margin-bottom:10px">{kr}</h3>
+  <p style="font-size:13.5px;color:var(--muted);line-height:1.7">{char[1] if char[1] else '권역 채용 정보를 확인하세요.'}</p>
 </a>"""
 
     seo = REGION_SEO_CONTENT.get(r["slug"])
