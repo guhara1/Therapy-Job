@@ -204,6 +204,19 @@ REGION_SEO_CONTENT = {
 }
 
 
+def shop_promo_banner():
+    """샵 운영자 광고 등록 안내 — 지역 페이지 하단 배너"""
+    return f"""
+<section class="wrap" style="padding-top:40px;padding-bottom:20px">
+  <a href="/pricing-ads/" aria-label="샵 운영자 광고 등록 — VVIP 월 44만원부터, 4개 업체 한정. 상세는 광고 상품 안내 페이지 참고" style="display:block;border-radius:20px;overflow:hidden;border:1px solid rgba(123,176,255,.22);transition:transform .25s,box-shadow .25s,border-color .25s">
+    <img src="/assets/ads/shop-banner.svg" alt="샵 운영자라면 여기에 광고하세요 — VVIP 월 44만원부터 · 4개 업체 한정" width="1200" height="400" loading="lazy" decoding="async" style="width:100%;height:auto;display:block">
+  </a>
+  <style>
+    section.wrap > a[aria-label^="샵 운영자"]:hover{{transform:translateY(-3px);box-shadow:0 18px 44px rgba(91,155,255,.18);border-color:rgba(123,176,255,.5)}}
+  </style>
+</section>"""
+
+
 def render_region_seo(region):
     """광역 지역별 SEO 콘텐츠 블록 (광고 하단 노출)"""
     data = REGION_SEO_CONTENT.get(region["slug"])
@@ -354,6 +367,8 @@ def build_region_hub(r):
 {render_region_seo(r)}
 
 {single_tier_block("premium", jobs_for_region_tier(r, "premium"))}
+
+{shop_promo_banner()}
 """
     return page(title, desc, f"/locations/{r['slug']}/", body, extra_jsonld=extra_ld)
 
@@ -559,7 +574,9 @@ def build_district(region, district_slug, district_kr):
   <div class="note-stack" style="margin-top:30px">{review_cards}</div>
 </section>
 
-<section class="wrap" style="padding-top:40px">
+{shop_promo_banner()}
+
+<section class="wrap" style="padding-top:20px">
   <div style="padding:50px 40px;border-radius:22px;background:linear-gradient(135deg,rgba(91,155,255,.1),rgba(44,84,168,.04));border:1px solid rgba(123,176,255,.18);text-align:center">
     <h2 style="margin-bottom:14px">{district_kr} 채용 상담 받기</h2>
     <p class="lead" style="margin:0 auto 24px">{district_kr} 권역 전담 매칭이 가능합니다.</p>

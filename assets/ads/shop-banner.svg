@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" role="img" aria-label="샵 운영자라면 여기에 광고하세요 — VVIP 월 44만원부터">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a0e1a"/><stop offset="55%" stop-color="#1b3a78"/><stop offset="100%" stop-color="#2c54a8"/></linearGradient>
+<linearGradient id="b" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7bb0ff"/><stop offset="100%" stop-color="#5b9bff"/></linearGradient>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d4af37"/><stop offset="100%" stop-color="#f4d29c"/></linearGradient>
+</defs>
+<rect width="1200" height="400" fill="url(#bg)"/>
+<circle cx="1080" cy="80" r="240" fill="url(#b)" opacity=".10"/>
+<circle cx="180" cy="370" r="170" fill="url(#b)" opacity=".08"/>
+<g transform="translate(60,86)">
+<rect width="160" height="28" rx="6" fill="rgba(91,155,255,.18)"/>
+<text x="80" y="19" text-anchor="middle" font-family="-apple-system,Pretendard,sans-serif" font-size="12" font-weight="700" fill="#7bb0ff" letter-spacing="2">광고 등록 안내</text>
+<text x="0" y="80" font-family="-apple-system,Pretendard,sans-serif" font-size="42" font-weight="800" fill="#eef2fb" letter-spacing="-1.5">샵 운영자라면,</text>
+<text x="0" y="130" font-family="-apple-system,Pretendard,sans-serif" font-size="42" font-weight="800" letter-spacing="-1.5"><tspan fill="#eef2fb">여기에 </tspan><tspan fill="url(#b)">광고하세요</tspan></text>
+<text x="0" y="170" font-family="-apple-system,Pretendard,sans-serif" font-size="16" font-weight="500"><tspan fill="#d4af37" font-weight="700">VVIP 월 44만원</tspan><tspan fill="#a0a8be">부터 · 4개 업체 한정</tspan></text>
+<g transform="translate(0,196)">
+<rect width="240" height="56" rx="28" fill="url(#b)"/>
+<text x="120" y="36" text-anchor="middle" font-family="-apple-system,Pretendard,sans-serif" font-size="15" font-weight="800" fill="#fff">광고 상품 보기 →</text>
+</g>
+<text x="0" y="282" font-family="-apple-system,Pretendard,sans-serif" font-size="13" font-weight="600" fill="#a0a8be" letter-spacing=".4">0508-202-4690 · 평일 10:00 ~ 19:00</text>
+</g>
+<g transform="translate(750,72)">
+<rect width="380" height="80" rx="14" fill="rgba(212,175,55,.07)" stroke="rgba(212,175,55,.3)"/>
+<rect x="18" y="22" width="54" height="22" rx="4" fill="url(#g)"/>
+<text x="45" y="37" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" font-weight="800" fill="#1a1410" letter-spacing="2">VVIP</text>
+<text x="84" y="37" font-family="-apple-system,sans-serif" font-size="16" font-weight="800" fill="#f4d29c">강남 프리미엄 스파</text>
+<text x="84" y="59" font-family="-apple-system,sans-serif" font-size="12" fill="#d4af37">일 18~24만원 · 4슬롯 한정</text>
+<rect y="100" width="380" height="80" rx="14" fill="rgba(91,155,255,.07)" stroke="rgba(91,155,255,.3)"/>
+<rect x="18" y="122" width="44" height="22" rx="4" fill="url(#b)"/>
+<text x="40" y="137" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" font-weight="800" fill="#fff" letter-spacing="2">VIP</text>
+<text x="74" y="137" font-family="-apple-system,sans-serif" font-size="16" font-weight="800" fill="#eef2fb">잠실 송파 스웨디시</text>
+<text x="74" y="159" font-family="-apple-system,sans-serif" font-size="12" fill="#7bb0ff">일 17~26만원 · 12슬롯</text>
+<rect y="200" width="380" height="80" rx="14" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.1)"/>
+<rect x="18" y="222" width="72" height="22" rx="4" fill="rgba(160,168,190,.18)" stroke="rgba(160,168,190,.4)"/>
+<text x="54" y="237" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" font-weight="800" fill="#a0a8be" letter-spacing="2">PREMIUM</text>
+<text x="102" y="237" font-family="-apple-system,sans-serif" font-size="16" font-weight="800" fill="#eef2fb">동탄 신축 샵</text>
+<text x="102" y="259" font-family="-apple-system,sans-serif" font-size="12" fill="#a0a8be">일 14~22만원 · 등록 무제한</text>
+</g>
+</svg>
