@@ -3,8 +3,8 @@ import os, sys, re, json
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(__file__))
-from data import COMPANY, SERVICES, NATIONALITIES, REGIONS, MAGAZINE, DISTRICTS, SAMPLE_JOBS
-from pages_core import build_index, build_about, build_contact, build_pricing, build_reviews, build_policy_privacy, build_policy_terms, build_policy_youth, build_pricing_ads, build_contact_ads, build_shop_sale
+from data import COMPANY, SERVICES, NATIONALITIES, REGIONS, MAGAZINE, DISTRICTS, SAMPLE_JOBS, SHOP_SALES
+from pages_core import build_index, build_about, build_contact, build_pricing, build_reviews, build_policy_privacy, build_policy_terms, build_policy_youth, build_pricing_ads, build_contact_ads, build_shop_sale, build_shop_sale_detail
 from pages_hubs import build_jobs_hub, build_job_service, build_seekers_hub, build_seeker_service, build_therapists_hub, build_therapist, build_magazine_hub, build_magazine_article
 from pages_locations import build_locations_hub, build_region_hub, build_district
 from ads import build_ad_detail
@@ -67,7 +67,9 @@ def build_sitemap():
     add("/magazine/", priority="0.85", changefreq="weekly")
     add("/pricing/", priority="0.85", changefreq="weekly")
     add("/pricing-ads/", priority="0.9", changefreq="monthly")
-    add("/shop-sale/", priority="0.85", changefreq="monthly")
+    add("/shop-sale/", priority="0.85", changefreq="weekly")
+    for shop in SHOP_SALES:
+        add(f"/shop-sale/{shop['id']}/", priority="0.7", changefreq="weekly")
     add("/contact-ads/", priority="0.85", changefreq="monthly")
     add("/reviews/", priority="0.8", changefreq="weekly")
     add("/about/", priority="0.75", changefreq="monthly")
@@ -237,6 +239,8 @@ def main():
     write_page("/pricing/", build_pricing(), minify); count += 1
     write_page("/pricing-ads/", build_pricing_ads(), minify); count += 1
     write_page("/shop-sale/", build_shop_sale(), minify); count += 1
+    for shop in SHOP_SALES:
+        write_page(f"/shop-sale/{shop['id']}/", build_shop_sale_detail(shop), minify); count += 1
     write_page("/contact-ads/", build_contact_ads(), minify); count += 1
     write_page("/reviews/", build_reviews(), minify); count += 1
     write_page("/policy/privacy/", build_policy_privacy(), minify); count += 1

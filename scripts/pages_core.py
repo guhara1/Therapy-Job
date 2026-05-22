@@ -1019,7 +1019,7 @@ def build_shop_sale():
     for s in SHOP_SALES:
         scolor = svc_colors.get(s["service"], ("#7bb0ff","rgba(123,176,255,.15)","rgba(123,176,255,.32)"))
         stcol, stbg = status_styles.get(s["status"], status_styles["매매중"])
-        shop_cards += f"""<a class="shop-card reveal" href="#" data-region="{s['region_slug']}" data-district="{s['district_slug']}" data-service="{s['service']}" data-status="{s['status']}">
+        shop_cards += f"""<a class="shop-card reveal" href="/shop-sale/{s['id']}/" data-region="{s['region_slug']}" data-district="{s['district_slug']}" data-service="{s['service']}" data-status="{s['status']}">
   <div class="shop-img" style="background:linear-gradient(135deg,{scolor[1]},{scolor[2]})">
     <div class="shop-img-icon">{s['service_kr'][:2]}</div>
     <div class="shop-img-tag">샘플 이미지</div>
@@ -1196,7 +1196,7 @@ def build_shop_sale():
 
   <div class="shop-count">
     <span><strong id="shop-result-count">{len(SHOP_SALES)}</strong>건의 매물</span>
-    <span style="color:var(--dim);font-size:11.5px;letter-spacing:.08em">SAMPLE LISTINGS · 매수 문의 <a href="tel:{COMPANY['tel']}" style="color:var(--blue-1);font-weight:700">{COMPANY['tel']}</a></span>
+    <span style="color:var(--dim);font-size:11.5px;letter-spacing:.08em">SAMPLE LISTINGS · 매물 카드 클릭 시 상세 페이지</span>
   </div>
 
   <div class="shop-grid" id="shop-grid">{shop_cards}</div>
@@ -1315,15 +1315,214 @@ def build_shop_sale():
 
 <section class="wrap" style="padding-top:40px">
   <div style="padding:50px 40px;border-radius:22px;background:linear-gradient(135deg,rgba(212,175,55,.08),rgba(91,155,255,.04));border:1px solid rgba(212,175,55,.25);text-align:center">
-    <span class="kicker" style="color:#d4af37">매수·매도 문의</span>
-    <h2 style="margin:10px 0 14px">고객센터로 바로 연결됩니다</h2>
-    <p class="lead" style="margin:0 auto 24px">매수 의향·매물 등록 모두 고객센터 전화로 직접 상담드립니다. 평일 영업시간 내 즉시 연결, 야간·주말은 다음 영업일 회신.</p>
+    <span class="kicker" style="color:#d4af37">매물 등록 (양도자 전용)</span>
+    <h2 style="margin:10px 0 14px">내 샵 매물 등록하기</h2>
+    <p class="lead" style="margin:0 auto 24px">샵을 양도하시려는 분은 광고문의 폼에 \"업소매매 등록\"을 명시해 신청해주세요. 매수 의향자는 매물 카드를 직접 클릭하시면 됩니다.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <a class="btn btn-primary" href="tel:{COMPANY['tel']}">{COMPANY['tel']} 전화</a>
-      <a class="btn btn-ghost" href="mailto:{COMPANY['email']}?subject=업소 매매 문의">이메일 문의</a>
+      <a class="btn btn-primary" href="/contact-ads/">매물 등록 신청 →</a>
+      <a class="btn btn-ghost" href="/pricing-ads/">광고 상품 안내</a>
     </div>
-    <p style="font-size:12px;color:var(--dim);margin-top:18px">{COMPANY['tel_hours']}</p>
   </div>
 </section>
 """
     return page(title, desc, "/shop-sale/", body, extra_jsonld=extra_ld)
+
+
+# ─────────────────────────────────────────────
+# 업소 매매 매물 상세 페이지 (/shop-sale/{id}/)
+# ─────────────────────────────────────────────
+def build_shop_sale_detail(shop):
+    s = shop
+    svc_colors = {
+        "swedish":("#7bb0ff","rgba(123,176,255,.15)","rgba(123,176,255,.32)"),
+        "aroma":("#c39bff","rgba(195,155,255,.15)","rgba(195,155,255,.32)"),
+        "thai":("#ffa46b","rgba(255,164,107,.15)","rgba(255,164,107,.32)"),
+        "lomilomi":("#f4d29c","rgba(244,210,156,.15)","rgba(244,210,156,.32)"),
+        "sports":("#9fd9b8","rgba(159,217,184,.15)","rgba(159,217,184,.32)"),
+    }
+    status_styles = {
+        "매매중":("#5b9bff","rgba(91,155,255,.18)"),
+        "상담중":("#d4af37","rgba(212,175,55,.18)"),
+        "매매완료":("#6c7490","rgba(160,168,190,.14)"),
+    }
+    scolor = svc_colors.get(s["service"], ("#7bb0ff","rgba(123,176,255,.15)","rgba(123,176,255,.32)"))
+    stcol, stbg = status_styles.get(s["status"], status_styles["매매중"])
+
+    title = f"{s['title']} — 권리금 {s['key_money']:,}만원·월매출 {s['monthly_revenue']} | {COMPANY['brand_kr']} 업소매매"
+    desc = f"{s['region_kr']} {s['district_kr']} {s['service_kr']} 마사지샵 매매. {s['location_sub']}. 권리금 {s['key_money']:,}만 · 총금액 {s['total']:,}만 · 월세 {s['rent']}만 · 보증금 {s['deposit']:,}만 · 월매출 {s['monthly_revenue']} · {s['size_pyeong']}평. {s['feature']}."
+
+    # 관련 매물 — 같은 광역시도 우선, 같은 업종 보충
+    related = []
+    for r in SHOP_SALES:
+        if r["id"] != s["id"] and (r["region_slug"]==s["region_slug"] or r["service"]==s["service"]):
+            related.append(r)
+        if len(related) >= 4: break
+
+    related_cards = ""
+    for r in related:
+        rscolor = svc_colors.get(r["service"], ("#7bb0ff","rgba(123,176,255,.15)","rgba(123,176,255,.32)"))
+        related_cards += f"""<a class="shop-card reveal" href="/shop-sale/{r['id']}/">
+  <div class="shop-img" style="background:linear-gradient(135deg,{rscolor[1]},{rscolor[2]});height:120px">
+    <div class="shop-img-icon" style="font-size:28px">{r['service_kr'][:2]}</div>
+  </div>
+  <div class="shop-body" style="padding:14px 16px;gap:8px">
+    <h3 class="shop-title" style="font-size:14px">{r['title']}</h3>
+    <div class="shop-loc" style="font-size:11.5px">{r['region_kr']} {r['district_kr']}</div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;padding-top:10px;border-top:1px solid var(--line)">
+      <span style="color:var(--muted)">권리금</span>
+      <span style="color:var(--blue-1);font-weight:700">{r['key_money']:,}만</span>
+    </div>
+  </div>
+</a>"""
+
+    extra_ld = [
+        breadcrumb_ld([("홈","/"),("업소매매","/shop-sale/"),(s["title"],f"/shop-sale/{s['id']}/")]),
+        {
+            "@type":"Product",
+            "@id":f"{COMPANY['base_url']}/shop-sale/{s['id']}/#product",
+            "name":s["title"],
+            "description":desc,
+            "category":f"마사지샵 업소 매매 — {s['service_kr']}",
+            "brand":{"@type":"Organization","@id":f"{COMPANY['base_url']}/#organization"},
+            "offers":{
+                "@type":"Offer",
+                "price":str(s["total"]*10000),
+                "priceCurrency":"KRW",
+                "priceSpecification":{
+                    "@type":"PriceSpecification",
+                    "price":str(s["total"]*10000),
+                    "priceCurrency":"KRW",
+                    "valueAddedTaxIncluded":False
+                },
+                "availability":"https://schema.org/InStock" if s["status"]=="매매중" else "https://schema.org/PreOrder",
+                "url":f"{COMPANY['base_url']}/shop-sale/{s['id']}/"
+            },
+            "additionalProperty":[
+                {"@type":"PropertyValue","name":"권리금","value":f"{s['key_money']:,}만원"},
+                {"@type":"PropertyValue","name":"보증금","value":f"{s['deposit']:,}만원"},
+                {"@type":"PropertyValue","name":"월세","value":f"{s['rent']:,}만원"},
+                {"@type":"PropertyValue","name":"평수","value":f"{s['size_pyeong']}평"},
+                {"@type":"PropertyValue","name":"월매출","value":s["monthly_revenue"]},
+                {"@type":"PropertyValue","name":"월 순익","value":s["monthly_profit"]},
+                {"@type":"PropertyValue","name":"업종","value":s["service_kr"]},
+                {"@type":"PropertyValue","name":"지역","value":f"{s['region_kr']} {s['district_kr']}"},
+            ]
+        }
+    ]
+
+    body = f"""
+<style>
+.detail-hero{{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:start}}
+.detail-image{{height:340px;border-radius:18px;background:linear-gradient(135deg,{scolor[1]},{scolor[2]});border:1px solid var(--line);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}}
+.detail-image-icon{{font-size:88px;font-weight:800;color:rgba(255,255,255,.78);letter-spacing:-.04em}}
+.detail-image-tag{{position:absolute;bottom:16px;right:18px;font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.18em;font-weight:600}}
+.detail-info{{display:flex;flex-direction:column;gap:14px}}
+.detail-info .badges{{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}}
+.detail-info .badge-status,.detail-info .badge-tag{{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:700;letter-spacing:.03em}}
+.detail-info .badge-tag{{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--line)}}
+.detail-info h1{{font-size:clamp(24px,3.2vw,32px);font-weight:800;letter-spacing:-.025em;line-height:1.3;margin:4px 0}}
+.detail-loc{{font-size:14px;color:var(--muted);line-height:1.6}}
+.detail-keystat{{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.22);border-radius:12px;margin-top:6px}}
+.detail-keystat .ks{{display:flex;flex-direction:column;gap:3px}}
+.detail-keystat .kl{{font-size:11px;color:#d4af37;letter-spacing:.18em;text-transform:uppercase;font-weight:700}}
+.detail-keystat .kv{{font-size:18px;color:#f4d29c;font-weight:800;letter-spacing:-.01em}}
+.detail-prices{{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;padding:18px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--line);border-radius:12px}}
+.detail-prices .pp{{display:flex;justify-content:space-between;font-size:14px;padding:4px 0}}
+.detail-prices .pl{{color:var(--muted)}}
+.detail-prices .pv{{font-weight:700}}
+.detail-sample{{padding:14px 18px;background:rgba(91,155,255,.06);border:1px solid rgba(91,155,255,.22);border-radius:10px;font-size:12.5px;color:#a0c0ff;line-height:1.65}}
+.detail-spec{{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;padding:24px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--line);border-radius:14px}}
+.detail-spec .sp{{display:flex;flex-direction:column;gap:4px;padding:10px 12px;background:rgba(255,255,255,.03);border-radius:8px}}
+.detail-spec .sl{{font-size:11px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;font-weight:700}}
+.detail-spec .sv{{font-size:14.5px;color:var(--text);font-weight:700}}
+@media(max-width:880px){{.detail-hero{{grid-template-columns:1fr}}.detail-image{{height:220px}}.detail-image-icon{{font-size:60px}}}}
+</style>
+
+<section class="wrap" style="padding-bottom:30px">
+  <div style="font-size:12px;color:var(--muted);letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:20px">
+    <a href="/" style="color:var(--blue-1)">홈</a> · <a href="/shop-sale/" style="color:var(--blue-1)">업소매매</a> · 매물 #{s['id']}
+  </div>
+  <div class="detail-hero">
+    <div class="detail-image">
+      <div class="detail-image-icon">{s['service_kr'][:2]}</div>
+      <div class="detail-image-tag">샘플 이미지</div>
+    </div>
+    <div class="detail-info">
+      <div class="badges">
+        <span class="badge-status" style="color:{stcol};background:{stbg}">● {s['status']}</span>
+        <span class="badge-tag">{s['service_kr']}</span>
+        <span class="badge-tag">{s['size_pyeong']}평</span>
+      </div>
+      <h1>{s['title']}</h1>
+      <div class="detail-loc">📍 {s['region_kr']} {s['district_kr']} · {s['location_sub']}</div>
+      <div class="detail-keystat">
+        <div class="ks"><span class="kl">월매출</span><span class="kv">{s['monthly_revenue']}</span></div>
+        <div class="ks"><span class="kl">월 순익</span><span class="kv">{s['monthly_profit']}</span></div>
+      </div>
+      <div class="detail-prices">
+        <div class="pp"><span class="pl">권리금</span><span class="pv">{s['key_money']:,}만원</span></div>
+        <div class="pp"><span class="pl">총금액</span><span class="pv" style="color:var(--blue-1)">{s['total']:,}만원</span></div>
+        <div class="pp"><span class="pl">월세</span><span class="pv">{s['rent']:,}만원</span></div>
+        <div class="pp"><span class="pl">보증금</span><span class="pv">{s['deposit']:,}만원</span></div>
+      </div>
+      <div class="detail-sample">
+        <strong style="color:#7bb0ff">샘플 매물</strong> · 본 매물은 시장 안내용 예시이며, 실 등록 매물은 양도자 검증 후 매수 의향자에게 직접 연결됩니다. 본 사이트에 매물을 등록하시려면 <a href="/contact-ads/" style="color:var(--blue-1);font-weight:700">광고문의</a>를 이용하세요.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:20px">
+  <h2 style="font-size:24px;margin-bottom:18px">매물 정보</h2>
+  <div class="detail-spec">
+    <div class="sp"><span class="sl">매물 번호</span><span class="sv">#{s['id']}</span></div>
+    <div class="sp"><span class="sl">상태</span><span class="sv" style="color:{stcol}">{s['status']}</span></div>
+    <div class="sp"><span class="sl">업종</span><span class="sv">{s['service_kr']}</span></div>
+    <div class="sp"><span class="sl">평수</span><span class="sv">{s['size_pyeong']}평</span></div>
+    <div class="sp"><span class="sl">지역</span><span class="sv">{s['region_kr']} {s['district_kr']}</span></div>
+    <div class="sp"><span class="sl">위치</span><span class="sv" style="font-size:12.5px">{s['location_sub']}</span></div>
+    <div class="sp"><span class="sl">등록일</span><span class="sv">{s['registered']}</span></div>
+    <div class="sp"><span class="sl">권리금</span><span class="sv" style="color:#f4d29c">{s['key_money']:,}만원</span></div>
+    <div class="sp"><span class="sl">총금액</span><span class="sv" style="color:var(--blue-1)">{s['total']:,}만원</span></div>
+    <div class="sp"><span class="sl">월세</span><span class="sv">{s['rent']:,}만원</span></div>
+    <div class="sp"><span class="sl">보증금</span><span class="sv">{s['deposit']:,}만원</span></div>
+    <div class="sp"><span class="sl">월매출</span><span class="sv" style="color:#f4d29c">{s['monthly_revenue']}</span></div>
+    <div class="sp"><span class="sl">월 순익</span><span class="sv" style="color:#f4d29c">{s['monthly_profit']}</span></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <h2 style="font-size:24px;margin-bottom:18px">매물 특징</h2>
+  <div class="note-card">
+    <div class="note-num">●</div>
+    <div class="note-content">
+      <h3 class="note-title">{s['feature']}</h3>
+      <div class="note-text">
+        <p>{s['region_kr']} {s['district_kr']} 권역 내 {s['service_kr']} 라인으로 운영되어 온 매물입니다. {s['location_sub']}에 위치해 교통 접근성이 우수하며, 평수 {s['size_pyeong']}평 규모로 1인~다인 운영 모두 가능한 구조입니다.</p>
+        <p>월매출 {s['monthly_revenue']} 범위로 안정적 운영 기반을 갖추고 있으며, 월 순익은 {s['monthly_profit']} 수준입니다. 권리금 {s['key_money']:,}만원에 보증금 {s['deposit']:,}만원, 월세 {s['rent']:,}만원으로 총 인수 비용은 {s['total']:,}만원입니다.</p>
+        <p>본 매물은 권리·시설·고정 고객 인수를 포함하며, 자세한 시설 목록·직원 승계 여부·임대인 동의 사항은 매수 의향 확인 후 양도자가 직접 안내합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <h2 style="font-size:24px;margin-bottom:18px">매수 전 체크사항</h2>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">임대차 승계·임대인 동의</h3><div class="note-text"><p>임대차 계약서 사본·잔여 기간·임대인의 신규 임차인 승계 의사를 사전에 확인해주세요. 「상가건물 임대차보호법」상 권리금 회수 기회가 보호되지만, 임대인이 정당한 사유로 거부 가능한 경우도 있어 미리 점검이 필요합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">매출·순익 자료</h3><div class="note-text"><p>최근 3~6개월 카드사 정산표·POS 매출·신고 매출 자료를 양도자에게 요청하세요. 표시 월매출({s['monthly_revenue']})·월 순익({s['monthly_profit']})은 양도자 자료 기반의 범위로, 실측 자료 확인이 필수입니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">시설·장비 인수 목록</h3><div class="note-text"><p>침대·오일 워머·세탁기·정수기·POS·CCTV 등 인수 대상 시설·장비를 목록화하고 사진을 받아두세요. \"포함이라고 했는데 없다\"는 분쟁의 출발점이 됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">관리사·직원 승계</h3><div class="note-text"><p>마사지샵의 핵심 자산 중 하나는 관리사·직원입니다. 권리금에 직원 승계가 포함되는지, 직원 동의는 받았는지, 4대 보험·퇴직금 정산 방식은 어떻게 할지 사전에 정리해야 거래가 매끄럽게 진행됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">05</div><div class="note-content"><h3 class="note-title">단골·고객 데이터 인계</h3><div class="note-text"><p>단골 명단·예약 시스템·SNS 계정·블로그 등 무형 자산의 인계 절차를 문서로 정리하세요. 개인정보보호법상 단순 명단 양도는 위법 가능성이 있어 변호사 자문을 권장드립니다.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <h2 style="font-size:24px;margin-bottom:18px">{s['region_kr']} {s['district_kr']} 관련 매물</h2>
+  <div class="shop-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px">{related_cards}</div>
+  <div style="text-align:center;margin-top:30px">
+    <a class="btn btn-ghost" href="/shop-sale/">전체 매물 보기 →</a>
+  </div>
+</section>
+"""
+    return page(title, desc, f"/shop-sale/{s['id']}/", body, extra_jsonld=extra_ld)
