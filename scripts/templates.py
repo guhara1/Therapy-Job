@@ -308,7 +308,7 @@ def header_html():
     <li><a href="/reviews/">사례</a></li>
     <li><a href="/pricing-ads/" aria-haspopup="true">광고 상품</a>
       <ul class="submenu">
-        <li><a href="/pricing-ads/">광고 상품 안내</a></li>
+        <li><a href="/pricing-ads/">채용공고</a></li>
         <li><a href="/shop-sale/">업소매매</a></li>
       </ul></li>
     <li><a class="cta-gold" href="/contact-ads/">광고문의</a></li>
@@ -345,8 +345,8 @@ def footer_html():
       <ul>
         <li><a href="/about/">테라피잡 소개</a></li>
         <li><a href="/notices/">공지사항</a></li>
-        <li><a href="/pricing-ads/">광고 상품 안내</a></li>
-        <li><a href="/shop-sale/">업소 매매</a></li>
+        <li><a href="/pricing-ads/">채용공고 광고</a></li>
+        <li><a href="/shop-sale/">업소매매</a></li>
         <li><a href="/pricing/">급여 시세표</a></li>
         <li><a href="/magazine/">매거진</a></li>
         <li><a href="/reviews/">매칭 사례</a></li>
