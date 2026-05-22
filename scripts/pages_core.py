@@ -794,7 +794,10 @@ def build_contact_ads():
 .adq-input,.adq-select,.adq-text{{font-family:inherit;font-size:14.5px;color:var(--text);padding:13px 16px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;transition:.2s;outline:none;width:100%}}
 .adq-input:focus,.adq-select:focus,.adq-text:focus{{border-color:rgba(123,176,255,.5);background:rgba(255,255,255,.05);box-shadow:0 0 0 3px rgba(91,155,255,.12)}}
 .adq-input::placeholder,.adq-text::placeholder{{color:var(--dim)}}
-.adq-select{{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a0a8be' d='M6 8 0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 18px center;padding-right:40px}}
+.adq-select{{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a0a8be' d='M6 8 0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 18px center;padding-right:40px;color-scheme:dark}}
+.adq-select option{{background:#1a2236;color:#eef2fb;font-weight:500;padding:8px}}
+.adq-select option:checked{{background:#2c54a8;color:#fff}}
+.adq-select option[value=""]{{color:#a0a8be}}
 .adq-text{{min-height:130px;resize:vertical;line-height:1.7}}
 .adq-honey{{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}}
 .adq-submit{{display:flex;align-items:center;justify-content:center;gap:8px;padding:16px 28px;background:linear-gradient(135deg,#d4af37,#f4d29c);color:#1a1410;border:0;border-radius:999px;font-weight:800;font-size:15px;letter-spacing:-.01em;cursor:pointer;transition:.2s;width:100%}}
