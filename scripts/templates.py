@@ -426,6 +426,32 @@ def global_banner(path):
 """
 
 
+def shop_sale_promo_bar(path):
+    """헤더 직하 업소매매 광고 배너 — 모든 페이지 상단 노출. /shop-sale/ 페이지에서는 자기 자신이므로 제외."""
+    if path.startswith("/shop-sale"):
+        return ""
+    return """
+<a href="/shop-sale/" class="promo-bar" aria-label="마사지샵 업소매매 매물 등록 — 1개월 10만원부터, 익명 게재 · 매수자 1:1 매칭">
+  <div class="promo-bar-inner">
+    <span class="promo-tag">업소매매</span>
+    <span class="promo-text"><strong>마사지샵 양도 매물 등록</strong> · 1개월 10만원 · 익명 게재 · 매수자 1:1 매칭</span>
+    <span class="promo-cta">지금 등록 →</span>
+  </div>
+</a>
+<style>
+.promo-bar{display:block;background:linear-gradient(90deg,#1a1410 0%,#2a1f12 50%,#1a1410 100%);border-bottom:1px solid rgba(212,175,55,.32);transition:background .2s}
+.promo-bar:hover{background:linear-gradient(90deg,#231911 0%,#352713 50%,#231911 100%)}
+.promo-bar-inner{max-width:1240px;margin:0 auto;padding:11px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:13px;line-height:1.4}
+.promo-tag{padding:4px 10px;background:linear-gradient(135deg,#d4af37,#f4d29c);color:#1a1410;font-size:10.5px;letter-spacing:.18em;font-weight:800;border-radius:5px;flex-shrink:0}
+.promo-text{color:#f4d29c;flex:1;min-width:200px}
+.promo-text strong{color:#fff;font-weight:700}
+.promo-cta{padding:6px 14px;background:rgba(212,175,55,.18);color:#d4af37;font-size:12.5px;font-weight:700;border:1px solid rgba(212,175,55,.42);border-radius:999px;letter-spacing:-.01em;flex-shrink:0;transition:.18s}
+.promo-bar:hover .promo-cta{background:linear-gradient(135deg,#d4af37,#f4d29c);color:#1a1410;border-color:transparent}
+@media(max-width:680px){.promo-bar-inner{padding:10px 16px;font-size:12px;gap:10px}.promo-text{font-size:11.5px}.promo-tag{font-size:9.5px;padding:3px 8px}.promo-cta{font-size:11.5px;padding:5px 11px}}
+</style>
+"""
+
+
 def page(title, description, path, body, og_image=None, extra_jsonld=None):
     return f"""<!doctype html>
 <html lang="ko">
@@ -434,6 +460,7 @@ def page(title, description, path, body, og_image=None, extra_jsonld=None):
 </head>
 <body>
 {header_html()}
+{shop_sale_promo_bar(path)}
 <main>
 {body}
 </main>
