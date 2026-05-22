@@ -983,3 +983,179 @@ def build_contact_ads():
 </script>
 """
     return page(title, desc, "/contact-ads/", body, extra_jsonld=extra_ld)
+
+
+# ─────────────────────────────────────────────
+# 업소 매매 안내 (/shop-sale/)
+# ─────────────────────────────────────────────
+def build_shop_sale():
+    title = f"마사지샵 업소 매매 — 권리금·매매 매물 등록 안내 2026 | {COMPANY['brand_kr']}"
+    desc = "테라피잡 업소 매매 매물 등록 안내. 1개월 10만원·2개월 15만원·1년 33만원. 권리금·매출·운영 정보를 검증된 매수자에게만 노출하는 익명 매물 게재 서비스."
+
+    def num(n): return f"{n:,}원"
+
+    pricing = [
+        {"period":"1개월","price":100000,"per_month":100000,"label":"단기 매물","sub":"빠른 매수자 매칭이 목표일 때"},
+        {"period":"2개월","price":150000,"per_month":75000,"label":"표준 매물 · 추천","sub":"가장 많이 선택되는 기간"},
+        {"period":"12개월 (1년)","price":330000,"per_month":27500,"label":"장기 매물","sub":"확실한 거래 성사까지 안정 노출"},
+    ]
+
+    price_cards = ""
+    for i,p in enumerate(pricing):
+        best = i == 1
+        bg = "linear-gradient(135deg,rgba(212,175,55,.08),rgba(212,175,55,.02))" if best else "linear-gradient(135deg,var(--surface),var(--surface-2))"
+        border = "rgba(212,175,55,.4)" if best else "var(--line)"
+        accent = "#d4af37" if best else "var(--blue-1)"
+        badge = '<span style="position:absolute;top:-12px;right:24px;padding:5px 12px;background:linear-gradient(135deg,#d4af37,#f4d29c);color:#1a1410;font-size:10.5px;letter-spacing:.22em;font-weight:800;border-radius:5px">BEST</span>' if best else ''
+        price_cards += f"""<div style="position:relative;padding:32px 28px;border-radius:18px;background:{bg};border:1px solid {border}">
+  {badge}
+  <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:{accent};font-weight:700;margin-bottom:8px">{p['label']}</div>
+  <h3 style="font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.02em">{p['period']}</h3>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.65">{p['sub']}</p>
+  <div style="padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:18px">
+    <div style="font-size:32px;font-weight:800;color:{accent};letter-spacing:-.02em">{num(p['price'])}</div>
+    <div style="font-size:12px;color:var(--dim);margin-top:4px">월 환산 {num(p['per_month'])}</div>
+  </div>
+  <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13.5px;color:#c8ccda">
+    <li><span style="color:{accent};margin-right:6px">●</span>매물 단독 페이지 게재</li>
+    <li><span style="color:{accent};margin-right:6px">●</span>지역·업종별 매물 영역 노출</li>
+    <li><span style="color:{accent};margin-right:6px">●</span>익명 처리(상호·주소 비공개)</li>
+    <li><span style="color:{accent};margin-right:6px">●</span>매수자 검증 후 1:1 연결</li>
+  </ul>
+</div>"""
+
+    faqs = [
+        ("업소 매매란 정확히 무엇인가요?",
+         "운영 중인 마사지샵의 영업권·시설·고정 고객·임대차 권리 등을 새 운영자에게 양도하는 거래입니다. 양도자는 권리금을 회수하고, 양수자는 시장 진입 시간을 단축하고 검증된 운영 노하우와 단골을 함께 인수받습니다. 단순 임대 매물(영업 안 함)과는 다릅니다."),
+        ("매물 정보는 누구에게 공개되나요?",
+         "기본은 익명 게재입니다 — 지역(구·동까지만)·업종·평수·월 매출 범위·권리금 범위만 공개됩니다. 상호·정확한 주소·계좌 정보 등은 매수 의향이 있는 분이 운영팀을 통해 본인 확인 후에만 전달됩니다."),
+        ("권리금 협상은 누가 진행하나요?",
+         "권리금 협상은 양도자·양수자가 직접 진행합니다. 본 사이트는 매물 정보 게재와 매수자 매칭을 도와드리는 정보 제공 서비스이며, 부동산 중개나 권리금 산정은 별도 자격 사업자(공인중개사)와 협의가 필요합니다."),
+        ("매물 등록 후 매수자가 안 나타나면 환불되나요?",
+         "본 서비스는 매물 게재 슬롯에 대한 비용이므로 거래 성사 여부에 따라 환불되지 않습니다. 다만 게재 후 7일 이내 본인 사유 해지 시 50%, 7일 이후에는 잔여 일수 기준 30% 환불됩니다. 운영상 문제로 노출 중단된 기간은 무료 연장됩니다."),
+        ("어떤 정보를 미리 준비하면 좋나요?",
+         "사업자등록증·임대차계약서 사본, 최근 3~6개월 매출 자료(카드사 정산표 또는 신고 매출), 시설·장비 목록, 직원·관리사 현황, 단골 비중 추정치, 희망 권리금이 있으면 매수자 매칭이 빨라집니다."),
+        ("매물 등록 시 알아둬야 할 법적 사안은?",
+         "권리금 양도는 「상가건물 임대차보호법」에 따라 임대인의 동의가 필요한 경우가 있으며, 임차인의 권리금 회수 기회 보호 조항도 적용됩니다. 부가가치세·소득세 처리, 직원 승계 여부, 보증금 정산도 사전에 정리해두시는 것이 좋습니다. 구체적인 법률 자문은 변호사·공인중개사·세무사 자문을 권장드립니다."),
+        ("매물 등록 진행은 어떻게 하나요?",
+         f"<a href=\"/contact-ads/\" style=\"color:var(--blue-1);font-weight:700\">광고문의</a> 폼에 \"업소 매매 등록\"을 명시해 신청해주시면 담당자가 평일 1영업일 내 안내드립니다. 고객센터 <a href=\"tel:{COMPANY['tel']}\" style=\"color:var(--blue-1);font-weight:700\">{COMPANY['tel']}</a>로 직접 문의도 가능합니다."),
+    ]
+
+    offer_items = []
+    for p in pricing:
+        offer_items.append({
+            "@type":"Offer",
+            "name":f"업소 매매 매물 게재 — {p['period']}",
+            "price":str(p['price']),
+            "priceCurrency":"KRW",
+            "availability":"https://schema.org/InStock",
+            "category":"업소 매매 매물 게재",
+            "url":f"{COMPANY['base_url']}/shop-sale/"
+        })
+
+    extra_ld = [
+        breadcrumb_ld([("홈","/"),("업소 매매","/shop-sale/")]),
+        faq_ld(faqs),
+        {
+            "@type":"Service",
+            "@id":f"{COMPANY['base_url']}/shop-sale/#service",
+            "serviceType":"마사지샵 업소 매매 매물 게재 서비스",
+            "name":"테라피잡 업소 매매 매물 등록",
+            "description":desc,
+            "provider":{"@id":f"{COMPANY['base_url']}/#organization"},
+            "areaServed":{"@type":"Country","name":"대한민국"},
+            "audience":{"@type":"Audience","audienceType":"마사지샵 양도자 · 양수자"},
+            "hasOfferCatalog":{
+                "@type":"OfferCatalog",
+                "name":"업소 매매 매물 게재 단가표",
+                "itemListElement":offer_items
+            }
+        }
+    ]
+
+    body = f"""
+<section class="wrap" style="padding-bottom:30px">
+  <span class="kicker">SHOP SALE · 업소 매매</span>
+  <h1 style="font-size:clamp(36px,5.5vw,60px);margin:14px 0 20px">마사지샵<br><span class="grad">업소 매매</span> <span class="serif">매물.</span></h1>
+  <p class="lead">운영 중인 마사지샵을 새 운영자에게 양도하시거나, 검증된 매물을 인수받고 싶으신 분을 위한 매물 게재 서비스입니다. 익명 게재로 운영 중인 영업에 지장이 없으며, 매수 의향자만 운영팀이 1:1로 연결합니다.</p>
+</section>
+
+<section class="wrap" style="padding-top:0;padding-bottom:40px">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker" style="color:#d4af37">PRICING</span>
+    <h2 style="margin-top:8px">매물 게재 가격</h2>
+    <p class="lead" style="margin:14px auto 0">기간별 단가입니다. 모든 가격은 부가세 별도이며, 사업자 세금계산서 발행됩니다.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px">{price_cards}</div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">WHAT YOU GET</span>
+    <h2 style="margin-top:8px">매물 등록 시 제공되는 것</h2>
+    <p class="lead" style="margin:14px auto 0">단순 게시판 노출이 아니라, 매물 단독 페이지·익명 처리·매수자 검증을 모두 포함합니다.</p>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">매물 단독 페이지 게재</h3><div class="note-text"><p>매물별로 단독 URL이 생성되며, 지역·업종·평수·매출 범위·권리금 등을 정리한 상세 정보 페이지가 자동 생성됩니다. 매물 정보는 SEO에 최적화된 형식으로 작성되어 구글 검색 노출이 가능합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">지역·업종 매물 영역 노출</h3><div class="note-text"><p>매물이 위치한 광역시·행정구·업종 페이지의 매물 영역에 자동 노출됩니다. 매수 의향이 있는 방문자가 자연스럽게 매물을 발견하도록 설계됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">익명 처리 (영업 보호)</h3><div class="note-text"><p>상호·정확한 주소·연락처는 비공개로 처리됩니다. 동(洞) 단위까지만 공개되며, 정확한 위치와 상호는 매수 의향 확인된 분에게만 운영팀이 별도 전달합니다. 운영 중인 영업과 직원에게 매매 진행 사실이 알려지지 않습니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">매수자 1차 검증·1:1 연결</h3><div class="note-text"><p>매수 의향자가 문의하면 운영팀이 신원·예산·진정성을 1차 확인한 뒤 양도자에게 연결합니다. 호기심성·정보 수집 목적의 문의를 1차 차단해 양도자의 시간을 보호합니다.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">PROCESS</span>
+    <h2 style="margin-top:8px">매물 등록부터 거래 성사까지</h2>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">상담 신청</h3><div class="note-text"><p><a href="/contact-ads/" style="color:var(--blue-1);font-weight:700">광고문의</a> 폼에 \"업소 매매 등록\"을 명시해 신청 또는 고객센터 <a href="tel:{COMPANY['tel']}" style="color:var(--blue-1);font-weight:700">{COMPANY['tel']}</a>로 연락 주시면 담당자가 평일 1영업일 내 안내드립니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">매물 정보 정리</h3><div class="note-text"><p>지역·업종·평수·월 매출 범위·희망 권리금·시설 상태·직원 현황·임대 조건 등을 정리합니다. 사업자등록증·임대차계약서·매출 자료를 함께 검토해 매물의 시장 가치를 진단합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">매물 게재 시작 (1영업일)</h3><div class="note-text"><p>결제 확인 시점부터 매물 단독 페이지가 게재되며, 지역·업종 페이지 매물 영역에 자동 노출됩니다. 게재 시작일부터 계약 기간이 카운트됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">매수 문의 검증·전달</h3><div class="note-text"><p>매수 문의가 들어오면 운영팀이 신원·예산·진정성을 1차 확인한 후 양도자에게 전달합니다. 정보 수집 목적·시세 탐색 목적의 문의는 1차 차단됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">05</div><div class="note-content"><h3 class="note-title">실사·협상·계약 (당사자 직접)</h3><div class="note-text"><p>실제 현장 실사·권리금 협상·계약은 양도자와 양수자가 직접 진행합니다. 본 사이트는 매물 정보 제공·매칭만 담당하며, 거래 성사 시 별도 수수료를 받지 않습니다. 공인중개사·변호사 자문이 필요한 경우 신뢰할 수 있는 전문가를 연결해드릴 수 있습니다.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">CHECKLIST</span>
+    <h2 style="margin-top:8px">매물 등록 전 알아둘 것</h2>
+    <p class="lead" style="margin:14px auto 0">권리금 거래는 단순 매매와 달리 법적·세무적 고려사항이 많습니다. 등록 전 다음 항목을 검토하시는 것이 좋습니다.</p>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">임대인 동의 여부</h3><div class="note-text"><p>「상가건물 임대차보호법」상 임차인은 권리금 회수 기회를 보호받지만, 임대인이 신규 임차인을 정당한 사유로 거부할 수 있는 경우도 있습니다. 임대차 계약서 조건과 임대인의 의사를 사전에 확인하세요.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">권리금 시세 산정</h3><div class="note-text"><p>월 매출·순익·단골 비중·시설 가치·잔여 임대 기간·입지·업종 트렌드를 종합해 시세가 형성됩니다. 본 사이트의 권역별 데이터(평균 권리금 범위)를 참고하시고, 정밀 산정은 공인중개사 자문을 권장드립니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">세무 처리</h3><div class="note-text"><p>권리금은 양도자에게 기타소득(또는 사업소득)으로 과세되며, 양수자는 권리금을 5년간 균등 상각해 비용 처리할 수 있습니다. 부가세 처리·세금계산서 발행 의무도 함께 검토하시는 것이 좋습니다. 세부 사안은 세무사 자문을 권장드립니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">직원·관리사 승계</h3><div class="note-text"><p>마사지샵의 핵심 자산 중 하나는 관리사·직원입니다. 권리금에 직원 승계가 포함되는지, 직원의 동의는 받았는지, 4대 보험 처리·퇴직금 정산은 어떻게 할지 사전에 정리해두시면 거래가 매끄럽게 진행됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">05</div><div class="note-content"><h3 class="note-title">시설·장비 목록</h3><div class="note-text"><p>침대·오일 워머·세탁기·정수기·POS·CCTV 등 인수 대상 시설·장비를 목록화하고 사진을 함께 준비하세요. 거래 후 \"이게 포함이라고 했는데 없다\"는 분쟁의 출발점이 됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">06</div><div class="note-content"><h3 class="note-title">단골·고객 데이터 인계</h3><div class="note-text"><p>단골 명단·예약 시스템·SNS 계정·블로그 등은 정당한 절차로 인계되어야 하며, 개인정보보호법상 고객 동의가 필요한 항목도 있습니다. 단순 명단 양도는 위법 가능성이 있어 변호사 자문을 권장드립니다.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 30px">
+    <span class="kicker">FAQ</span>
+    <h2 style="margin-top:8px">자주 묻는 질문</h2>
+  </div>
+  <div style="max-width:860px;margin:0 auto">
+"""
+    for q,a in faqs:
+        body += f'<details><summary>{q}<span>+</span></summary><div>{a}</div></details>'
+    body += f"""
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:40px">
+  <div style="padding:50px 40px;border-radius:22px;background:linear-gradient(135deg,rgba(212,175,55,.08),rgba(91,155,255,.04));border:1px solid rgba(212,175,55,.25);text-align:center">
+    <span class="kicker" style="color:#d4af37">매물 등록 문의</span>
+    <h2 style="margin:10px 0 14px">검증된 매수자와 1:1 매칭</h2>
+    <p class="lead" style="margin:0 auto 24px">광고문의 폼에 \"업소 매매 등록\"을 명시해 신청해주시면 평일 1영업일 내 담당자가 연락드립니다.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn btn-primary" href="/contact-ads/">광고문의 폼 →</a>
+      <a class="btn btn-ghost" href="tel:{COMPANY['tel']}">{COMPANY['tel']} 전화</a>
+    </div>
+  </div>
+</section>
+"""
+    return page(title, desc, "/shop-sale/", body, extra_jsonld=extra_ld)
