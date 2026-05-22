@@ -1,6 +1,7 @@
 """허브·서브 페이지 — 구인공고, 구직 가이드, 관리사, 매거진"""
 from templates import page, breadcrumb_ld, faq_ld, COMPANY
 from data import SERVICES, NATIONALITIES, REGIONS, MAGAZINE, SAMPLE_JOBS, DISTRICTS, AD_TIERS
+from ads import render_all_tiers
 
 # ─────────────────────────────────────────────
 # 구인공고 허브
@@ -167,8 +168,10 @@ def build_job_service(s):
   </div>
 </section>
 
+{render_all_tiers(service=s['slug'], context_label=s['kr'])}
+
 <section class="wrap" style="padding-top:0">
-  <h2>{s['kr']} 모집 중인 공고</h2>
+  <h2>{s['kr']} — 기타 공고 샘플</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:30px">{job_cards}</div>
 </section>
 

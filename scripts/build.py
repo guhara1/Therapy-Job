@@ -3,10 +3,11 @@ import os, sys, re, json
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(__file__))
-from data import COMPANY, SERVICES, NATIONALITIES, REGIONS, MAGAZINE, DISTRICTS
+from data import COMPANY, SERVICES, NATIONALITIES, REGIONS, MAGAZINE, DISTRICTS, SAMPLE_JOBS
 from pages_core import build_index, build_about, build_contact, build_pricing, build_reviews, build_policy_privacy, build_policy_terms, build_policy_youth
 from pages_hubs import build_jobs_hub, build_job_service, build_seekers_hub, build_seeker_service, build_therapists_hub, build_therapist, build_magazine_hub, build_magazine_article
 from pages_locations import build_locations_hub, build_region_hub, build_district
+from ads import build_ad_detail
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
@@ -83,6 +84,11 @@ def build_sitemap():
 
     for m in MAGAZINE:
         add(f"/magazine/{m['slug']}/", priority="0.75", changefreq="monthly")
+
+    # 광고 상세 (JobPosting — Google Jobs 노출 우선)
+    for j in SAMPLE_JOBS:
+        pri = "0.95" if j.get("tier")=="vvip" else "0.85" if j.get("tier")=="vip" else "0.7"
+        add(f"/ad/{j['id']}/", priority=pri, changefreq="weekly")
 
     add("/policy/privacy/", priority="0.3", changefreq="yearly")
     add("/policy/terms/", priority="0.3", changefreq="yearly")
@@ -257,6 +263,10 @@ def main():
         write_page(f"/locations/{r['slug']}/", build_region_hub(r), minify); count += 1
         for slug, kr in DISTRICTS[r["slug"]]:
             write_page(f"/locations/{r['slug']}/{slug}/", build_district(r, slug, kr), minify); count += 1
+
+    print(f"→ 광고 상세 ({len(SAMPLE_JOBS)})")
+    for j in SAMPLE_JOBS:
+        write_page(f"/ad/{j['id']}/", build_ad_detail(j), minify); count += 1
 
     print(f"\n✓ 총 {count}개 파일 생성 완료")
 

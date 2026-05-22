@@ -1,6 +1,45 @@
 """지역 페이지 — 광역시도 허브 + 82개 행정구 페이지"""
 from templates import page, breadcrumb_ld, faq_ld, COMPANY
-from data import REGIONS, DISTRICTS, DISTRICT_DONGS, DISTRICT_CHARACTER, SERVICES, district_reviews
+from data import REGIONS, DISTRICTS, DISTRICT_DONGS, DISTRICT_CHARACTER, SERVICES, SAMPLE_JOBS, district_reviews
+from ads import render_all_tiers, filter_jobs, render_card, render_tier_section, AD_CSS, TIER_STYLES
+from data import AD_TIERS
+
+def _jobs_in_region(region):
+    """광역 지역 안에 속한 모든 광고 (행정구 slug 기반)"""
+    district_slugs = {slug for slug,_ in DISTRICTS[region["slug"]]}
+    return [j for j in SAMPLE_JOBS if j.get("region_slug") in district_slugs]
+
+def render_district_tiers(region, district_slug, district_kr):
+    """행정구 페이지용 3단계 광고 — 해당 행정구 매칭 우선, 부족하면 광역 보충"""
+    region_jobs = _jobs_in_region(region)
+    intro = f'<div style="text-align:center;max-width:760px;margin:0 auto 40px"><span class="kicker">PAID LISTINGS · {district_kr.upper()}</span><h2 style="margin-top:8px">{district_kr} 광고 채용정보</h2><p class="lead" style="margin-top:14px">{district_kr} 권역 매칭 광고를 우선 노출하고, 인근 권역 광고로 보충합니다. 등급 내에서는 선등록순.</p></div>'
+    out = [AD_CSS, '<section class="wrap">', intro]
+    for tier in ["vvip","vip","premium"]:
+        # 1순위: 해당 행정구
+        local = sorted([j for j in region_jobs if j.get("region_slug")==district_slug and j.get("tier")==tier], key=lambda j:j.get("registered",""))
+        # 2순위: 같은 광역 내 다른 행정구 (보충)
+        backup = sorted([j for j in region_jobs if j.get("region_slug")!=district_slug and j.get("tier")==tier], key=lambda j:j.get("registered",""))
+        max_c = next(t["max"] for t in AD_TIERS if t["slug"]==tier)
+        jobs = (local + backup)[:max_c]
+        out.append(render_tier_section(tier, jobs, max_c))
+        if tier != "premium":
+            out.append('</section><section class="wrap" style="padding-top:0">')
+    out.append('</section>')
+    return "\n".join(out)
+
+def render_region_tiers(region):
+    """광역 지역 페이지용 3단계 광고 섹션"""
+    region_jobs = _jobs_in_region(region)
+    intro = f'<div style="text-align:center;max-width:760px;margin:0 auto 40px"><span class="kicker">PAID LISTINGS</span><h2 style="margin-top:8px">{region["kr"]} 광고 채용정보</h2><p class="lead" style="margin-top:14px">{region["kr"]} 권역 유료 광고는 VVIP → VIP → 프리미엄 3단계로 노출되며, 각 등급 내에서는 선등록순으로 정렬됩니다.</p></div>'
+    out = [AD_CSS, '<section class="wrap">', intro]
+    for tier in ["vvip","vip","premium"]:
+        jobs = sorted([j for j in region_jobs if j.get("tier")==tier], key=lambda j:j.get("registered",""))
+        max_c = next(t["max"] for t in AD_TIERS if t["slug"]==tier)
+        out.append(render_tier_section(tier, jobs, max_c))
+        if tier != "premium":
+            out.append('</section><section class="wrap" style="padding-top:0">')
+    out.append('</section>')
+    return "\n".join(out)
 
 # ─────────────────────────────────────────────
 # 지역 허브 (/locations/)
@@ -90,6 +129,8 @@ def build_region_hub(r):
   <h2>{r['kr']} 전체 행정구</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:30px">{district_cards}</div>
 </section>
+
+{render_region_tiers(r)}
 """
     return page(title, desc, f"/locations/{r['slug']}/", body, extra_jsonld=extra_ld)
 
@@ -256,6 +297,8 @@ def build_district(region, district_slug, district_kr):
     <p style="color:#c8ccda;line-height:1.78">{district_kr} 권역의 모든 시세·평균 도착 시간은 2025년 1월~2026년 5월 사이 본사 자체 매칭 로그 23,700건(서울 14,200·경기 6,400·인천 1,750·부산 1,350)과 샵 인터뷰 412건에서 도출한 1차 데이터입니다. 동별 도착 시간은 분기별로 재계산해 갱신합니다.</p>
   </div>
 </section>
+
+{render_district_tiers(region, district_slug, district_kr)}
 
 <section class="wrap" style="padding-top:0">
   <h2>업종별 시세</h2>
