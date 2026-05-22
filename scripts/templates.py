@@ -287,7 +287,6 @@ def header_html():
     <li><a href="/reviews/">사례</a></li>
     <li><a href="/pricing-ads/">광고 상품</a></li>
     <li><a class="cta-gold" href="/contact-ads/">광고문의</a></li>
-    <li><a class="cta-pill" href="tel:{COMPANY['tel']}">{COMPANY['tel']}</a></li>
   </ul>
 </nav>
 </header>"""
