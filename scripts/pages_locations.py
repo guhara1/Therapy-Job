@@ -1,7 +1,7 @@
 """지역 페이지 — 광역시도 허브 + 82개 행정구 페이지"""
 from templates import page, breadcrumb_ld, faq_ld, COMPANY
 from data import REGIONS, DISTRICTS, DISTRICT_DONGS, DISTRICT_CHARACTER, SERVICES, SAMPLE_JOBS, district_reviews
-from ads import render_all_tiers, filter_jobs, render_card, render_tier_section, AD_CSS, TIER_STYLES
+from ads import render_all_tiers, filter_jobs, render_card, render_tier_section, AD_CSS, TIER_STYLES, single_tier_block, jobs_for_region_tier, jobs_for_district_tier
 from data import AD_TIERS
 
 def _jobs_in_region(region):
@@ -342,14 +342,18 @@ def build_region_hub(r):
   </div>
 </section>
 
-<section class="wrap" style="padding-top:0">
+{single_tier_block("vvip", jobs_for_region_tier(r, "vvip"), include_css=True, padding_top=20)}
+
+<section class="wrap" style="padding-top:20px">
   <h2>{r['kr']} 전체 행정구</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:30px">{district_cards}</div>
 </section>
 
-{render_region_tiers(r)}
+{single_tier_block("vip", jobs_for_region_tier(r, "vip"))}
 
 {render_region_seo(r)}
+
+{single_tier_block("premium", jobs_for_region_tier(r, "premium"))}
 """
     return page(title, desc, f"/locations/{r['slug']}/", body, extra_jsonld=extra_ld)
 
@@ -474,7 +478,9 @@ def build_district(region, district_slug, district_kr):
   </div>
 </section>
 
-<section class="wrap" style="padding-top:30px">
+{single_tier_block("vvip", jobs_for_district_tier(region, district_slug, "vvip"), include_css=True, padding_top=20)}
+
+<section class="wrap" style="padding-top:20px">
   <h2>{district_kr} 권역 — 한눈에 보기</h2>
   <div class="note-stack" style="margin-top:30px">
     <div class="note-card"><div class="note-num">05</div><div class="note-content"><h3 class="note-title">동(洞)별 로드샵 분포</h3><div class="note-text">
@@ -498,6 +504,8 @@ def build_district(region, district_slug, district_kr):
     </div></div></div>
   </div>
 </section>
+
+{single_tier_block("vip", jobs_for_district_tier(region, district_slug, "vip"))}
 
 <section class="wrap" style="padding-top:0">
   <h2>{district_kr} 필드 노트 · 2026</h2>
@@ -529,7 +537,7 @@ def build_district(region, district_slug, district_kr):
   </div>
 </section>
 
-{render_district_tiers(region, district_slug, district_kr)}
+{single_tier_block("premium", jobs_for_district_tier(region, district_slug, "premium"))}
 
 <section class="wrap" style="padding-top:0">
   <h2>업종별 시세</h2>

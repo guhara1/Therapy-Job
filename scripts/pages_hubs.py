@@ -1,7 +1,7 @@
 """허브·서브 페이지 — 구인공고, 구직 가이드, 관리사, 매거진"""
 from templates import page, breadcrumb_ld, faq_ld, COMPANY
 from data import SERVICES, NATIONALITIES, REGIONS, MAGAZINE, SAMPLE_JOBS, DISTRICTS, AD_TIERS
-from ads import render_all_tiers
+from ads import render_all_tiers, single_tier_block, jobs_for_service_tier
 
 # ─────────────────────────────────────────────
 # 구인공고 허브
@@ -158,7 +158,9 @@ def build_job_service(s):
   </div>
 </section>
 
-<section class="wrap" style="padding-top:0">
+{single_tier_block("vvip", jobs_for_service_tier(s['slug'], "vvip"), include_css=True, padding_top=20)}
+
+<section class="wrap" style="padding-top:20px">
   <h2>업종 특성</h2>
   <div class="note-stack" style="margin-top:30px">
     <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">{s['kr']} 시장 개요</h3><div class="note-text">{details_p}</div></div></div>
@@ -168,12 +170,14 @@ def build_job_service(s):
   </div>
 </section>
 
-{render_all_tiers(service=s['slug'], context_label=s['kr'])}
+{single_tier_block("vip", jobs_for_service_tier(s['slug'], "vip"))}
 
 <section class="wrap" style="padding-top:0">
   <h2>{s['kr']} — 기타 공고 샘플</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:30px">{job_cards}</div>
 </section>
+
+{single_tier_block("premium", jobs_for_service_tier(s['slug'], "premium"))}
 
 <section class="wrap" style="padding-top:0">
   <h2>자주 묻는 질문</h2>

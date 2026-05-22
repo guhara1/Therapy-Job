@@ -1,7 +1,7 @@
 """핵심 페이지 생성 — 메인, About, Contact, Pricing, Reviews, Policy"""
 from templates import page, breadcrumb_ld, faq_ld, COMPANY
 from data import SERVICES, NATIONALITIES, REGIONS, MAGAZINE, SAMPLE_JOBS, TEAM, DISTRICTS, AD_TIERS
-from ads import render_all_tiers, AD_CSS, filter_jobs, render_card, render_tier_section
+from ads import render_all_tiers, AD_CSS, filter_jobs, render_card, render_tier_section, single_tier_block
 
 # ─────────────────────────────────────────────
 # 메인 페이지
@@ -127,13 +127,9 @@ def build_index():
   <style>@keyframes scroll{{to{{transform:translateX(-50%)}}}}</style>
 </section>
 
-{render_all_tiers()}
-<section class="wrap" style="padding-top:10px;text-align:center">
-  <a class="btn btn-ghost" href="/jobs/">전체 공고 보기 →</a>
-  <a class="btn btn-primary" href="/contact/" style="margin-left:8px">광고 등록 문의 →</a>
-</section>
+{single_tier_block("vvip", filter_jobs(tier="vvip"), include_css=True, padding_top=20)}
 
-<section class="wrap" style="padding-top:0">
+<section class="wrap" style="padding-top:20px">
   <div style="text-align:center;max-width:760px;margin:0 auto 60px">
     <span class="kicker">BY SERVICE</span>
     <h2>업종별 채용 현황</h2>
@@ -141,6 +137,8 @@ def build_index():
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">{svc_cards}</div>
 </section>
+
+{single_tier_block("vip", filter_jobs(tier="vip"))}
 
 <section class="wrap" style="padding-top:0">
   <div style="text-align:center;max-width:760px;margin:0 auto 60px">
@@ -162,6 +160,13 @@ def build_index():
     <div class="note-card reveal"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">면접 연결</h3><div class="note-text"><p>고객센터를 통해 샵과 일정을 조율하고 면접 일자를 확정합니다.</p></div></div></div>
     <div class="note-card reveal"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">계약·출근</h3><div class="note-text"><p>프리랜서 계약서를 확인하고 첫 출근까지 평균 47시간 안에 완료됩니다.</p></div></div></div>
   </div>
+</section>
+
+{single_tier_block("premium", filter_jobs(tier="premium"))}
+
+<section class="wrap" style="padding-top:10px;text-align:center">
+  <a class="btn btn-ghost" href="/jobs/">전체 공고 보기 →</a>
+  <a class="btn btn-primary" href="/contact/" style="margin-left:8px">광고 등록 문의 →</a>
 </section>
 
 <section class="wrap" style="padding-top:0">

@@ -123,7 +123,7 @@ def render_tier_section(tier, jobs, max_count=None):
 {cards_html}"""
 
 def render_all_tiers(service=None, region_slug=None, context_label=""):
-    """3단계 광고 섹션 전체 (VVIP → VIP → 프리미엄)"""
+    """3단계 광고 섹션 전체 (VVIP → VIP → 프리미엄) — 한 곳에 몰아 표시"""
     sections = []
     intro = f'<div style="text-align:center;max-width:760px;margin:0 auto 40px"><span class="kicker">PAID LISTINGS</span><h2 style="margin-top:8px">{context_label} 광고 채용정보</h2><p class="lead" style="margin-top:14px">유료 광고는 VVIP → VIP → 프리미엄 3단계로 노출되며, 각 등급 내에서는 선등록순으로 정렬됩니다.</p></div>' if context_label else ""
     out = [intro]
@@ -136,6 +136,43 @@ def render_all_tiers(service=None, region_slug=None, context_label=""):
             out.append('</section><section class="wrap" style="padding-top:0;padding-bottom:30px">')
     out.append('</section>')
     return AD_CSS + "\n".join(out)
+
+
+# ─────────────────────────────────────────────
+# Hybrid 배치용 — 단일 등급 섹션 (콘텐츠 사이사이에 삽입)
+# ─────────────────────────────────────────────
+def single_tier_block(tier, jobs, include_css=False, padding_top=30):
+    """등급 1개 섹션을 <section>으로 감싸 반환. include_css=True면 CSS 1회 인라인."""
+    max_c = next(t["max"] for t in AD_TIERS if t["slug"]==tier)
+    css = AD_CSS if include_css else ""
+    return f"""{css}
+<section class="wrap" style="padding-top:{padding_top}px;padding-bottom:30px">
+{render_tier_section(tier, jobs, max_c)}
+</section>"""
+
+def jobs_for_service_tier(service, tier):
+    """업종별 카테고리 페이지용 — 업종 매칭 광고 (선등록순)"""
+    return sorted(
+        [j for j in SAMPLE_JOBS if j.get("service")==service and j.get("tier")==tier],
+        key=lambda j: j.get("registered","")
+    )
+
+def jobs_for_region_tier(region, tier):
+    """광역 페이지용 — 광역 내 모든 행정구 광고 (선등록순)"""
+    district_slugs = {slug for slug,_ in DISTRICTS[region["slug"]]}
+    return sorted(
+        [j for j in SAMPLE_JOBS if j.get("region_slug") in district_slugs and j.get("tier")==tier],
+        key=lambda j: j.get("registered","")
+    )
+
+def jobs_for_district_tier(region, district_slug, tier):
+    """행정구 페이지용 — 1순위 행정구 매칭 → 2순위 같은 광역 보충 (선등록순)"""
+    district_slugs = {slug for slug,_ in DISTRICTS[region["slug"]]}
+    region_jobs = [j for j in SAMPLE_JOBS if j.get("region_slug") in district_slugs and j.get("tier")==tier]
+    local = sorted([j for j in region_jobs if j.get("region_slug")==district_slug], key=lambda j: j.get("registered",""))
+    backup = sorted([j for j in region_jobs if j.get("region_slug")!=district_slug], key=lambda j: j.get("registered",""))
+    max_c = next(t["max"] for t in AD_TIERS if t["slug"]==tier)
+    return (local + backup)[:max_c]
 
 
 # ─────────────────────────────────────────────
