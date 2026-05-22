@@ -1,7 +1,173 @@
 """허브·서브 페이지 — 구인공고, 구직 가이드, 관리사, 매거진"""
-from templates import page, breadcrumb_ld, faq_ld, COMPANY
+from templates import page, breadcrumb_ld, faq_ld, COMPANY, internal_link_section
 from data import SERVICES, NATIONALITIES, REGIONS, MAGAZINE, SAMPLE_JOBS, DISTRICTS, AD_TIERS
 from ads import render_all_tiers, single_tier_block, jobs_for_service_tier
+
+
+# ─────────────────────────────────────────────
+# 매거진 글 하단 — 내부 링크 강화 데이터
+# ─────────────────────────────────────────────
+MAGAZINE_INTERNAL = {
+    "salary-guide-2026": {
+        "h2":"지역·업종별 마사지 관리사 급여 시세 자세히 보기",
+        "intro":"지역과 업종에 따라 단가가 크게 달라집니다. 본인 조건에 맞는 권역과 업종별 시세를 한 페이지에서 확인하세요.",
+        "groups":[
+            ("권역별 마사지 단가",[
+                ("서울 강남구 마사지 관리사 시세","/locations/seoul/gangnam/"),
+                ("서울 마포구 야간 라인 시세","/locations/seoul/mapo/"),
+                ("분당 판교 마사지 관리사 단가","/locations/gyeonggi/seongnam/"),
+                ("해운대 마린시티 프리미엄 시세","/locations/busan/haeundae/"),
+                ("송도 국제도시 외국인 응대 단가","/locations/incheon/yeonsu/"),
+            ]),
+            ("업종별 마사지 구인공고",[
+                ("스웨디시 마사지 구인공고 전체","/jobs/swedish/"),
+                ("아로마 마사지 채용 정보","/jobs/aroma/"),
+                ("타이마사지 구인공고","/jobs/thai/"),
+                ("로미로미 프리미엄 채용","/jobs/lomilomi/"),
+                ("스포츠 마사지 자격증 우대 채용","/jobs/sports/"),
+            ]),
+            ("관련 가이드·공지",[
+                ("프리랜서 계약 체크리스트 9가지","/magazine/contract-checklist/"),
+                ("샵 소속 vs 출장 프리랜서 비교","/magazine/shop-vs-freelance/"),
+                ("신규 입직자 안전 가이드","/notices/newcomer-safety/"),
+            ]),
+        ]
+    },
+    "interview-tips": {
+        "h2":"마사지샵 면접 합격을 위한 추가 가이드",
+        "intro":"면접 통과 후 정착까지의 흐름을 단계별로 정리한 자료입니다. 업종 선택부터 첫 출근 안전까지 함께 참고하세요.",
+        "groups":[
+            ("업종별 구직 가이드",[
+                ("스웨디시 구직 완벽 가이드","/seekers/swedish/"),
+                ("아로마 마사지 구직 가이드","/seekers/aroma/"),
+                ("타이마사지 구직 정보","/seekers/thai/"),
+                ("로미로미·스포츠 프리미엄 구직","/seekers/lomilomi/"),
+            ]),
+            ("관련 매거진",[
+                ("신규 입직자 30일 정착 로드맵","/magazine/newbie-roadmap/"),
+                ("프리랜서 계약 체크리스트","/magazine/contract-checklist/"),
+                ("2026 마사지 관리사 급여 가이드","/magazine/salary-guide-2026/"),
+            ]),
+            ("운영팀 공지",[
+                ("신규 입직자 안전 가이드","/notices/newcomer-safety/"),
+                ("동남아 해외 취업 사기 주의","/notices/southeast-asia-scam/"),
+                ("부정 광고 신고 채널","/notices/fraud-report-channel/"),
+            ]),
+        ]
+    },
+    "contract-checklist": {
+        "h2":"프리랜서 계약 분쟁 예방 — 추가 자료 모음",
+        "intro":"계약 분쟁의 80%는 사전 정보로 막을 수 있습니다. 업종·지역별 시세와 안전 가이드를 함께 확인하세요.",
+        "groups":[
+            ("업종별 구인공고 (계약 사례)",[
+                ("스웨디시 구인공고 — 인센티브 시세","/jobs/swedish/"),
+                ("아로마 채용 — 정산 조건","/jobs/aroma/"),
+                ("스포츠 자격증 우대 — 계약 가산","/jobs/sports/"),
+                ("로미로미 프리미엄 라인 — 계약 구조","/jobs/lomilomi/"),
+            ]),
+            ("관련 매거진",[
+                ("2026 마사지 관리사 급여 가이드","/magazine/salary-guide-2026/"),
+                ("안전한 일터 찾는 7가지 위험 신호","/magazine/safe-workplace/"),
+                ("샵 소속 vs 출장 — 세금·계약 비교","/magazine/shop-vs-freelance/"),
+            ]),
+            ("안전·신고 공지",[
+                ("신규 입직자 안전 체크리스트","/notices/newcomer-safety/"),
+                ("부정 공고·광고 신고 채널","/notices/fraud-report-channel/"),
+                ("성매매업소 모니터링 강화 안내","/notices/prostitution-monitoring/"),
+            ]),
+        ]
+    },
+    "newbie-roadmap": {
+        "h2":"신규 마사지 관리사를 위한 추가 가이드",
+        "intro":"입직 30일 동안 단골 5명을 만들기까지, 업종·면접·안전 정보를 함께 챙기세요.",
+        "groups":[
+            ("신규 입직 적합 업종",[
+                ("스웨디시 — 시장 가장 넓음","/seekers/swedish/"),
+                ("아로마 — 단가 안정 라인","/seekers/aroma/"),
+                ("타이 — 회전 빠른 라인","/seekers/thai/"),
+            ]),
+            ("관련 매거진",[
+                ("면접 95% 합격자의 공통점 7가지","/magazine/interview-tips/"),
+                ("프리랜서 계약 체크리스트","/magazine/contract-checklist/"),
+                ("안전한 일터 고르는 법","/magazine/safe-workplace/"),
+            ]),
+            ("운영팀 안전 공지",[
+                ("신규 입직자 안전 가이드 (필독)","/notices/newcomer-safety/"),
+                ("동남아 해외 취업 사기 주의보","/notices/southeast-asia-scam/"),
+                ("부정 광고 신고 채널 안내","/notices/fraud-report-channel/"),
+            ]),
+        ]
+    },
+    "shop-vs-freelance": {
+        "h2":"샵 소속 vs 출장 프리랜서 — 권역별 추가 비교",
+        "intro":"권역별로 샵 소속 강세 지역과 출장 라인이 활발한 지역이 다릅니다. 본인 라이프 패턴에 맞는 권역을 확인하세요.",
+        "groups":[
+            ("출장 라인 강세 권역",[
+                ("서울 강남구 출장 라인","/locations/seoul/gangnam/"),
+                ("서울 마포 합정 야간 라인","/locations/seoul/mapo/"),
+                ("서울 송파 잠실 출장","/locations/seoul/songpa/"),
+                ("부산 해운대 호텔 출장","/locations/busan/haeundae/"),
+            ]),
+            ("샵 소속 안정 권역",[
+                ("일산 백석 1기 신도시 안정","/locations/gyeonggi/goyang/"),
+                ("부산 동래 단골 비중 60%+","/locations/busan/dongnae/"),
+                ("인천 부평 1·7호선 결절지","/locations/incheon/bupyeong/"),
+                ("서울 노원 주거 권역 안정","/locations/seoul/nowon/"),
+            ]),
+            ("관련 매거진·공지",[
+                ("2026 급여 가이드 — 권역별 단가","/magazine/salary-guide-2026/"),
+                ("프리랜서 계약 체크리스트","/magazine/contract-checklist/"),
+                ("신규 입직자 안전 가이드","/notices/newcomer-safety/"),
+            ]),
+        ]
+    },
+    "safe-workplace": {
+        "h2":"안전한 마사지 일터 찾기 — 안전 자료 모음",
+        "intro":"위험 신호를 미리 알고 정상 샵을 빠르게 가려내는 종합 자료입니다. 운영팀 공지와 정책을 함께 확인하세요.",
+        "groups":[
+            ("운영팀 안전·법령 공지",[
+                ("동남아 해외 취업 사기 주의 (긴급)","/notices/southeast-asia-scam/"),
+                ("성매매업소 모니터링 강화","/notices/prostitution-monitoring/"),
+                ("신규 입직자 안전 가이드","/notices/newcomer-safety/"),
+                ("부정 광고 신고 채널","/notices/fraud-report-channel/"),
+            ]),
+            ("관련 매거진",[
+                ("프리랜서 계약 체크리스트","/magazine/contract-checklist/"),
+                ("면접 합격 패턴 7가지","/magazine/interview-tips/"),
+                ("샵 vs 출장 — 안전성 비교","/magazine/shop-vs-freelance/"),
+            ]),
+            ("플랫폼 신뢰 정책",[
+                ("개인정보처리방침","/policy/privacy/"),
+                ("이용약관","/policy/terms/"),
+                ("청소년 보호정책","/policy/youth/"),
+            ]),
+        ]
+    },
+    "newcomer-shop-guide": {
+        "h2":"신축 마사지샵 채용 정보 더 보기",
+        "intro":"최근 1년간 신축 샵이 가장 많이 오픈한 권역과 업종을 정리했습니다. 단가 상승 트렌드를 함께 잡으세요.",
+        "groups":[
+            ("신축 샵 강세 권역",[
+                ("서울 성수동 신흥 트렌드","/locations/seoul/seongdong/"),
+                ("경기 동탄 신도시 2기","/locations/gyeonggi/hwaseong/"),
+                ("경기 미사 하남 신축 아파트권","/locations/gyeonggi/hanam/"),
+                ("경기 광교 수원 영통 신축","/locations/gyeonggi/suwon/"),
+                ("인천 송도 국제도시","/locations/incheon/yeonsu/"),
+                ("부산 명지 신도시","/locations/busan/gangseo-busan/"),
+            ]),
+            ("신축 강세 업종",[
+                ("스웨디시 신축 라인","/jobs/swedish/"),
+                ("로미로미 프리미엄 신축","/jobs/lomilomi/"),
+                ("아로마 부티크 신축","/jobs/aroma/"),
+            ]),
+            ("관련 매거진·공지",[
+                ("신규 입직 30일 로드맵","/magazine/newbie-roadmap/"),
+                ("2026 급여 가이드","/magazine/salary-guide-2026/"),
+                ("신규 입직자 안전 가이드","/notices/newcomer-safety/"),
+            ]),
+        ]
+    },
+}
 
 # ─────────────────────────────────────────────
 # 구인공고 허브
@@ -644,8 +810,18 @@ def build_magazine_article(m):
   <div class="note-stack">{body_sections}</div>
 </section>
 
-<section class="wrap" style="padding-top:0;text-align:center">
+{_magazine_link_block(m['slug'])}
+
+<section class="wrap" style="padding-top:30px;text-align:center">
   <a class="btn btn-primary" href="/magazine/">매거진 더 보기 →</a>
 </section>
 """
     return page(title, desc, f"/magazine/{m['slug']}/", body, extra_jsonld=extra_ld)
+
+
+def _magazine_link_block(slug):
+    """매거진 글 하단 내부 링크 섹션 렌더링"""
+    data = MAGAZINE_INTERNAL.get(slug)
+    if not data:
+        return ""
+    return internal_link_section(data["h2"], data["intro"], data["groups"])

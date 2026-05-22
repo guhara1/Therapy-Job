@@ -181,6 +181,18 @@ details>div{padding-top:14px;color:#c8ccda;font-size:14px;line-height:1.78}
   .shop-card{content-visibility:auto;contain-intrinsic-size:auto 480px}
   .site-footer{content-visibility:auto;contain-intrinsic-size:auto 800px}
 }
+/* 내부 링크 강화 섹션 (블로그 글 하단) */
+.link-section{padding:32px 36px;border-radius:18px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--line)}
+.link-section .link-h2{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px;line-height:1.35}
+.link-section .link-intro{color:var(--muted);font-size:13.5px;margin-bottom:24px;line-height:1.7;max-width:680px}
+.link-section .link-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px}
+.link-section .link-group-label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue-1);font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.link-section ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+.link-section ul a{color:#c8ccda;font-size:13.5px;line-height:1.6;display:block;padding:6px 0;transition:color .15s,transform .15s}
+.link-section ul a::before{content:"→ ";color:var(--dim);transition:color .15s}
+.link-section ul a:hover{color:var(--blue-1);transform:translateX(4px)}
+.link-section ul a:hover::before{color:var(--blue-1)}
+@media(max-width:640px){.link-section{padding:24px 22px}.link-section .link-groups{gap:20px}}
 """
 
 # ─────────────────────────────────────────────
@@ -452,3 +464,22 @@ def faq_ld(qa_list):
             for q,a in qa_list
         ]
     }
+
+
+def internal_link_section(h2_title, intro, link_groups):
+    """블로그 글 하단 내부 링크 강화 섹션
+    
+    link_groups: [(group_label, [(text, url), ...]), ...]
+    """
+    groups_html = ""
+    for label, links in link_groups:
+        items = "".join(f'<li><a href="{url}">{text}</a></li>' for text, url in links)
+        groups_html += f"""<div><div class="link-group-label">{label}</div><ul>{items}</ul></div>"""
+    return f"""
+<section class="wrap">
+  <div class="link-section">
+    <h2 class="link-h2">{h2_title}</h2>
+    <p class="link-intro">{intro}</p>
+    <div class="link-groups">{groups_html}</div>
+  </div>
+</section>"""
