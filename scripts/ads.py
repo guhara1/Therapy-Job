@@ -261,23 +261,26 @@ def build_ad_detail(j):
           <div style="display:flex;justify-content:space-between;font-size:13.5px"><span style="color:var(--muted)">정산</span><span style="font-weight:700">{j['settle']}</span></div>
         </div>
         <div style="margin-top:18px;display:flex;flex-direction:column;gap:10px">
-          <a class="btn btn-primary" style="justify-content:center;width:100%" href="tel:{COMPANY['tel']}">{COMPANY['tel']} 지원</a>
-          <a class="btn btn-ghost" style="justify-content:center;width:100%" href="mailto:{COMPANY['email']}?subject=공고 {j['id']} 지원">이메일 문의</a>
+          <a class="btn btn-primary" style="justify-content:center;width:100%" href="#apply">지원하기 →</a>
+          <a class="btn btn-ghost" style="justify-content:center;width:100%" href="#apply">지원 절차 보기</a>
         </div>
-        <p style="font-size:11.5px;color:var(--dim);margin-top:14px;text-align:center;line-height:1.65">고객센터 {COMPANY['tel_hours']}<br>지원 시 공고 번호 #{j['id']} 안내</p>
+        <p style="font-size:11.5px;color:var(--dim);margin-top:14px;text-align:center;line-height:1.65">선착순 모집 · 모집 인원 {j['positions']}명<br>지원 시 공고 번호 #{j['id']} 안내</p>
       </div>
     </aside>
   </div>
 </section>
 <style>@media(max-width:920px){{.ad-detail-grid{{grid-template-columns:1fr!important}}}}</style>
 
-<section class="wrap" style="padding-top:0">
+<section class="wrap" style="padding-top:0" id="apply">
   <h2>지원 절차</h2>
   <div class="note-stack" style="margin-top:30px">
-    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">전화 또는 이메일로 문의</h3><div class="note-text"><p>고객센터 {COMPANY['tel']}로 전화 주시고, 공고 번호 <strong>#{j['id']}</strong>를 안내해주세요.</p><p>이메일은 {COMPANY['email']}로 제목에 공고 번호를 포함해 보내주세요.</p></div></div></div>
-    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">기본 정보 확인</h3><div class="note-text"><p>경력·희망 시작일·근무 가능 시간을 알려주시면 샵 측에 빠르게 전달됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">지원 의사 등록</h3><div class="note-text"><p>본 공고 <strong>#{j['id']}</strong>에 지원하고자 하는 분은 아래 \"이메일로 지원\" 버튼으로 지원 의사를 등록해주세요.</p><p>지원 시 이름·경력·희망 시작일·연락 가능 시간을 함께 보내주시면 절차가 빨라집니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">샵 측 검토 · 연락</h3><div class="note-text"><p>지원 등록 후 평균 1영업일 안에 샵 담당자가 본인이 남긴 연락처로 직접 연락드립니다.</p><p>이때 면접 일정·필요 서류·확인 사항이 안내됩니다.</p></div></div></div>
     <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">면접 일정 확정</h3><div class="note-text"><p>샵과 직접 일정을 조율한 뒤 면접일이 확정됩니다. 평균 매칭 시간은 47시간입니다.</p></div></div></div>
     <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">계약 · 첫 출근</h3><div class="note-text"><p>프리랜서 계약서를 확인한 뒤 첫 출근 일정을 정합니다.</p><p>계약 시 인센티브 비율·정산 주기·교통비를 다시 한 번 확인하세요.</p></div></div></div>
+  </div>
+  <div style="margin-top:30px;text-align:center">
+    <a class="btn btn-primary" href="mailto:{COMPANY['email']}?subject=공고 {j['id']} 지원&body=공고 번호: {j['id']}%0D%0A샵: {j['shop']}%0D%0A지원자 이름:%0D%0A경력:%0D%0A희망 시작일:%0D%0A연락 가능 시간:">이메일로 지원하기 →</a>
   </div>
 </section>
 
@@ -303,7 +306,7 @@ def build_ad_detail(j):
     <h2 style="margin:10px 0 14px">지금 #{j['id']} 공고에 지원하세요</h2>
     <p class="lead" style="margin:0 auto 24px">선착순 모집 · 모집 인원 {j['positions']}명</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <a class="btn btn-primary" href="tel:{COMPANY['tel']}">{COMPANY['tel']}</a>
+      <a class="btn btn-primary" href="#apply">지원하기 →</a>
       <a class="btn btn-ghost" href="/jobs/{svc['slug']}/">{svc['kr']} 전체 공고</a>
     </div>
   </div>
