@@ -171,6 +171,16 @@ details>div{padding-top:14px;color:#c8ccda;font-size:14px;line-height:1.78}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .reveal{opacity:1!important;transform:none!important}
 }
+/* content-visibility — 뷰포트 밖 요소 렌더 스킵 (지원 브라우저만 적용) */
+@supports(content-visibility:auto){
+  .note-card,.job-card,.price-card,details{content-visibility:auto;contain-intrinsic-size:auto 320px}
+  details{contain-intrinsic-size:auto 80px}
+  .ad-card.ad-vvip{content-visibility:auto;contain-intrinsic-size:auto 380px}
+  .ad-card.ad-vip{content-visibility:auto;contain-intrinsic-size:auto 280px}
+  .ad-card.ad-premium{content-visibility:auto;contain-intrinsic-size:auto 200px}
+  .shop-card{content-visibility:auto;contain-intrinsic-size:auto 480px}
+  .site-footer{content-visibility:auto;contain-intrinsic-size:auto 800px}
+}
 """
 
 # ─────────────────────────────────────────────
