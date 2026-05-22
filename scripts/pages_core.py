@@ -963,6 +963,69 @@ def build_pricing_ads():
 </section>
 
 <section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 40px">
+    <span class="kicker" style="color:#d4af37">SHOP SALE PRICING · 업소매매</span>
+    <h2 style="margin-top:8px">업소매매 매물 등록 가격</h2>
+    <p class="lead" style="margin:14px auto 0">샵 양도를 원하시는 분을 위한 매물 등록 상품입니다. 익명 게재로 운영 중인 영업에 지장이 없으며, 매수 의향자는 운영팀이 1:1 매칭으로 연결합니다.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:24px">
+    <div style="padding:32px 28px;border-radius:18px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--line);position:relative">
+      <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue-1);font-weight:700;margin-bottom:8px">단기 매물</div>
+      <h3 style="font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.02em">1개월</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.65">빠른 매수자 매칭이 목표일 때</p>
+      <div style="padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:18px">
+        <div style="font-size:32px;font-weight:800;color:var(--blue-1);letter-spacing:-.02em">100,000원</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:4px">월 환산 100,000원</div>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13.5px;color:#c8ccda">
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>매물 단독 페이지 게재</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>지역·업종별 매물 영역 노출</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>익명 처리(상호·주소 비공개)</li>
+      </ul>
+    </div>
+    <div style="padding:32px 28px;border-radius:18px;background:linear-gradient(135deg,rgba(212,175,55,.08),rgba(212,175,55,.02));border:1px solid rgba(212,175,55,.4);position:relative">
+      <span style="position:absolute;top:-12px;right:24px;padding:5px 12px;background:linear-gradient(135deg,#d4af37,#f4d29c);color:#1a1410;font-size:10.5px;letter-spacing:.22em;font-weight:800;border-radius:5px">BEST</span>
+      <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#d4af37;font-weight:700;margin-bottom:8px">표준 매물 · 추천</div>
+      <h3 style="font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.02em">2개월</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.65">가장 많이 선택되는 기간</p>
+      <div style="padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:18px">
+        <div style="font-size:32px;font-weight:800;color:#d4af37;letter-spacing:-.02em">150,000원</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:4px">월 환산 75,000원 · 1개월 단가 대비 25% 절감</div>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13.5px;color:#c8ccda">
+        <li><span style="color:#d4af37;margin-right:6px">●</span>매물 단독 페이지 게재</li>
+        <li><span style="color:#d4af37;margin-right:6px">●</span>지역·업종별 매물 영역 노출</li>
+        <li><span style="color:#d4af37;margin-right:6px">●</span>익명 처리(상호·주소 비공개)</li>
+        <li><span style="color:#d4af37;margin-right:6px">●</span>매수자 검증 후 1:1 연결</li>
+      </ul>
+    </div>
+    <div style="padding:32px 28px;border-radius:18px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--line);position:relative">
+      <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue-1);font-weight:700;margin-bottom:8px">장기 매물</div>
+      <h3 style="font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.02em">12개월 (1년)</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.65">확실한 거래 성사까지 안정 노출</p>
+      <div style="padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:18px">
+        <div style="font-size:32px;font-weight:800;color:var(--blue-1);letter-spacing:-.02em">330,000원</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:4px">월 환산 27,500원 · 1개월 단가 대비 72% 절감</div>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13.5px;color:#c8ccda">
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>매물 단독 페이지 게재</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>지역·업종별 매물 영역 노출</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>익명 처리(상호·주소 비공개)</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>매수자 검증 후 1:1 연결</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>거래 성사 시 별도 수수료 0원</li>
+      </ul>
+    </div>
+  </div>
+  <div style="padding:24px 28px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px">
+    <div>
+      <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue-1);font-weight:700;margin-bottom:6px">상세 정보 · 매물 검색</div>
+      <p style="font-size:13.5px;color:#c8ccda;margin:0;line-height:1.65">현재 등록된 매물 12건과 등록 절차·법령 안내·매수 전 체크리스트는 업소매매 페이지에서 확인하세요.</p>
+    </div>
+    <a class="btn btn-ghost" href="/shop-sale/">업소매매 페이지 →</a>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
   <div style="text-align:center;max-width:760px;margin:0 auto 30px">
     <span class="kicker">FAQ</span>
     <h2 style="margin-top:8px">광고주를 위한 자주 묻는 질문</h2>
