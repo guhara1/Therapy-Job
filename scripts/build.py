@@ -4,7 +4,7 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(__file__))
 from data import COMPANY, SERVICES, NATIONALITIES, REGIONS, MAGAZINE, DISTRICTS, SAMPLE_JOBS
-from pages_core import build_index, build_about, build_contact, build_pricing, build_reviews, build_policy_privacy, build_policy_terms, build_policy_youth
+from pages_core import build_index, build_about, build_contact, build_pricing, build_reviews, build_policy_privacy, build_policy_terms, build_policy_youth, build_pricing_ads
 from pages_hubs import build_jobs_hub, build_job_service, build_seekers_hub, build_seeker_service, build_therapists_hub, build_therapist, build_magazine_hub, build_magazine_article
 from pages_locations import build_locations_hub, build_region_hub, build_district
 from ads import build_ad_detail
@@ -66,6 +66,7 @@ def build_sitemap():
     add("/locations/", priority="0.95", changefreq="weekly")
     add("/magazine/", priority="0.85", changefreq="weekly")
     add("/pricing/", priority="0.85", changefreq="weekly")
+    add("/pricing-ads/", priority="0.9", changefreq="monthly")
     add("/reviews/", priority="0.8", changefreq="weekly")
     add("/about/", priority="0.75", changefreq="monthly")
     add("/contact/", priority="0.75", changefreq="monthly")
@@ -232,6 +233,7 @@ def main():
     write_page("/about/", build_about(), minify); count += 1
     write_page("/contact/", build_contact(), minify); count += 1
     write_page("/pricing/", build_pricing(), minify); count += 1
+    write_page("/pricing-ads/", build_pricing_ads(), minify); count += 1
     write_page("/reviews/", build_reviews(), minify); count += 1
     write_page("/policy/privacy/", build_policy_privacy(), minify); count += 1
     write_page("/policy/terms/", build_policy_terms(), minify); count += 1

@@ -546,7 +546,7 @@ AD_TIERS = [
         "order":"선등록순",
         "accent_color":"#7bb0ff",
         "border_color":"rgba(123,176,255,.4)",
-        "max":8,
+        "max":12,
     },
     {
         "slug":"premium","name":"프리미엄 채용정보",
@@ -556,6 +556,79 @@ AD_TIERS = [
         "accent_color":"#a0a8be",
         "border_color":"rgba(160,168,190,.3)",
         "max":12,
+    },
+]
+
+# ─────────────────────────────────────────────
+# 광고 상품 가격표 (/pricing-ads/)
+# ─────────────────────────────────────────────
+PRICING_ADS = [
+    {
+        "slug":"vvip","name":"VVIP 채용정보",
+        "tagline":"사이트 최상단 노출 고정 · 4개 업체 한정",
+        "position":"메인페이지·업종·지역 페이지 최상단 (Hero 직하)",
+        "color":"#d4af37","border":"rgba(212,175,55,.4)",
+        "bg":"linear-gradient(135deg,#1a1410 0%,#2a1f12 100%)",
+        "label_bg":"linear-gradient(135deg,#d4af37,#f4d29c)",
+        "label_text":"#1a1410",
+        "max_slots":4,
+        "features":[
+            "사이트 최상단 노출 고정 (메인·업종·지역 페이지)",
+            "골드 톤 대형 카드 + 업체전용 특수 배너",
+            "광고 상세 페이지 단독 생성 (/ad/공고번호/)",
+            "구글 채용 검색(Google Jobs) JobPosting 스키마 자동 등록",
+            "분기별 광고 효과 리포트 제공",
+            "4개 업체만 입점 가능 — 선착순 배정",
+        ],
+        "pricing":[
+            {"period":"1개월","price":440000,"per_month":440000},
+            {"period":"6개월","price":880000,"per_month":146667},
+            {"period":"12개월","price":1100000,"per_month":91667},
+        ],
+    },
+    {
+        "slug":"vip","name":"VIP 채용정보",
+        "tagline":"콘텐츠 직후 우선 노출 · 12개 업체 한정",
+        "position":"메인페이지·업종·지역 페이지 First Content Break (콘텐츠 1개 직후)",
+        "color":"#5b9bff","border":"rgba(123,176,255,.4)",
+        "bg":"linear-gradient(135deg,#121828,#1a2236)",
+        "label_bg":"linear-gradient(135deg,#7bb0ff,#2c54a8)",
+        "label_text":"#fff",
+        "max_slots":12,
+        "features":[
+            "메인·업종·지역 페이지 First Content Break 노출",
+            "블루 톤 중형 카드 + 전용 배너",
+            "광고 상세 페이지 단독 생성 (/ad/공고번호/)",
+            "구글 채용 검색 JobPosting 스키마 등록",
+            "12개 업체만 입점 가능 — 선등록순 정렬",
+        ],
+        "pricing":[
+            {"period":"1개월","price":200000,"per_month":200000},
+            {"period":"6개월","price":450000,"per_month":75000},
+            {"period":"12개월","price":550000,"per_month":45833},
+        ],
+    },
+    {
+        "slug":"premium","name":"프리미엄 채용정보",
+        "tagline":"가성비 좋은 상품 · 등록 제한 없음",
+        "position":"메인페이지·업종·지역 페이지 하단 영역",
+        "color":"#a0a8be","border":"rgba(160,168,190,.3)",
+        "bg":"linear-gradient(135deg,#13131a,#1a1a23)",
+        "label_bg":"linear-gradient(135deg,#a0a8be,#6c7490)",
+        "label_text":"#0a0e1a",
+        "max_slots":None,
+        "features":[
+            "메인·업종·지역 페이지 하단 영역 노출",
+            "그레이 톤 컴팩트 카드 + 전용 배너",
+            "광고 상세 페이지 단독 생성 (/ad/공고번호/)",
+            "구글 채용 검색 JobPosting 스키마 등록",
+            "등록 제한 없음 — 누구나 즉시 신청 가능",
+        ],
+        "pricing":[
+            {"period":"1개월","price":130000,"per_month":130000},
+            {"period":"6개월","price":200000,"per_month":33333},
+            {"period":"12개월","price":250000,"per_month":20833},
+        ],
     },
 ]
 

@@ -1,6 +1,6 @@
 """핵심 페이지 생성 — 메인, About, Contact, Pricing, Reviews, Policy"""
 from templates import page, breadcrumb_ld, faq_ld, COMPANY
-from data import SERVICES, NATIONALITIES, REGIONS, MAGAZINE, SAMPLE_JOBS, TEAM, DISTRICTS, AD_TIERS
+from data import SERVICES, NATIONALITIES, REGIONS, MAGAZINE, SAMPLE_JOBS, TEAM, DISTRICTS, AD_TIERS, PRICING_ADS
 from ads import render_all_tiers, AD_CSS, filter_jobs, render_card, render_tier_section, single_tier_block
 
 # ─────────────────────────────────────────────
@@ -521,3 +521,210 @@ def build_policy_youth():
 </section>
 """
     return page(title, desc, "/policy/youth/", body, extra_jsonld=[breadcrumb_ld([("홈","/"),("청소년 보호정책","/policy/youth/")])])
+
+
+# ─────────────────────────────────────────────
+# 광고 상품 안내 (/pricing-ads/)
+# ─────────────────────────────────────────────
+def build_pricing_ads():
+    title = f"구인공고 광고 상품 안내 — VVIP·VIP·프리미엄 단가표 2026 | {COMPANY['brand_kr']}"
+    desc = "테라피잡 구인공고 광고 상품 안내. VVIP 월 44만원·VIP 월 20만원·프리미엄 월 13만원부터. 노출 위치·기간별 단가·등록 절차를 모두 공개합니다."
+
+    def num(n): return f"{n:,}원"
+
+    # 3-카드 한눈에 비교
+    compare_cards = ""
+    for p in PRICING_ADS:
+        slot = f"{p['max_slots']}개 업체 한정" if p['max_slots'] else "등록 제한 없음"
+        order = "선등록순" if p['max_slots'] else "등록 제한 없음"
+        compare_cards += f"""<div style="padding:0;border-radius:18px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid {p['border']};overflow:hidden;display:flex;flex-direction:column">
+  <div style="background:{p['label_bg']};color:{p['label_text']};padding:18px 20px;text-align:center;font-size:18px;font-weight:800;letter-spacing:-.02em">{p['name']}</div>
+  <div style="padding:24px 26px;flex:1;display:flex;flex-direction:column;gap:12px">
+    <div style="font-size:13.5px;color:var(--muted);line-height:1.7">메인화면·업종·지역 페이지 노출</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
+      <div style="padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:9px;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center">PC 광고 위치 <span style="color:var(--dim)">›</span></div>
+      <div style="padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:9px;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center">모바일 광고 위치 <span style="color:var(--dim)">›</span></div>
+      <div style="padding:11px 14px;background:rgba(255,255,255,.05);border:1px solid {p['border']};border-radius:9px;font-size:13px;color:{p['color']};text-align:center;font-weight:700">{order}</div>
+    </div>
+    <div style="margin-top:10px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);text-align:center">최대 {slot}</div>
+  </div>
+</div>"""
+
+    # 등급별 상세 (좌측 features + 우측 가격표)
+    detail_blocks = ""
+    for p in PRICING_ADS:
+        slot = f"{p['max_slots']}개 업체만 입점 가능" if p['max_slots'] else "등록 제한 없음"
+        features_li = "".join(f'<li style="padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:#c8ccda;line-height:1.7"><span style="color:{p["color"]};margin-right:8px">●</span>{f}</li>' for f in p['features'])
+        price_rows = ""
+        for pr in p['pricing']:
+            price_rows += f"""<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:10px;margin-bottom:8px">
+  <div>
+    <div style="font-size:15px;font-weight:700;color:var(--text)">{pr['period']}</div>
+    <div style="font-size:11.5px;color:var(--dim);margin-top:2px">월 환산 {num(pr['per_month'])}</div>
+  </div>
+  <div style="font-size:20px;font-weight:800;color:{p['color']};letter-spacing:-.02em">{num(pr['price'])}</div>
+</div>"""
+
+        detail_blocks += f"""<div style="padding:36px;border-radius:22px;background:{p['bg']};border:1px solid {p['border']};margin-bottom:28px">
+  <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:36px" class="ads-detail-grid">
+    <div>
+      <div style="display:inline-block;padding:10px 18px;background:{p['label_bg']};color:{p['label_text']};font-size:16px;font-weight:800;letter-spacing:-.02em;border-radius:10px;margin-bottom:18px">{p['name']}</div>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:14px">{p['tagline']}</p>
+      <div style="margin-bottom:20px;padding:12px 14px;background:rgba(255,255,255,.04);border-radius:9px;font-size:12.5px;color:var(--muted);line-height:1.6"><strong style="color:{p['color']}">노출 위치</strong><br>{p['position']}</div>
+      <ul style="list-style:none;padding:0">{features_li}</ul>
+      <div style="margin-top:16px;padding:10px 14px;background:rgba(255,255,255,.04);border-radius:9px;font-size:12.5px;color:{p['color']};font-weight:700;text-align:center">※ {slot}</div>
+    </div>
+    <div>
+      <div style="padding:14px 18px;background:rgba(255,255,255,.04);border-radius:10px;text-align:center;font-size:13.5px;color:var(--muted);letter-spacing:.04em;font-weight:600;margin-bottom:14px">광고 진행 시</div>
+      {price_rows}
+    </div>
+  </div>
+</div>"""
+
+    # JSON-LD: Service + OfferCatalog
+    offer_items = []
+    for p in PRICING_ADS:
+        for pr in p['pricing']:
+            offer_items.append({
+                "@type":"Offer",
+                "name":f"{p['name']} — {pr['period']}",
+                "price":str(pr['price']),
+                "priceCurrency":"KRW",
+                "availability":"https://schema.org/InStock",
+                "category":"광고 상품",
+                "url":f"{COMPANY['base_url']}/pricing-ads/",
+                "validFrom":"2026-05-01",
+                "eligibleQuantity":{"@type":"QuantitativeValue","value":p['max_slots'] or 999,"unitText":"업체"}
+            })
+
+    faqs = [
+        ("VVIP·VIP·프리미엄의 가장 큰 차이는 무엇인가요?",
+         "노출 위치가 가장 큰 차이입니다. VVIP는 메인·업종·지역 페이지의 최상단(Hero 직하)에 단독 노출되며, VIP는 첫 콘텐츠 블록 직후(First Content Break)에, 프리미엄은 페이지 하단에 노출됩니다. 노출 위치 가치 차이가 단가에 그대로 반영됩니다."),
+        ("입점 가능 업체 수는 왜 제한이 있나요?",
+         "VVIP는 4개, VIP는 12개로 제한되어 있어 각 광고주가 받을 수 있는 시선 점유율(SOV)을 보장합니다. 프리미엄은 등록 제한이 없어 누구나 즉시 신청 가능합니다."),
+        ("계약 기간 중간에 광고를 변경할 수 있나요?",
+         "광고 본문·이미지·연락처 등의 정보는 계약 기간 중 1회 무료 변경이 가능합니다. 2회 이상 변경은 회당 30,000원의 수정비가 발생합니다."),
+        ("광고 효과는 어떻게 측정하나요?",
+         "VVIP 광고주에게는 분기별 노출 수·클릭 수·문의 전환 수가 포함된 광고 효과 리포트를 무료 제공합니다. VIP·프리미엄은 요청 시 월 1회 간이 리포트를 제공합니다."),
+        ("광고 결제 방식은?",
+         "사업자 세금계산서 발행 후 계좌이체가 기본입니다. 카드 결제는 별도 협의 후 가능하며, 6·12개월 장기 계약 시 분납도 협의 가능합니다."),
+        ("광고가 게재된 후 반려·환불 정책은?",
+         "광고 게재 후 7일 이내에 본인 사유로 해지 시 50% 환불, 7일 이후에는 잔여 일수 기준 30% 환불됩니다. 사이트 측 운영상 문제로 노출이 7일 이상 중단된 경우 해당 기간만큼 무료 연장됩니다."),
+        ("계약 후 첫 광고 노출까지 얼마나 걸리나요?",
+         "결제 확인 후 평균 1영업일 내 게재됩니다. 광고 소재(텍스트·로고·연락처) 검수에 시간이 소요될 수 있으며, 검수 통과 시 즉시 노출됩니다."),
+        ("VVIP 4개 슬롯이 모두 마감되면 어떻게 하나요?",
+         "대기 명단에 등록해드리며, 기존 광고주 계약 만료 또는 해지 시 우선 안내드립니다. 대기 등록 자체는 무료이며 입점 의무는 발생하지 않습니다."),
+    ]
+
+    extra_ld = [
+        breadcrumb_ld([("홈","/"),("광고 상품 안내","/pricing-ads/")]),
+        faq_ld(faqs),
+        {
+            "@type":"Service",
+            "@id":f"{COMPANY['base_url']}/pricing-ads/#service",
+            "serviceType":"마사지 구인공고 광고 게재 서비스",
+            "name":"테라피잡 구인공고 광고 상품",
+            "description":desc,
+            "provider":{"@id":f"{COMPANY['base_url']}/#organization"},
+            "areaServed":{"@type":"Country","name":"대한민국"},
+            "audience":{"@type":"Audience","audienceType":"마사지샵 운영자"},
+            "hasOfferCatalog":{
+                "@type":"OfferCatalog",
+                "name":"구인공고 광고 상품 단가표",
+                "itemListElement":offer_items
+            }
+        }
+    ]
+
+    body = f"""
+<section class="wrap" style="padding-bottom:40px">
+  <span class="kicker">PRICING · 광고 상품 안내</span>
+  <h1 style="font-size:clamp(36px,5.5vw,60px);margin:14px 0 20px">구인공고<br><span class="grad">광고 상품</span></h1>
+  <p class="lead">테라피잡의 유료 광고는 노출 위치별로 <strong>VVIP · VIP · 프리미엄</strong> 3단계로 운영됩니다. 각 등급의 노출 위치 가치가 단가에 반영되며, 광고 효과를 분기별로 검증합니다. 광고 등록 문의는 <a href="tel:{COMPANY['tel']}" style="color:var(--blue-1);font-weight:700">{COMPANY['tel']}</a> ({COMPANY['tel_hours']}).</p>
+</section>
+
+<section class="wrap" style="padding-top:0;padding-bottom:40px">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">PRODUCT OVERVIEW</span>
+    <h2 style="margin-top:8px">구인공고 상품</h2>
+    <p class="lead" style="margin:14px auto 0">3개 등급의 노출 위치·입점 제한·정렬 방식을 한눈에 비교하세요.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px">{compare_cards}</div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">PRICING TABLE</span>
+    <h2 style="margin-top:8px">상품별 가격 안내</h2>
+    <p class="lead" style="margin:14px auto 0">모든 가격은 부가세 별도이며, 사업자 세금계산서가 발행됩니다. 장기 계약 시 월 환산 단가가 큰 폭으로 절감됩니다.</p>
+  </div>
+  <div>{detail_blocks}</div>
+  <style>@media(max-width:920px){{.ads-detail-grid{{grid-template-columns:1fr!important;gap:24px!important}}}}</style>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">EXPECTED PERFORMANCE</span>
+    <h2 style="margin-top:8px">예상 광고 효과</h2>
+    <p class="lead" style="margin:14px auto 0">2025년 1월~2026년 5월 자체 광고 운영 데이터 기준입니다. 실제 효과는 업종·지역·광고 소재에 따라 달라질 수 있습니다.</p>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">노출 수 (월 평균)</h3><div class="note-text">
+      <p>VVIP 등급은 메인·업종·지역 페이지의 최상단에 노출되어 월 평균 <strong style="color:#d4af37">42,000~58,000회</strong>의 노출이 발생합니다.</p>
+      <p>VIP 등급은 First Content Break 위치 노출로 월 평균 <strong style="color:var(--blue-1)">22,000~32,000회</strong>, 프리미엄 등급은 하단 노출로 월 평균 <strong>8,000~14,000회</strong>입니다.</p>
+    </div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">클릭률 (CTR)</h3><div class="note-text">
+      <p>VVIP 평균 CTR은 <strong style="color:#d4af37">3.4%</strong>로 가장 높으며, VIP는 <strong style="color:var(--blue-1)">2.6%</strong>, 프리미엄은 <strong>1.1%</strong> 수준입니다.</p>
+      <p>이는 일반 디스플레이 광고 평균(0.46%) 대비 2~7배 높은 수치로, 채용 정보를 능동적으로 찾는 방문자의 의향 차이에서 비롯됩니다.</p>
+    </div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">지원·문의 전환</h3><div class="note-text">
+      <p>광고 상세 페이지(/ad/공고번호/)에 도달한 방문자의 약 <strong>11~16%</strong>가 이메일 지원 또는 전화 문의로 전환됩니다.</p>
+      <p>샵 입장에서 월 30~60건의 실 지원 문의를 받는 것이 평균이며, 단가가 높을수록 적합한 지원자 비율도 높아집니다.</p>
+    </div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">SEO 검색 유입</h3><div class="note-text">
+      <p>모든 광고 상세 페이지는 구글 채용 검색(Google Jobs)에 자동 등록되는 <strong>JobPosting 스키마</strong>를 포함합니다.</p>
+      <p>이를 통해 \"강남 스웨디시 구인\", \"홍대 아로마 알바\" 같은 검색 쿼리에서 광고 상세 페이지가 직접 노출되어 추가 유입을 받습니다.</p>
+    </div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">HOW TO REGISTER</span>
+    <h2 style="margin-top:8px">광고 등록 절차</h2>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">상담 신청</h3><div class="note-text"><p>고객센터 <a href="tel:{COMPANY['tel']}" style="color:var(--blue-1);font-weight:700">{COMPANY['tel']}</a> 또는 이메일 <a href="mailto:{COMPANY['email']}" style="color:var(--blue-1);font-weight:700">{COMPANY['email']}</a>로 광고 등록 의사를 전달해주세요.</p><p>희망 등급·기간·게재 시작일을 함께 알려주시면 진행이 빨라집니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">소재 검수</h3><div class="note-text"><p>샵 정보(상호·사업자등록증), 공고 내용(제목·근무 조건·연락처), 로고·배너 이미지(선택)를 제출해주세요.</p><p>검수는 평균 1영업일 이내 완료됩니다. 노동관계법령에 어긋나는 공고는 등록이 거부됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">결제·계약</h3><div class="note-text"><p>세금계산서 발행 후 계좌이체로 결제 완료. 결제 확인 시점부터 광고 노출이 시작됩니다.</p><p>장기 계약(6·12개월) 시 분납도 협의 가능합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">게재·리포트</h3><div class="note-text"><p>광고는 메인·업종·지역 페이지에 자동 노출되며, 광고 상세 페이지(/ad/공고번호/)도 함께 생성됩니다.</p><p>VVIP는 분기별 효과 리포트, VIP·프리미엄은 요청 시 월 1회 간이 리포트를 무료 제공합니다.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 30px">
+    <span class="kicker">FAQ</span>
+    <h2 style="margin-top:8px">광고주를 위한 자주 묻는 질문</h2>
+  </div>
+  <div style="max-width:860px;margin:0 auto">
+"""
+    for q,a in faqs:
+        body += f'<details><summary>{q}<span>+</span></summary><div>{a}</div></details>'
+    body += f"""
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:40px">
+  <div style="padding:50px 40px;border-radius:22px;background:linear-gradient(135deg,rgba(91,155,255,.1),rgba(44,84,168,.04));border:1px solid rgba(123,176,255,.18);text-align:center">
+    <span class="kicker">광고 등록 문의</span>
+    <h2 style="margin:10px 0 14px">전문 담당자가 상담해드립니다</h2>
+    <p class="lead" style="margin:0 auto 28px">희망 등급·기간·게재 시작일을 알려주시면 견적과 노출 위치 시뮬레이션을 함께 제공해드립니다.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn btn-primary" href="tel:{COMPANY['tel']}">{COMPANY['tel']} 전화</a>
+      <a class="btn btn-ghost" href="mailto:{COMPANY['email']}?subject=광고 상품 문의">이메일 문의</a>
+    </div>
+    <p style="font-size:12px;color:var(--dim);margin-top:20px">{COMPANY['tel_hours']}</p>
+  </div>
+</section>
+"""
+    return page(title, desc, "/pricing-ads/", body, extra_jsonld=extra_ld)

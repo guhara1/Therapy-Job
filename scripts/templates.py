@@ -283,6 +283,7 @@ def header_html():
     <li><a href="/pricing/">급여</a></li>
     <li><a href="/magazine/">매거진</a></li>
     <li><a href="/reviews/">사례</a></li>
+    <li><a href="/pricing-ads/">광고 상품</a></li>
     <li><a class="cta-pill" href="tel:{COMPANY['tel']}">{COMPANY['tel']}</a></li>
   </ul>
 </nav>
@@ -316,6 +317,7 @@ def footer_html():
       <h4>안내</h4>
       <ul>
         <li><a href="/about/">테라피잡 소개</a></li>
+        <li><a href="/pricing-ads/">광고 상품 안내</a></li>
         <li><a href="/pricing/">급여 시세표</a></li>
         <li><a href="/magazine/">매거진</a></li>
         <li><a href="/reviews/">매칭 사례</a></li>
