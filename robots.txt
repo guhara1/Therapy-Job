@@ -1,34 +1,58 @@
+# therapyjob.club robots.txt — 전 검색엔진 빠른 색인 최적화
+
+# 기본 — 모든 봇 전체 허용 (운영/함수 경로만 차단)
 User-agent: *
 Allow: /
-Disallow: /admin/
 Disallow: /api/
+Disallow: /admin/
 
+# ── 구글 (즉시 색인) ──
 User-agent: Googlebot
 Allow: /
-
-User-agent: Bingbot
+User-agent: Googlebot-Image
 Allow: /
-
-User-agent: NaverBot
+User-agent: Googlebot-News
 Allow: /
-
-User-agent: Yeti
+User-agent: Storebot-Google
 Allow: /
-
-User-agent: Daum
-Allow: /
-
-User-agent: GPTBot
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
 User-agent: Google-Extended
 Allow: /
 
-User-agent: PerplexityBot
+# ── 네이버 (Yeti) — crawl-delay 짧게 두어 빠른 수집 ──
+User-agent: Yeti
+Allow: /
+Crawl-delay: 1
+User-agent: NaverBot
+Allow: /
+Crawl-delay: 1
+
+# ── 다음/카카오 ──
+User-agent: Daum
+Allow: /
+User-agent: Daumoa
 Allow: /
 
+# ── 빙 ──
+User-agent: Bingbot
+Allow: /
+User-agent: msnbot
+Allow: /
+
+# ── AI 검색 크롤러 (AI Overview·SGE 노출) ──
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Applebot
+Allow: /
+
+# 사이트맵 — 이중화 (구글 파싱 오류 대비 백업)
 Sitemap: https://therapyjob.club/sitemap.xml
+Sitemap: https://therapyjob.club/sitemap1.xml
 Host: therapyjob.club

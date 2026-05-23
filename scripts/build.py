@@ -117,40 +117,115 @@ def build_sitemap():
 # robots.txt
 # ─────────────────────────────────────────────
 def build_robots():
-    return f"""User-agent: *
-Allow: /
-Disallow: /admin/
-Disallow: /api/
+    return f"""# therapyjob.club robots.txt — 전 검색엔진 빠른 색인 최적화
 
+# 기본 — 모든 봇 전체 허용 (운영/함수 경로만 차단)
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# ── 구글 (즉시 색인) ──
 User-agent: Googlebot
 Allow: /
-
-User-agent: Bingbot
+User-agent: Googlebot-Image
 Allow: /
-
-User-agent: NaverBot
+User-agent: Googlebot-News
 Allow: /
-
-User-agent: Yeti
+User-agent: Storebot-Google
 Allow: /
-
-User-agent: Daum
-Allow: /
-
-User-agent: GPTBot
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
 User-agent: Google-Extended
 Allow: /
 
-User-agent: PerplexityBot
+# ── 네이버 (Yeti) — crawl-delay 짧게 두어 빠른 수집 ──
+User-agent: Yeti
+Allow: /
+Crawl-delay: 1
+User-agent: NaverBot
+Allow: /
+Crawl-delay: 1
+
+# ── 다음/카카오 ──
+User-agent: Daum
+Allow: /
+User-agent: Daumoa
 Allow: /
 
+# ── 빙 ──
+User-agent: Bingbot
+Allow: /
+User-agent: msnbot
+Allow: /
+
+# ── AI 검색 크롤러 (AI Overview·SGE 노출) ──
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Applebot
+Allow: /
+
+# 사이트맵 — 이중화 (구글 파싱 오류 대비 백업)
 Sitemap: {COMPANY['base_url']}/sitemap.xml
+Sitemap: {COMPANY['base_url']}/sitemap1.xml
 Host: {COMPANY['domain']}
+"""
+
+
+# ─────────────────────────────────────────────
+# RSS 2.0 피드 — 매거진 + 공지 (빠른 색인·네이버 RSS 제출용)
+# ─────────────────────────────────────────────
+def build_rss():
+    from datetime import datetime, timezone, timedelta
+    KST = timezone(timedelta(hours=9))
+    def rfc822(date_str):
+        try:
+            dt = datetime.strptime(date_str, "%Y-%m-%d").replace(hour=9, tzinfo=KST)
+        except Exception:
+            dt = datetime.now(KST)
+        return dt.strftime("%a, %d %b %Y %H:%M:%S +0900")
+
+    items = []
+    for m in MAGAZINE:
+        items.append((m["title"], f"/magazine/{m['slug']}/", m["summary"], m["date"], m.get("tag", "매거진")))
+    for n in NOTICES:
+        items.append((n["title"], f"/notices/{n['slug']}/", n["summary"], n["date"], f"공지 · {n['category']}"))
+    items.sort(key=lambda x: x[3], reverse=True)
+
+    def esc(s):
+        return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+
+    now = datetime.now(KST).strftime("%a, %d %b %Y %H:%M:%S +0900")
+    item_xml = ""
+    for title, path, summary, date, cat in items:
+        url = f"{COMPANY['base_url']}{path}"
+        item_xml += f"""  <item>
+    <title>{esc(title)}</title>
+    <link>{url}</link>
+    <guid isPermaLink="true">{url}</guid>
+    <description>{esc(summary)}</description>
+    <category>{esc(cat)}</category>
+    <pubDate>{rfc822(date)}</pubDate>
+  </item>
+"""
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>{COMPANY['brand_kr']} — 매거진 · 공지</title>
+  <link>{COMPANY['base_url']}/</link>
+  <atom:link href="{COMPANY['base_url']}/rss.xml" rel="self" type="application/rss+xml"/>
+  <description>전국 마사지 구인구직 테라피잡의 매거진·공지 최신 글</description>
+  <language>ko-KR</language>
+  <lastBuildDate>{now}</lastBuildDate>
+  <ttl>60</ttl>
+{item_xml}</channel>
+</rss>
 """
 
 # ─────────────────────────────────────────────
@@ -230,7 +305,10 @@ def main():
 
     print("→ 정적 자산")
     write_root("robots.txt", build_robots()); count += 1
-    write_root("sitemap.xml", build_sitemap()); count += 1
+    _sitemap = build_sitemap()
+    write_root("sitemap.xml", _sitemap); count += 1
+    write_root("sitemap1.xml", _sitemap); count += 1   # 백업 미러 (구글 파싱 오류 대비)
+    write_root("rss.xml", build_rss()); count += 1
     write_root("site.webmanifest", build_manifest()); count += 1
     write_root("favicon.svg", build_favicon_svg()); count += 1
 

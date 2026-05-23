@@ -241,6 +241,7 @@ def head(title, description, path, og_image=None, extra_jsonld=None, schema_type
         f'<meta name="twitter:image" content="{og}">',
         '<link rel="icon" type="image/svg+xml" href="/favicon.svg">',
         '<link rel="manifest" href="/site.webmanifest">',
+        f'<link rel="alternate" type="application/rss+xml" title="{COMPANY["brand_kr"]} 매거진·공지" href="/rss.xml">',
         f'<style>{CSS_BASE}</style>',
     ]
 
