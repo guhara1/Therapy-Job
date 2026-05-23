@@ -311,8 +311,8 @@ def header_html():
   </a>
   <button class="toggle" aria-expanded="false" aria-controls="primary-menu" onclick="document.getElementById('primary-menu').classList.toggle('open')">☰</button>
   <ul id="primary-menu" class="menu">
-    <li><a href="/jobs/" aria-haspopup="true">구인공고</a><ul class="submenu">{svc_links}<li><a href="/jobs/">전체 보기</a></li></ul></li>
-    <li><a href="/seekers/" aria-haspopup="true">구직</a><ul class="submenu">{seeker_links}<li><a href="/seekers/">전체 보기</a></li></ul></li>
+    <li><a href="/jobs/" aria-haspopup="true">구인공고</a><ul class="submenu">{svc_links}<li><a href="/jobs/">구인공고 전체 보기</a></li></ul></li>
+    <li><a href="/seekers/" aria-haspopup="true">구직</a><ul class="submenu">{seeker_links}<li><a href="/seekers/">구직 가이드 전체 보기</a></li></ul></li>
     <li><a href="/locations/" aria-haspopup="true">지역</a><ul class="submenu">{region_links}</ul></li>
     <li><a href="/therapists/" aria-haspopup="true">관리사</a><ul class="submenu">{nat_links}</ul></li>
     <li><a href="/pricing/">급여</a></li>

@@ -7,8 +7,8 @@ from ads import render_all_tiers, AD_CSS, filter_jobs, render_card, render_tier_
 # 메인 페이지
 # ─────────────────────────────────────────────
 def build_index():
-    title = f"{COMPANY['brand_kr']} — 전국 마사지 구인구직 1번지 | 스웨디시·아로마·타이·로미로미·스포츠"
-    desc = f"마사지 관리사 구인구직 · 전국 82개 행정구 · 5,820여건 채용 공고 · 매일 업데이트. 샵·관리사 연결 평균 47시간. 직업정보제공사업 신고 {COMPANY['job_info_reg']}."
+    title = f"{COMPANY['brand_kr']} — 전국 마사지 구인구직·로드샵 채용 1번지"
+    desc = "전국 82개 행정구 마사지 관리사 구인구직. 채용 공고 5,820여건 매일 갱신·평균 47시간 매칭. 직업정보제공사업 신고 합법 플랫폼."
 
     # 광고 3단계는 ads.py 헬퍼로 일괄 렌더링됨
 
