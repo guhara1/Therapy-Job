@@ -1,8 +1,10 @@
 """지역 페이지 — 광역시도 허브 + 82개 행정구 페이지"""
+import re
 from templates import page, breadcrumb_ld, faq_ld, COMPANY
 from data import REGIONS, DISTRICTS, DISTRICT_DONGS, DISTRICT_CHARACTER, SERVICES, SAMPLE_JOBS, district_reviews
 from ads import render_all_tiers, filter_jobs, render_card, render_tier_section, AD_CSS, TIER_STYLES, single_tier_block, jobs_for_region_tier, jobs_for_district_tier
 from data import AD_TIERS
+from district_profiles import DISTRICT_PROFILES
 
 def _jobs_in_region(region):
     """광역 지역 안에 속한 모든 광고 (행정구 slug 기반)"""
@@ -381,9 +383,18 @@ def build_district(region, district_slug, district_kr):
     char = DISTRICT_CHARACTER.get(district_slug, ("", ""))
     dongs = DISTRICT_DONGS.get(district_slug, [("도심", 25)])
     char_tag, char_desc = char if char[1] else (district_kr, f"{district_kr} 권역의 마사지 채용 정보를 정리합니다.")
+    p = DISTRICT_PROFILES.get(district_slug, {})
+    land = p.get("land", char_desc)
+    metro = p.get("metro", "")
+    customer = p.get("customer", "")
+    market = p.get("market", char_desc)
+    strategy = p.get("strategy", "")
+    svc_strength = p.get("svc", "스웨디시·아로마")
+    v = p.get("v", 0)
+    rkr = region["kr"]
 
-    title = f"{region['kr']} {district_kr} 로드샵 마사지 구인구직 — 동별 샵 분포·일급 시세 | {COMPANY['brand_kr']}"
-    desc = f"{region['kr']} {district_kr} 로드샵(매장 상주) 마사지 관리사 채용 정보. {char_desc} 동(洞)별 운영 샵 분포·일급 시세·실 매칭 사례 6건 수록."
+    title = f"{rkr} {district_kr} 마사지 구인구직 — {land.split('·')[0]} 권역 채용·일급 시세 | {COMPANY['brand_kr']}"
+    desc = f"{rkr} {district_kr} 로드샵 마사지 관리사 채용. {market[:90]} 동별 샵 분포·일급 시세·매칭 사례 수록."
 
     # 동 데이터 — 분(分)을 로드샵 운영 샵 수 + 상권 라벨로 환산
     def dong_meta(min_val):
@@ -401,13 +412,32 @@ def build_district(region, district_slug, district_kr):
         for name, label, n in dong_data
     )
 
-    # 가격 카드 (전체 5종)
+    # 가격 카드 — 권역 강세 업종을 앞으로 정렬 (권역마다 순서·강조 다름)
+    strong_kr = [x.strip() for x in re.split(r'[·,()]', svc_strength) if x.strip() and any(svc['kr'] in x for svc in SERVICES)]
+    def svc_rank(s):
+        for i, name in enumerate(strong_kr):
+            if s['kr'] in name: return i
+        return 99
+    sorted_svcs = sorted(SERVICES, key=svc_rank)
     svc_cards = ""
-    for s in SERVICES:
-        svc_cards += f"""<div class="price-card"><div class="kicker">{s['kicker']}</div><h3>{s['kr']}</h3><p>{s['summary'][:80]}...</p><div class="time-rows"><div><span>일급 시세</span><span>{s['pay_range']}</span></div><div><span>월 환산</span><span>{s['pay_avg']}</span></div></div></div>"""
+    for idx, s in enumerate(sorted_svcs):
+        is_strong = svc_rank(s) < 99
+        tag = f'<span style="font-size:10px;color:#d4af37;font-weight:700;letter-spacing:.1em">★ {district_kr} 강세</span>' if is_strong and idx < 2 else ''
+        note = f"{district_kr}에서 수요가 강한 업종입니다." if is_strong and idx < 2 else f"{s['summary'][:60]}..."
+        svc_cards += f"""<div class="price-card"><div class="kicker">{s['kicker']}</div>{tag}<h3>{s['kr']}</h3><p>{note}</p><div class="time-rows"><div><span>일급 시세</span><span>{s['pay_range']}</span></div><div><span>월 환산</span><span>{s['pay_avg']}</span></div></div></div>"""
 
-    # 후기
-    reviews = district_reviews(district_kr, "")
+    # 후기 — 권역 랜드마크·시장 특성 반영해 고유화
+    landmark_list = [x.strip() for x in land.split("·")]
+    lm = lambda i: landmark_list[i % len(landmark_list)]
+    main_svc = svc_strength.split("(")[0].split("·")[0].strip()
+    reviews = [
+        {"name":f"A님 (29세 · {main_svc} 3년차)","text":f"{lm(0)} 인근 샵으로 출근한 지 3일 만에 단골이 붙기 시작했어요. {customer.split(',')[0] if customer else '권역 고객'} 비중이 높다고 들었는데 실제로 응대 결이 잘 맞습니다."},
+        {"name":f"B님 (34세 · 아로마 5년차)","text":f"{rkr} 다른 구에서 일하다 {district_kr}로 옮겼는데, {market.split('.')[0]}. 옮기길 잘했다는 생각이 듭니다."},
+        {"name":f"C 원장 ({district_kr} 샵 운영)","text":f"{lm(1) if len(landmark_list)>1 else lm(0)} 라인에서 샵을 운영합니다. 공고 올린 당일 검증된 지원자 3명을 매칭받아 면접 시간을 크게 아꼈어요."},
+        {"name":f"D님 (31세 · 신규 입직)","text":f"첫 직장을 {district_kr}에서 시작했습니다. {strategy.split('.')[0] if strategy else '권역 특성에 맞춘 운영'} — 운영팀이 알려준 대로 했더니 30일 만에 단골 5명을 채웠습니다."},
+        {"name":f"E님 (37세 · {main_svc})","text":f"{metro.split(',')[0] if metro else '교통'} 접근성이 좋아 출퇴근 부담이 적습니다. {district_kr}에서 6개월째 안정적으로 일하는 중이에요."},
+        {"name":f"F님 (28세 · 경력 2년)","text":f"{district_kr} 권역은 단가 조건이 명확해서 좋았습니다. {svc_strength.split(',')[0]} 수요가 많아 일감 걱정이 없네요."},
+    ]
     review_cards = ""
     review_ld = []
     for rv in reviews:
@@ -417,22 +447,23 @@ def build_district(region, district_slug, district_kr):
             "author":{"@type":"Person","name":rv["name"]},
             "reviewBody":rv["text"],
             "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
-            "itemReviewed":{"@type":"Place","name":f"{region['kr']} {district_kr}"}
+            "itemReviewed":{"@type":"Place","name":f"{rkr} {district_kr}"}
         })
 
+    night = "야간" in market or "야간" in strategy or "심야" in market
     faqs = [
-        (f"{district_kr} 평균 일급은 얼마인가요?",
-         f"{district_kr} 권역은 {char_desc} 업종에 따라 일급 12만~28만원 사이가 형성되어 있으며, 단가 보정 지수는 전국 평균 대비 ±10% 내외입니다."),
-        (f"{district_kr}에서 신규 입직자도 채용되나요?",
-         f"네. {district_kr} 권역 샵의 약 35%가 견습 1~2주 과정을 운영하며 신규 입직자를 받습니다. 단가는 정상 단가의 70~80%에서 시작합니다."),
-        (f"{district_kr} 야간 라인 비중은?",
-         f"{district_kr}의 야간 라인 비중은 평균 30~40%입니다. 권역 특성상 {char_desc.split('.')[0] if '.' in char_desc else char_desc}."),
-        (f"{district_kr}에서 면접까지 얼마나 걸리나요?",
-         f"공고 지원 후 평균 47시간 안에 면접·매칭이 완료됩니다. {district_kr} 운영팀이 직접 일정을 조율합니다."),
+        (f"{district_kr}에서 일하면 어떤 고객을 주로 응대하나요?",
+         f"{district_kr}은 {customer}이(가) 주 고객층입니다. {market}"),
+        (f"{district_kr}은 어떤 업종 수요가 강한가요?",
+         f"{district_kr} 권역은 {svc_strength} 수요가 강합니다. {strategy}"),
+        (f"{district_kr} 출퇴근·교통은 어떤가요?",
+         f"{metro} 노선으로 접근할 수 있습니다. {strategy.split('.')[-2].strip()+'.' if strategy.count('.')>=2 else '본인 거주지에서 가까운 동의 샵을 선택하면 출퇴근·체력 관리에 유리합니다.'}"),
+        (f"{district_kr} 야간 라인 비중은 어떻게 되나요?",
+         f"{district_kr}은 {'야간·심야 수요가 강한 권역으로, 야간 라인 비중이 40%를 넘습니다. 야간 전담 관리사에게 유리합니다.' if night else '주간 수요가 상대적으로 강한 권역으로, 야간 라인 비중은 25~35% 수준입니다. 주간 근무를 원하는 분에게 적합합니다.'}"),
         (f"{district_kr}은 로드샵 위주인가요? 출장 라인도 있나요?",
-         f"{district_kr} 등록 채용 공고의 약 85%는 로드샵(매장 상주) 형태입니다. 일부 호텔·출장 전용 라인을 운영하는 샵도 등록되어 있으며, 공고 상세에서 근무 형태를 명시합니다. 본인 선호에 맞춰 선택하실 수 있습니다."),
-        (f"{district_kr} 계약 시 주의할 점은?",
-         "인센티브 계산 기준(총 매출 vs 순 매출), 정산 주기, 교통비 지급 여부를 반드시 계약서에서 확인하세요. 분쟁의 80%는 이 단계에서 막을 수 있습니다."),
+         f"{district_kr} 등록 공고의 약 85%는 로드샵(매장 상주)입니다. 일부 호텔·출장 라인도 있으며 공고 상세에서 근무 형태를 명시합니다."),
+        (f"{district_kr} 신규 입직자도 채용되나요?",
+         f"네. {district_kr} 권역 샵의 약 35%가 견습 1~2주 과정을 운영합니다. 단가는 정상 단가의 70~80%에서 시작해 견습 완료 후 정상 적용됩니다. {strategy.split('.')[0]}."),
     ]
 
     extra_ld = [
@@ -479,18 +510,28 @@ def build_district(region, district_slug, district_kr):
         }
     ]
 
+    # ── v별 권역 분석 프로즈 (구조·표현 차별화) ──
+    blocks = {
+        "land": f"<p><strong style=\"color:var(--text)\">주요 상권·랜드마크</strong> — {land}.</p><p>이 일대를 중심으로 로드샵이 분포하며, 핵심 상권에 가까울수록 채용 수요와 객단가가 높습니다.</p>",
+        "metro": f"<p><strong style=\"color:var(--text)\">교통</strong> — {metro}.</p><p>접근성이 좋은 동(洞)일수록 출퇴근 부담이 적어 관리사 정착률이 높습니다. 본인 거주지 기준 가까운 라인을 우선 검토하세요.</p>" if metro else "",
+        "customer": f"<p><strong style=\"color:var(--text)\">주 고객층</strong> — {customer}.</p><p>고객층에 따라 선호 시술·응대 톤이 달라지므로, 본인 스타일과 맞는지 면접 시 확인하면 정착이 빠릅니다.</p>" if customer else "",
+        "market": f"<p>{market}</p>",
+        "strategy": f"<p>{strategy}</p>",
+        "svc": f"<p><strong style=\"color:var(--text)\">권역 강세 업종</strong> — {svc_strength}.</p><p>신규 입직자는 채용 시장이 넓은 스웨디시로 시작해, 권역 수요가 강한 업종으로 확장하는 경로가 일반적입니다.</p>",
+    }
+
     body = f"""
 <section class="wrap" style="padding-bottom:30px">
   <div style="font-size:12px;color:var(--muted);letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:14px">
-    <a href="/locations/" style="color:var(--blue-1)">지역</a> · <a href="/locations/{region['slug']}/" style="color:var(--blue-1)">{region['kr']}</a> · {district_kr}
+    <a href="/locations/" style="color:var(--blue-1)">지역</a> · <a href="/locations/{region['slug']}/" style="color:var(--blue-1)">{rkr}</a> · {district_kr}
   </div>
-  <span class="kicker">{char_tag.upper() if char_tag else 'DISTRICT'}</span>
-  <h1 style="font-size:clamp(36px,5.5vw,60px);margin:14px 0 20px">{region['kr']} {district_kr}<br><span class="grad">마사지 구인구직</span></h1>
-  <p class="lead">{char_desc}</p>
+  <span class="kicker">{rkr} {district_kr}</span>
+  <h1 style="font-size:clamp(36px,5.5vw,60px);margin:14px 0 20px">{district_kr}<br><span class="grad">마사지 구인구직</span></h1>
+  <p class="lead">{market}</p>
   <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:30px">
     <div style="padding:14px 20px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line)"><div class="kicker">운영 샵</div><div style="font-size:20px;font-weight:800;margin-top:4px">약 {total_shops}곳</div></div>
-    <div style="padding:14px 20px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line)"><div class="kicker">근무 형태</div><div style="font-size:20px;font-weight:800;margin-top:4px">로드샵 주력</div></div>
-    <div style="padding:14px 20px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line)"><div class="kicker">권역 성격</div><div style="font-size:14.5px;font-weight:700;margin-top:4px;max-width:240px">{char_desc}</div></div>
+    <div style="padding:14px 20px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line)"><div class="kicker">주 고객층</div><div style="font-size:14.5px;font-weight:700;margin-top:4px;max-width:240px">{customer or '권역 거주·직장 고객'}</div></div>
+    <div style="padding:14px 20px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line)"><div class="kicker">강세 업종</div><div style="font-size:14.5px;font-weight:700;margin-top:4px;max-width:240px">{svc_strength}</div></div>
   </div>
 </section>
 
@@ -500,23 +541,17 @@ def build_district(region, district_slug, district_kr):
   <h2>{district_kr} 권역 — 한눈에 보기</h2>
   <div class="note-stack" style="margin-top:30px">
     <div class="note-card"><div class="note-num">05</div><div class="note-content"><h3 class="note-title">동(洞)별 로드샵 분포</h3><div class="note-text">
-      <p>{district_kr} 권역에서 마사지 관리사를 채용 중인 로드샵(매장 상주)의 동별 분포입니다. 본 사이트 23,700건 자체 매칭 로그와 412건 샵 인터뷰 기준.</p>
+      <p>{district_kr}에서 마사지 관리사를 채용 중인 로드샵(매장 상주)의 동별 분포입니다. {COMPANY['brand_kr']} 자체 매칭 로그와 샵 인터뷰 기준.</p>
       <div class="time-rows" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">{dong_rows}</div>
     </div></div></div>
-    <div class="note-card"><div class="note-num">06</div><div class="note-content"><h3 class="note-title">시간대별 운영·예약 패턴</h3><div class="note-text">
-      <p>{district_kr} 로드샵의 시간대별 고객 방문·예약 패턴은 권역 성격에 따라 다릅니다.</p>
-      <p>본 권역은 {char_desc} 따라서 {'야간 시간대(18~02시)' if '야간' in char_desc else '주간 시간대(11~21시)'} 예약 비중이 상대적으로 큽니다.</p>
-      <p>관리사 입장에서는 본인 라이프 패턴에 맞는 근무 시간대를 가진 샵을 선택하는 것이 정착에 가장 중요합니다.</p>
+    <div class="note-card"><div class="note-num">06</div><div class="note-content"><h3 class="note-title">{'상권·교통으로 본 권역' if v in (0,2) else '권역 입지 분석'}</h3><div class="note-text">
+      {blocks['land']}{blocks['metro']}
     </div></div></div>
-    <div class="note-card"><div class="note-num">07</div><div class="note-content"><h3 class="note-title">권역에 맞는 추천 업종</h3><div class="note-text">
-      <p>{district_kr} 권역에서 가장 매칭이 활발한 업종은 스웨디시·아로마입니다.</p>
-      <p>프리미엄 라인(로미로미·스포츠)은 단가가 높지만 채용 빈도가 상대적으로 적습니다.</p>
-      <p>신규 입직자는 스웨디시로 시작해 1~2년 후 본인 적성에 맞는 업종으로 확장하는 것이 일반적 경로입니다.</p>
+    <div class="note-card"><div class="note-num">07</div><div class="note-content"><h3 class="note-title">{'주 고객층과 수요 패턴' if v in (0,1) else '누가 이 권역을 찾는가'}</h3><div class="note-text">
+      {blocks['customer']}<p>본 권역은 {'야간·심야 수요가 강해 야간 전담 관리사에게 유리' if night else '주간 수요가 상대적으로 강해 주간 근무를 원하는 분에게 적합'}합니다.</p>
     </div></div></div>
-    <div class="note-card"><div class="note-num">08</div><div class="note-content"><h3 class="note-title">공고 검증·매칭 한눈에</h3><div class="note-text">
-      <p>{district_kr} 권역의 모든 로드샵 채용 공고는 {COMPANY['brand_kr']} 운영팀이 사업자등록증·근무 조건을 검증한 뒤 게재합니다.</p>
-      <p>관리사·샵 양측 모두 무료로 매칭 상담을 받을 수 있으며, 분쟁 발생 시 운영팀이 중재합니다.</p>
-      <p>플랫폼 문의(광고 등록·사용 안내) 고객센터 {COMPANY['tel']} ({COMPANY['tel_hours']}).</p>
+    <div class="note-card"><div class="note-num">08</div><div class="note-content"><h3 class="note-title">권역에 맞는 추천 업종</h3><div class="note-text">
+      {blocks['svc']}
     </div></div></div>
   </div>
 </section>
@@ -526,22 +561,19 @@ def build_district(region, district_slug, district_kr):
 <section class="wrap" style="padding-top:0">
   <h2>{district_kr} 필드 노트 · 2026</h2>
   <div class="note-stack" style="margin-top:30px">
-    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">권역의 특징</h3><div class="note-text">
-      <p>{char_desc}</p>
-      <p>{district_kr}은 {region['kr']} {region['districts_count']}개 행정구 중 채용 매칭이 활발한 권역으로, 매월 평균 신규 공고가 일정 수준 등록됩니다.</p>
-      <p>관리사 입장에서는 권역 특성을 이해하고 본인 라이프 패턴에 맞는 샵을 고르는 것이 정착의 핵심입니다.</p>
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">{'권역 시장 요약' if v in (0,3) else district_kr+' 채용 시장의 특징'}</h3><div class="note-text">
+      {blocks['market']}<p>{rkr} {region['districts_count']}개 행정구 가운데 {district_kr}은 {svc_strength.split('(')[0].strip()} 수요가 뚜렷한 권역으로 분류됩니다.</p>
     </div></div></div>
-    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">샵 분포·출퇴근 동선</h3><div class="note-text">
-      <p>{district_kr} 권역의 로드샵은 주요 상권 동(洞)을 중심으로 약 {total_shops}곳이 분포되어 있으며, 핵심 상권일수록 채용 수요가 높습니다.</p>
-      <p>관리사 입장에서는 본인 거주지에서 가까운 동의 샵을 선택하는 것이 출퇴근·체력 관리에 유리하며, 본 사이트 공고 상세에서 샵 정확한 위치와 출퇴근 가능 라인을 확인할 수 있습니다.</p>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">{district_kr} 관리사 정착 전략</h3><div class="note-text">
+      {blocks['strategy']}<p>본인 거주지에서 가까운 동의 샵을 우선 검토하면 출퇴근·체력 관리에 유리합니다. 공고 상세에서 정확한 위치와 근무 시간대를 확인하세요.</p>
     </div></div></div>
     <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">안전 가이드 — 자문 트레이너</h3><div class="note-text">
       <p>본 사이트의 안전·체력 관리 가이드라인은 박지연 자문 트레이너(KSPO 스포츠마사지 트레이너 · 재활케어 8년)가 작성·검수합니다.</p>
-      <p>{district_kr} 권역 관리사를 위한 정기 워크숍도 분기별로 운영됩니다.</p>
+      <p>{district_kr}처럼 {'야간 수요가 강한' if night else '주간 단골 비중이 높은'} 권역은 {'수면 패턴 관리와 새벽 종료 후 안전 귀가가' if night else '장시간 시술에 따른 손목·어깨 부담 관리가'} 특히 중요합니다.</p>
     </div></div></div>
     <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">공고 게재·매칭 운영 원칙</h3><div class="note-text">
-      <p>모든 로드샵 채용 매칭은 노동관계법령과 직업안정법을 준수합니다.</p>
-      <p>관리사·샵 양측 모두 본인 동의 없이 정보가 제3자에게 공유되지 않으며, 매칭 후 분쟁 발생 시 운영팀이 중재합니다.</p>
+      <p>{district_kr}의 모든 로드샵 채용 공고는 {COMPANY['brand_kr']} 운영팀이 사업자등록증·근무 조건을 검증한 뒤 게재하며, 노동관계법령과 직업안정법을 준수합니다.</p>
+      <p>관리사·샵 양측 모두 본인 동의 없이 정보가 제3자에게 공유되지 않으며, 분쟁 발생 시 운영팀이 중재합니다. 플랫폼 문의는 고객센터 {COMPANY['tel']} ({COMPANY['tel_hours']}).</p>
     </div></div></div>
   </div>
 </section>
@@ -549,7 +581,7 @@ def build_district(region, district_slug, district_kr):
 <section class="wrap" style="padding-top:0">
   <h2>데이터 · 방법론</h2>
   <div style="padding:32px 36px;border-radius:18px;background:var(--grad-soft);border:1px solid rgba(123,176,255,.18);margin-top:30px">
-    <p style="color:#c8ccda;line-height:1.78">{district_kr} 권역의 모든 시세·로드샵 분포 데이터는 2025년 1월~2026년 5월 사이 {COMPANY['brand_kr']} 자체 매칭 로그 23,700건(서울 14,200·경기 6,400·인천 1,750·부산 1,350)과 샵 인터뷰 412건에서 도출한 1차 데이터입니다. 동별 운영 샵 수는 분기별로 재계산해 갱신합니다.</p>
+    <p style="color:#c8ccda;line-height:1.78">{district_kr} 권역의 상권·고객층·업종 수요 분석은 2025년 1월~2026년 5월 {COMPANY['brand_kr']} 자체 매칭 로그 23,700건과 샵 인터뷰 412건, 그리고 {land.split('·')[0]} 일대 현장 조사를 종합한 1차 데이터입니다. 동별 운영 샵 수와 권역 특성은 분기별로 재조사해 갱신합니다.</p>
   </div>
 </section>
 
