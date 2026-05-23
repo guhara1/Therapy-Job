@@ -4,7 +4,7 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(__file__))
 from data import COMPANY, SERVICES, NATIONALITIES, REGIONS, MAGAZINE, DISTRICTS, SAMPLE_JOBS, SHOP_SALES, NOTICES
-from pages_core import build_index, build_about, build_contact, build_pricing, build_reviews, build_policy_privacy, build_policy_terms, build_policy_youth, build_pricing_ads, build_contact_ads, build_shop_sale, build_shop_sale_detail, build_notices_hub, build_notice_article
+from pages_core import build_index, build_about, build_contact, build_pricing, build_reviews, build_policy_privacy, build_policy_terms, build_policy_youth, build_pricing_ads, build_contact_ads, build_shop_sale, build_shop_sale_detail, build_notices_hub, build_notice_article, build_shop_sale_pricing, build_recruitment_pricing
 from pages_hubs import build_jobs_hub, build_job_service, build_seekers_hub, build_seeker_service, build_therapists_hub, build_therapist, build_magazine_hub, build_magazine_article
 from pages_locations import build_locations_hub, build_region_hub, build_district
 from ads import build_ad_detail
@@ -67,6 +67,8 @@ def build_sitemap():
     add("/magazine/", priority="0.85", changefreq="weekly")
     add("/pricing/", priority="0.85", changefreq="weekly")
     add("/pricing-ads/", priority="0.9", changefreq="monthly")
+    add("/recruitment-pricing/", priority="0.9", changefreq="monthly")
+    add("/shop-sale-pricing/", priority="0.9", changefreq="monthly")
     add("/shop-sale/", priority="0.85", changefreq="weekly")
     for shop in SHOP_SALES:
         add(f"/shop-sale/{shop['id']}/", priority="0.7", changefreq="weekly")
@@ -243,6 +245,8 @@ def main():
     write_page("/contact/", build_contact(), minify); count += 1
     write_page("/pricing/", build_pricing(), minify); count += 1
     write_page("/pricing-ads/", build_pricing_ads(), minify); count += 1
+    write_page("/recruitment-pricing/", build_recruitment_pricing(), minify); count += 1
+    write_page("/shop-sale-pricing/", build_shop_sale_pricing(), minify); count += 1
     write_page("/shop-sale/", build_shop_sale(), minify); count += 1
     for shop in SHOP_SALES:
         write_page(f"/shop-sale/{shop['id']}/", build_shop_sale_detail(shop), minify); count += 1

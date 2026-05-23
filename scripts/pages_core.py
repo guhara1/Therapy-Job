@@ -2178,3 +2178,452 @@ def build_notice_article(n):
 </section>
 """
     return page(title, desc, f"/notices/{n['slug']}/", body, extra_jsonld=extra_ld)
+
+
+# ─────────────────────────────────────────────
+# 업소매매 매물 등록 가격 안내 (/shop-sale-pricing/)
+# ─────────────────────────────────────────────
+def build_shop_sale_pricing():
+    title = f"업소매매 매물 등록 가격 — 1개월 10만원~ · 마사지샵 양도 광고 안내 2026 | {COMPANY['brand_kr']}"
+    desc = "마사지샵 양도자를 위한 매물 등록 가격 안내. 1개월 100,000원·2개월 150,000원·1년 330,000원. 익명 게재 + 매수자 1:1 매칭 + 전국 노출. 등록 절차·세무·법령 종합 가이드."
+
+    def num(n): return f"{n:,}원"
+
+    faqs = [
+        ("매물 등록 후 어디에 노출되나요?",
+         "매물 단독 페이지(/shop-sale/매물번호)가 자동 생성되어 검색 엔진에 색인되며, 본 사이트의 업소매매 목록 페이지(/shop-sale/)와 매물이 위치한 광역시·행정구 페이지의 매물 영역에 동시 노출됩니다. 평균 월 노출 수는 4,000~9,000회입니다."),
+        ("\"익명 처리\"는 정확히 어떤 의미인가요?",
+         "지역은 광역시·자치구·동(洞)까지만 공개되며, 상호·정확한 주소·연락처는 비공개입니다. 매수 의향자가 본 사이트 운영팀을 통해 신원·예산을 1차 확인한 후, 양도자가 직접 추가 정보를 전달하는 구조입니다. 운영 중인 영업 사실이 직원·고객에게 노출되지 않습니다."),
+        ("권리금은 어떻게 정해지나요?",
+         "권리금은 월 매출·순익·단골 비중·시설 가치·잔여 임대 기간·입지·업종 트렌드를 종합해 양도자가 직접 산정합니다. 본 사이트는 정보 게재 서비스로 권리금 산정·중개를 직접 수행하지 않습니다. 정밀 산정은 공인중개사 자문을 권장드립니다."),
+        ("매물이 안 팔리면 환불되나요?",
+         "본 서비스는 매물 게재 슬롯에 대한 비용으로, 거래 성사 여부에 따라 환불되지 않습니다. 다만 게재 후 7일 이내 본인 사유 해지 시 50%, 7일 이후에는 잔여 일수 기준 30% 환불됩니다. 운영상 문제로 노출 중단된 기간은 무료 연장됩니다."),
+        ("등록 시 어떤 자료를 준비하나요?",
+         "사업자등록증·임대차계약서 사본, 최근 3~6개월 매출 자료(카드사 정산표 또는 신고 매출), 시설·장비 목록, 직원·관리사 현황, 단골 비중 추정치, 희망 권리금을 준비해주시면 매수자 매칭이 빨라집니다. 자료는 본 사이트 운영팀이 검증만 진행하며 외부에 공개되지 않습니다."),
+        ("거래 성사 시 별도 수수료가 있나요?",
+         "거래 성사 시 별도 수수료는 0원입니다. 본 사이트는 매물 게재 슬롯 단가만 받습니다. 다만 권리금 거래는 공인중개사·변호사·세무사 자문이 필요할 수 있으며, 그 비용은 양도자·양수자가 직접 부담합니다."),
+        ("부가가치세는 어떻게 처리되나요?",
+         "모든 가격은 부가세 별도이며, 사업자등록증 보유 시 세금계산서를 발행해드립니다. 발행된 세금계산서는 양도자의 광고비 항목으로 비용 처리 가능합니다."),
+        ("결제 후 노출까지 얼마나 걸리나요?",
+         "결제 확인 후 평균 1영업일 내 게재됩니다. 매물 정보 검증(사업자등록증·임대차계약서·운영 정보)에 시간이 소요될 수 있으며, 검증 통과 시 즉시 노출됩니다."),
+    ]
+
+    pricing_offers = [
+        {"@type":"Offer","name":"업소매매 매물 등록 — 1개월","price":"100000","priceCurrency":"KRW","availability":"https://schema.org/InStock","category":"매물 등록","url":f"{COMPANY['base_url']}/shop-sale-pricing/"},
+        {"@type":"Offer","name":"업소매매 매물 등록 — 2개월","price":"150000","priceCurrency":"KRW","availability":"https://schema.org/InStock","category":"매물 등록","url":f"{COMPANY['base_url']}/shop-sale-pricing/"},
+        {"@type":"Offer","name":"업소매매 매물 등록 — 12개월","price":"330000","priceCurrency":"KRW","availability":"https://schema.org/InStock","category":"매물 등록","url":f"{COMPANY['base_url']}/shop-sale-pricing/"},
+    ]
+
+    extra_ld = [
+        breadcrumb_ld([("홈","/"),("광고 상품","/pricing-ads/"),("업소매매 매물 등록 가격","/shop-sale-pricing/")]),
+        faq_ld(faqs),
+        {
+            "@type":"Service",
+            "@id":f"{COMPANY['base_url']}/shop-sale-pricing/#service",
+            "serviceType":"마사지샵 업소매매 매물 게재 서비스",
+            "name":"테라피잡 업소매매 매물 등록",
+            "description":desc,
+            "provider":{"@id":f"{COMPANY['base_url']}/#organization"},
+            "areaServed":{"@type":"Country","name":"대한민국"},
+            "audience":{"@type":"Audience","audienceType":"마사지샵 양도자"},
+            "hasOfferCatalog":{
+                "@type":"OfferCatalog",
+                "name":"업소매매 매물 등록 단가표",
+                "itemListElement":pricing_offers
+            }
+        }
+    ]
+
+    body = f"""
+<section class="wrap" style="padding-bottom:30px">
+  <span class="kicker" style="color:#d4af37">SHOP SALE PRICING · 업소매매 광고</span>
+  <h1 style="font-size:clamp(36px,5.5vw,60px);margin:14px 0 20px">업소매매 매물 등록<br><span style="background:linear-gradient(135deg,#d4af37,#f4d29c);-webkit-background-clip:text;background-clip:text;color:transparent">가격 안내</span></h1>
+  <p class="lead">마사지샵 양도를 원하시는 분을 위한 매물 등록 상품입니다. 익명 게재로 운영 중인 영업에 지장이 없으며, 매수 의향자는 운영팀이 1:1 매칭으로 연결합니다. 거래 성사 시 별도 수수료 0원.</p>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:28px">
+    <div style="padding:14px 20px;border-radius:14px;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.32)"><div style="font-size:11px;color:#d4af37;letter-spacing:.18em;font-weight:700">최저가</div><div style="font-size:20px;font-weight:800;color:#f4d29c;margin-top:4px">월 27,500원~</div></div>
+    <div style="padding:14px 20px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line)"><div class="kicker">평균 노출</div><div style="font-size:20px;font-weight:800;margin-top:4px">월 4,000~9,000회</div></div>
+    <div style="padding:14px 20px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line)"><div class="kicker">거래 수수료</div><div style="font-size:20px;font-weight:800;margin-top:4px;color:var(--blue-1)">0원</div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0;padding-bottom:40px">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker" style="color:#d4af37">PRICING</span>
+    <h2 style="margin-top:8px">기간별 매물 등록 가격</h2>
+    <p class="lead" style="margin:14px auto 0">모든 가격은 부가세 별도이며, 사업자 세금계산서가 발행됩니다. 장기 계약 시 월 환산 단가가 큰 폭으로 절감됩니다.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:24px">
+    <div style="position:relative;padding:32px 28px;border-radius:18px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--line)">
+      <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue-1);font-weight:700;margin-bottom:8px">단기 매물</div>
+      <h3 style="font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.02em">1개월</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.65">빠른 매수자 매칭이 목표일 때</p>
+      <div style="padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:18px">
+        <div style="font-size:32px;font-weight:800;color:var(--blue-1);letter-spacing:-.02em">100,000원</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:4px">월 환산 100,000원</div>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13.5px;color:#c8ccda">
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>매물 단독 페이지 게재</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>지역·업종별 매물 영역 노출</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>익명 처리(상호·주소 비공개)</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>매수자 검증 후 1:1 연결</li>
+      </ul>
+    </div>
+    <div style="position:relative;padding:32px 28px;border-radius:18px;background:linear-gradient(135deg,rgba(212,175,55,.08),rgba(212,175,55,.02));border:1px solid rgba(212,175,55,.4)">
+      <span style="position:absolute;top:-12px;right:24px;padding:5px 12px;background:linear-gradient(135deg,#d4af37,#f4d29c);color:#1a1410;font-size:10.5px;letter-spacing:.22em;font-weight:800;border-radius:5px">BEST</span>
+      <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#d4af37;font-weight:700;margin-bottom:8px">표준 매물 · 추천</div>
+      <h3 style="font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.02em">2개월</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.65">가장 많이 선택되는 기간</p>
+      <div style="padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:18px">
+        <div style="font-size:32px;font-weight:800;color:#d4af37;letter-spacing:-.02em">150,000원</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:4px">월 환산 75,000원 · 1개월 단가 대비 25% 절감</div>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13.5px;color:#c8ccda">
+        <li><span style="color:#d4af37;margin-right:6px">●</span>매물 단독 페이지 게재</li>
+        <li><span style="color:#d4af37;margin-right:6px">●</span>지역·업종별 매물 영역 노출</li>
+        <li><span style="color:#d4af37;margin-right:6px">●</span>익명 처리(상호·주소 비공개)</li>
+        <li><span style="color:#d4af37;margin-right:6px">●</span>매수자 검증 후 1:1 연결</li>
+        <li><span style="color:#d4af37;margin-right:6px">●</span>매물 정보 1회 무료 수정</li>
+      </ul>
+    </div>
+    <div style="position:relative;padding:32px 28px;border-radius:18px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--line)">
+      <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue-1);font-weight:700;margin-bottom:8px">장기 매물</div>
+      <h3 style="font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.02em">12개월 (1년)</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.65">확실한 거래 성사까지 안정 노출</p>
+      <div style="padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:18px">
+        <div style="font-size:32px;font-weight:800;color:var(--blue-1);letter-spacing:-.02em">330,000원</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:4px">월 환산 27,500원 · 1개월 단가 대비 72% 절감</div>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13.5px;color:#c8ccda">
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>매물 단독 페이지 게재</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>지역·업종별 매물 영역 노출</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>익명 처리(상호·주소 비공개)</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>매수자 검증 후 1:1 연결</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>매물 정보 무제한 무료 수정</li>
+        <li><span style="color:var(--blue-1);margin-right:6px">●</span>거래 성사 시 별도 수수료 0원</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">WHAT YOU GET</span>
+    <h2 style="margin-top:8px">매물 등록 시 제공되는 4가지</h2>
+    <p class="lead" style="margin:14px auto 0">단순 게시판 노출이 아니라, 매물 단독 페이지·익명 처리·매수자 검증·구글 검색 노출까지 일괄 제공합니다.</p>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">매물 단독 페이지 자동 생성</h3><div class="note-text"><p>매물별 단독 URL(/shop-sale/매물번호)이 자동 생성됩니다. 구글이 단독 페이지로 인식해 \"강남 마사지샵 매매\", \"분당 권리금\" 같은 롱테일 검색 쿼리에 노출됩니다.</p><p>각 매물 페이지에는 Product 스키마와 Offer 가격 정보가 자동 포함되어, 구글 쇼핑·매물 검색 결과에서도 노출될 자격을 갖춥니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">지역·업종 매물 영역 노출</h3><div class="note-text"><p>매물이 위치한 광역시(서울/경기/인천/부산) 페이지와 행정구 페이지의 매물 영역에 자동 노출됩니다. 같은 지역을 찾는 매수 의향자에게 자연스럽게 도달합니다.</p><p>업종별 페이지(/jobs/swedish/ 등)에도 \"같은 업종 매물\" 영역으로 노출되어, 채용 정보를 탐색 중인 분에게도 매물이 함께 보입니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">익명 처리 (영업 보호)</h3><div class="note-text"><p>상호·정확한 주소·연락처는 비공개로 처리됩니다. 동(洞) 단위까지만 공개되며, 정확한 위치와 상호는 매수 의향 확인된 분에게만 운영팀이 별도 전달합니다.</p><p>운영 중인 영업과 직원·고객에게 매매 진행 사실이 알려지지 않아, 영업에 지장 없이 매물을 노출시킬 수 있습니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">매수자 1차 검증·1:1 연결</h3><div class="note-text"><p>매수 의향자가 문의하면 운영팀이 신원·예산·진정성을 1차 확인한 뒤 양도자에게 연결합니다.</p><p>호기심성·정보 수집 목적·시세 탐색 목적의 문의를 1차 차단해 양도자의 시간을 보호합니다. 실제 매수 의향이 있는 분만 연결되어, 거래 성사 확률이 높아집니다.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">EXPECTED PERFORMANCE</span>
+    <h2 style="margin-top:8px">예상 노출·매칭 데이터</h2>
+    <p class="lead" style="margin:14px auto 0">본 사이트 자체 운영 데이터(2025.01~2026.05) 기준입니다. 실제 효과는 매물 조건·권역·시즌에 따라 달라질 수 있습니다.</p>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">월 평균 노출 수</h3><div class="note-text"><p>매물당 월 평균 <strong style="color:#f4d29c">4,000~9,000회</strong> 노출됩니다. 강남·해운대·송도 등 인기 권역은 6,000~9,000회, 외곽 권역은 2,500~5,000회 수준입니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">평균 매수 문의 수</h3><div class="note-text"><p>매물당 월 평균 <strong style="color:#f4d29c">3~8건</strong>의 매수 문의가 운영팀을 거쳐 양도자에게 전달됩니다. 1차 검증을 통과한 문의만 전달되므로 시간 낭비가 적습니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">권역별 평균 거래 성사 기간</h3><div class="note-text"><p>강남·서초·송파(서울 동남권): <strong>약 28~35일</strong></p><p>마포·용산·성동(서울 도심권): <strong>약 35~50일</strong></p><p>분당·판교·일산(1·2기 신도시): <strong>약 35~60일</strong></p><p>해운대·서면(부산): <strong>약 30~45일</strong></p><p>외곽 권역: <strong>60~90일 이상</strong></p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">검색 엔진 색인</h3><div class="note-text"><p>매물 단독 페이지는 자동으로 구글에 색인 요청됩니다. 평균 색인 완료 시간은 3~7일이며, 색인 후에는 \"권역명 + 업종 + 매매\" 같은 검색 쿼리에 자연 노출됩니다.</p><p>JobPosting과 별개로 Product 스키마가 적용되어, 매수 의향자가 구글에서 직접 매물 페이지에 진입할 수 있습니다.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">HOW IT WORKS</span>
+    <h2 style="margin-top:8px">등록부터 거래 성사까지 5단계</h2>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">광고문의 신청</h3><div class="note-text"><p><a href="/contact-ads/" style="color:var(--blue-1);font-weight:700">광고문의</a> 폼에 \"업소매매 등록\"을 명시해 신청해주세요. 평일 1영업일 내 담당자가 안내드립니다. 야간·주말 신청도 가능합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">매물 정보 정리·검증</h3><div class="note-text"><p>지역·업종·평수·월 매출 범위·희망 권리금·시설 상태·직원 현황·임대 조건을 정리합니다. 사업자등록증·임대차계약서·매출 자료를 함께 검토해 매물의 시장 가치를 진단합니다.</p><p>검증된 자료만 게재되며, 검증 자료 원본은 외부에 공개되지 않고 운영팀 내부 검증 용도로만 사용됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">결제·매물 게재 (1영업일)</h3><div class="note-text"><p>세금계산서 발행 후 계좌이체로 결제. 결제 확인 시점부터 매물 단독 페이지가 자동 생성되며, 지역·업종 페이지 매물 영역에 동시 노출됩니다.</p><p>장기 계약(6·12개월) 시 분납도 협의 가능합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">매수 문의 검증·전달</h3><div class="note-text"><p>매수 문의가 들어오면 운영팀이 신원·예산·진정성을 1차 확인한 후 양도자에게 전달합니다. 정보 수집 목적·시세 탐색 목적의 문의는 1차 차단됩니다.</p><p>평균 월 3~8건의 검증된 매수 문의가 전달됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">05</div><div class="note-content"><h3 class="note-title">실사·협상·계약 (당사자 직접)</h3><div class="note-text"><p>실제 현장 실사·권리금 협상·계약은 양도자와 양수자가 직접 진행합니다. 본 사이트는 매물 정보 제공·매칭만 담당하며, 거래 성사 시 별도 수수료를 받지 않습니다.</p><p>공인중개사·변호사·세무사 자문이 필요한 경우 신뢰할 수 있는 전문가를 연결해드릴 수 있습니다.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">CHECKLIST</span>
+    <h2 style="margin-top:8px">등록 전 준비 체크리스트</h2>
+    <p class="lead" style="margin:14px auto 0">권리금 거래는 단순 매매와 달리 법적·세무적 고려사항이 많습니다. 등록 전 다음 6가지를 점검하시면 거래가 매끄럽게 진행됩니다.</p>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">임대인 동의 여부</h3><div class="note-text"><p>「상가건물 임대차보호법」 제10조의4에 따라 임차인은 권리금 회수 기회를 보호받지만, 임대인이 정당한 사유(임차인의 차임 연체 등)로 신규 임차인을 거부할 수 있는 경우도 있습니다.</p><p>임대차 계약서 조건과 임대인의 신규 임차인 승계 의사를 사전에 확인하세요. 임대인 동의 없는 매매는 거래 자체가 무산될 수 있습니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">권리금 시세 산정</h3><div class="note-text"><p>월 매출·순익·단골 비중·시설 가치·잔여 임대 기간·입지·업종 트렌드를 종합해 시세가 형성됩니다.</p><p>본 사이트의 권역별 매매 데이터를 참고하시고, 정밀 산정은 공인중개사(권리금 평가 전문) 자문을 권장드립니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">세무 처리 (필독)</h3><div class="note-text"><p>권리금은 양도자에게 <strong>기타소득(또는 사업소득)</strong>으로 과세됩니다. 권리금이 일정 금액을 초과하면 종합소득세 신고 대상입니다.</p><p>양수자는 권리금을 <strong>5년간 균등 상각</strong>해 비용 처리할 수 있습니다. 부가가치세·세금계산서 발행 의무도 함께 검토하시는 것이 좋습니다.</p><p>세부 사안은 세무사 자문을 권장드립니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">직원·관리사 승계</h3><div class="note-text"><p>마사지샵의 핵심 자산 중 하나는 관리사·직원입니다. 권리금에 직원 승계가 포함되는지, 직원의 동의는 받았는지, 4대 보험·퇴직금 정산 방식은 어떻게 할지 사전에 정리하세요.</p><p>「근로기준법」상 영업양도 시 근로관계가 자동 승계되며, 직원이 거부하면 별도 정산이 필요합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">05</div><div class="note-content"><h3 class="note-title">시설·장비 인수 목록</h3><div class="note-text"><p>침대·오일 워머·세탁기·정수기·POS·CCTV·에어컨 등 인수 대상 시설·장비를 목록화하고 사진을 함께 준비하세요.</p><p>\"포함이라고 했는데 없다\"는 분쟁의 출발점이 됩니다. 계약서에 시설 목록을 첨부하시는 것이 안전합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">06</div><div class="note-content"><h3 class="note-title">단골·고객 데이터 인계</h3><div class="note-text"><p>단골 명단·예약 시스템·SNS 계정·블로그 등 무형 자산의 인계 절차를 문서로 정리하세요.</p><p><strong>개인정보보호법상 단순 고객 명단 양도는 위법 가능성이 있습니다.</strong> 고객 동의 절차를 거치거나, 변호사 자문을 받으신 후 진행하세요.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 30px">
+    <span class="kicker">FAQ</span>
+    <h2 style="margin-top:8px">양도자를 위한 자주 묻는 질문</h2>
+  </div>
+  <div style="max-width:860px;margin:0 auto">
+"""
+    for q,a in faqs:
+        body += f'<details><summary>{q}<span>+</span></summary><div>{a}</div></details>'
+    body += f"""
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:40px">
+  <div style="padding:50px 40px;border-radius:22px;background:linear-gradient(135deg,rgba(212,175,55,.08),rgba(91,155,255,.04));border:1px solid rgba(212,175,55,.25);text-align:center">
+    <span class="kicker" style="color:#d4af37">매물 등록 신청</span>
+    <h2 style="margin:10px 0 14px">샵 양도를 시작하세요</h2>
+    <p class="lead" style="margin:0 auto 24px">광고문의 폼에 \"업소매매 등록\"을 명시해 신청하시면 평일 1영업일 내 담당자가 매물 정보 정리·검증·게재까지 안내드립니다.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn btn-primary" href="/contact-ads/">매물 등록 신청 →</a>
+      <a class="btn btn-ghost" href="/shop-sale/">현재 등록 매물 보기</a>
+    </div>
+  </div>
+</section>
+"""
+    return page(title, desc, "/shop-sale-pricing/", body, extra_jsonld=extra_ld)
+
+
+# ─────────────────────────────────────────────
+# 채용공고 광고 가격 안내 (/recruitment-pricing/)
+# ─────────────────────────────────────────────
+def build_recruitment_pricing():
+    title = f"채용공고 광고 가격 — VVIP·VIP·프리미엄 단가 안내 2026 | {COMPANY['brand_kr']}"
+    desc = "마사지샵 채용 광고 등록 가격 안내. VVIP 월 44만원·VIP 월 20만원·프리미엄 월 13만원부터. 메인·업종·지역 페이지 노출 위치와 예상 효과를 모두 공개합니다."
+
+    def num(n): return f"{n:,}원"
+
+    faqs = [
+        ("VVIP·VIP·프리미엄의 핵심 차이는?",
+         "노출 위치가 가장 큰 차이입니다. VVIP는 메인·업종·지역 페이지의 최상단(Hero 직하)에 단독 노출되며, VIP는 첫 콘텐츠 블록 직후(First Content Break)에, 프리미엄은 페이지 하단에 노출됩니다. 노출 위치 가치 차이가 단가에 그대로 반영됩니다."),
+        ("입점 가능 업체 수 제한 이유는?",
+         "VVIP는 4개, VIP는 12개로 제한되어 있어 각 광고주가 받을 수 있는 시선 점유율(SOV)을 보장합니다. 프리미엄은 등록 제한이 없어 가성비 슬롯입니다."),
+        ("광고 효과는 어떻게 측정하나요?",
+         "VVIP 광고주에게는 분기별 노출 수·클릭 수·문의 전환 수가 포함된 광고 효과 리포트를 무료 제공합니다. VIP·프리미엄은 요청 시 월 1회 간이 리포트를 제공합니다."),
+        ("계약 기간 중 광고 변경이 가능한가요?",
+         "광고 본문·이미지·연락처는 계약 기간 중 1회 무료 변경이 가능합니다. 2회 이상 변경은 회당 30,000원 수정비가 발생합니다. 12개월 장기 계약은 무제한 무료 수정입니다."),
+        ("결제 방식·세금계산서는?",
+         "사업자 세금계산서 발행 후 계좌이체가 기본입니다. 카드 결제는 별도 협의 후 가능하며, 6·12개월 장기 계약 시 분납도 협의 가능합니다. 모든 가격은 부가세 별도입니다."),
+        ("환불 정책은 어떻게 되나요?",
+         "광고 게재 후 7일 이내 본인 사유로 해지 시 50% 환불, 7일 이후에는 잔여 일수 기준 30% 환불됩니다. 운영상 문제로 노출이 7일 이상 중단된 경우 해당 기간만큼 무료 연장됩니다."),
+        ("계약 후 첫 광고 노출까지 얼마나?",
+         "결제 확인 후 평균 1영업일 내 게재됩니다. 광고 소재(텍스트·로고·연락처) 검수에 시간이 소요될 수 있으며, 검수 통과 시 즉시 노출됩니다."),
+        ("VVIP 4슬롯이 모두 마감되면?",
+         "대기 명단에 무료 등록되며, 기존 계약 만료·해지 시 우선 안내됩니다. 대기 중에는 VIP·프리미엄으로 우선 시작했다가 VVIP 자리가 나면 차액으로 전환하는 패턴도 가능합니다."),
+        ("광고 상세 페이지는 어떻게 생성되나요?",
+         "결제와 검수 완료 시점부터 광고 상세 페이지(/ad/공고번호/)가 자동 생성됩니다. JobPosting 스키마가 자동 적용되어 구글 채용 검색(Google Jobs)에도 노출됩니다."),
+    ]
+
+    pricing_offers = []
+    for tier_name, prices in [
+        ("VVIP",[("1개월",440000),("6개월",880000),("12개월",1100000)]),
+        ("VIP",[("1개월",200000),("6개월",450000),("12개월",550000)]),
+        ("프리미엄",[("1개월",130000),("6개월",200000),("12개월",250000)]),
+    ]:
+        for period, price in prices:
+            pricing_offers.append({
+                "@type":"Offer",
+                "name":f"{tier_name} 채용공고 광고 — {period}",
+                "price":str(price),
+                "priceCurrency":"KRW",
+                "availability":"https://schema.org/InStock",
+                "category":"채용공고 광고",
+                "url":f"{COMPANY['base_url']}/recruitment-pricing/"
+            })
+
+    extra_ld = [
+        breadcrumb_ld([("홈","/"),("광고 상품","/pricing-ads/"),("채용공고 광고 가격","/recruitment-pricing/")]),
+        faq_ld(faqs),
+        {
+            "@type":"Service",
+            "@id":f"{COMPANY['base_url']}/recruitment-pricing/#service",
+            "serviceType":"마사지 관리사 채용공고 광고 게재 서비스",
+            "name":"테라피잡 채용공고 광고 상품",
+            "description":desc,
+            "provider":{"@id":f"{COMPANY['base_url']}/#organization"},
+            "areaServed":{"@type":"Country","name":"대한민국"},
+            "audience":{"@type":"Audience","audienceType":"마사지샵 운영자"},
+            "hasOfferCatalog":{
+                "@type":"OfferCatalog",
+                "name":"채용공고 광고 단가표 (VVIP·VIP·프리미엄 × 1·6·12개월)",
+                "itemListElement":pricing_offers
+            }
+        }
+    ]
+
+    body = f"""
+<section class="wrap" style="padding-bottom:30px">
+  <span class="kicker">RECRUITMENT PRICING · 채용공고 광고</span>
+  <h1 style="font-size:clamp(36px,5.5vw,60px);margin:14px 0 20px">채용공고 광고<br><span class="grad">가격 안내</span></h1>
+  <p class="lead">관리사 채용을 원하시는 샵 운영자를 위한 유료 채용 광고 상품입니다. 노출 위치에 따라 VVIP·VIP·프리미엄 3단계로 운영되며, 단가 차이는 노출 위치의 가치 차이를 반영합니다. 광고 등록 문의는 <a href="/contact-ads/" style="color:var(--blue-1);font-weight:700">광고문의</a>.</p>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:28px">
+    <div style="padding:14px 20px;border-radius:14px;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.32)"><div style="font-size:11px;color:#d4af37;letter-spacing:.18em;font-weight:700">최저가</div><div style="font-size:20px;font-weight:800;color:#f4d29c;margin-top:4px">월 20,833원~</div></div>
+    <div style="padding:14px 20px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line)"><div class="kicker">평균 CTR</div><div style="font-size:20px;font-weight:800;margin-top:4px">2.1~3.4%</div></div>
+    <div style="padding:14px 20px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line)"><div class="kicker">문의 전환율</div><div style="font-size:20px;font-weight:800;margin-top:4px;color:var(--blue-1)">11~16%</div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0;padding-bottom:30px" id="vvip-pricing">
+  <div style="padding:36px;border-radius:22px;background:linear-gradient(135deg,#1a1410 0%,#2a1f12 100%);border:1px solid rgba(212,175,55,.4);margin-bottom:28px;scroll-margin-top:80px">
+    <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:36px" class="rec-grid">
+      <div>
+        <div style="display:inline-block;padding:10px 18px;background:linear-gradient(135deg,#d4af37,#f4d29c);color:#1a1410;font-size:16px;font-weight:800;letter-spacing:-.02em;border-radius:10px;margin-bottom:18px">VVIP 채용공고</div>
+        <p style="font-size:14px;color:#a0a8be;line-height:1.7;margin-bottom:14px">사이트 최상단 노출 고정 · 4개 업체 한정 슬롯</p>
+        <div style="margin-bottom:20px;padding:12px 14px;background:rgba(255,255,255,.04);border-radius:9px;font-size:12.5px;color:#a0a8be;line-height:1.6"><strong style="color:#d4af37">노출 위치</strong><br>메인·업종·지역 페이지 최상단 (Hero 직하 단독 영역)</div>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;color:#c8ccda"><span style="color:#d4af37;margin-right:8px">●</span>사이트 최상단 단독 노출 (Hero 직하)</li>
+          <li style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;color:#c8ccda"><span style="color:#d4af37;margin-right:8px">●</span>골드 톤 대형 카드 + 특수 배너</li>
+          <li style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;color:#c8ccda"><span style="color:#d4af37;margin-right:8px">●</span>광고 상세 페이지(/ad/공고번호/) 단독 생성</li>
+          <li style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;color:#c8ccda"><span style="color:#d4af37;margin-right:8px">●</span>구글 채용 검색(Google Jobs) JobPosting 자동 등록</li>
+          <li style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;color:#c8ccda"><span style="color:#d4af37;margin-right:8px">●</span>분기별 광고 효과 리포트 무료 제공</li>
+          <li style="padding:10px 0;font-size:14px;color:#c8ccda"><span style="color:#d4af37;margin-right:8px">●</span>월 평균 노출 42,000~58,000회 · CTR 3.4%</li>
+        </ul>
+        <div style="margin-top:16px;padding:10px 14px;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.32);border-radius:9px;font-size:12.5px;color:#d4af37;font-weight:700;text-align:center">※ 4개 업체만 입점 가능 — 선착순</div>
+      </div>
+      <div>
+        <div style="padding:14px 18px;background:rgba(255,255,255,.04);border-radius:10px;text-align:center;font-size:13.5px;color:#a0a8be;letter-spacing:.04em;font-weight:600;margin-bottom:14px">VVIP 광고 진행 시</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px;margin-bottom:8px">
+          <div><div style="font-size:15px;font-weight:700;color:#f4d29c">1개월</div><div style="font-size:11.5px;color:#a0a8be;margin-top:2px">월 환산 440,000원</div></div>
+          <div style="font-size:22px;font-weight:800;color:#f4d29c;letter-spacing:-.02em">440,000원</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.22);border-radius:10px;margin-bottom:8px">
+          <div><div style="font-size:15px;font-weight:700;color:#f4d29c">6개월</div><div style="font-size:11.5px;color:#a0a8be;margin-top:2px">월 환산 146,667원 · 1개월 단가 대비 67% 절감</div></div>
+          <div style="font-size:22px;font-weight:800;color:#f4d29c;letter-spacing:-.02em">880,000원</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.4);border-radius:10px">
+          <div><div style="font-size:15px;font-weight:800;color:#f4d29c">12개월 (1년) — BEST</div><div style="font-size:11.5px;color:#a0a8be;margin-top:2px">월 환산 91,667원 · 1개월 단가 대비 79% 절감</div></div>
+          <div style="font-size:22px;font-weight:800;color:#f4d29c;letter-spacing:-.02em">1,100,000원</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:36px;border-radius:22px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid rgba(123,176,255,.32);margin-bottom:28px;scroll-margin-top:80px" id="vip-pricing">
+    <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:36px" class="rec-grid">
+      <div>
+        <div style="display:inline-block;padding:10px 18px;background:linear-gradient(135deg,#7bb0ff,#2c54a8);color:#fff;font-size:16px;font-weight:800;letter-spacing:-.02em;border-radius:10px;margin-bottom:18px">VIP 채용공고</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:14px">콘텐츠 직후 우선 노출 · 12개 업체 한정 슬롯</p>
+        <div style="margin-bottom:20px;padding:12px 14px;background:rgba(255,255,255,.04);border-radius:9px;font-size:12.5px;color:var(--muted);line-height:1.6"><strong style="color:var(--blue-1)">노출 위치</strong><br>메인·업종·지역 페이지 First Content Break (콘텐츠 1개 직후)</div>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:#c8ccda"><span style="color:var(--blue-1);margin-right:8px">●</span>First Content Break 우선 노출</li>
+          <li style="padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:#c8ccda"><span style="color:var(--blue-1);margin-right:8px">●</span>블루 톤 중형 카드 + 전용 배너</li>
+          <li style="padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:#c8ccda"><span style="color:var(--blue-1);margin-right:8px">●</span>광고 상세 페이지 단독 생성</li>
+          <li style="padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:#c8ccda"><span style="color:var(--blue-1);margin-right:8px">●</span>구글 채용 검색 JobPosting 등록</li>
+          <li style="padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:#c8ccda"><span style="color:var(--blue-1);margin-right:8px">●</span>월 평균 노출 22,000~32,000회 · CTR 2.6%</li>
+          <li style="padding:10px 0;font-size:14px;color:#c8ccda"><span style="color:var(--blue-1);margin-right:8px">●</span>요청 시 월 1회 간이 리포트</li>
+        </ul>
+        <div style="margin-top:16px;padding:10px 14px;background:rgba(123,176,255,.12);border:1px solid rgba(123,176,255,.32);border-radius:9px;font-size:12.5px;color:var(--blue-1);font-weight:700;text-align:center">※ 12개 업체만 입점 가능 — 선등록순</div>
+      </div>
+      <div>
+        <div style="padding:14px 18px;background:rgba(255,255,255,.04);border-radius:10px;text-align:center;font-size:13.5px;color:var(--muted);letter-spacing:.04em;font-weight:600;margin-bottom:14px">VIP 광고 진행 시</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:10px;margin-bottom:8px">
+          <div><div style="font-size:15px;font-weight:700">1개월</div><div style="font-size:11.5px;color:var(--dim);margin-top:2px">월 환산 200,000원</div></div>
+          <div style="font-size:22px;font-weight:800;color:var(--blue-1);letter-spacing:-.02em">200,000원</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:rgba(123,176,255,.06);border:1px solid rgba(123,176,255,.22);border-radius:10px;margin-bottom:8px">
+          <div><div style="font-size:15px;font-weight:700">6개월</div><div style="font-size:11.5px;color:var(--dim);margin-top:2px">월 환산 75,000원 · 63% 절감</div></div>
+          <div style="font-size:22px;font-weight:800;color:var(--blue-1);letter-spacing:-.02em">450,000원</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:rgba(123,176,255,.12);border:1px solid rgba(123,176,255,.4);border-radius:10px">
+          <div><div style="font-size:15px;font-weight:800">12개월 (1년) — BEST</div><div style="font-size:11.5px;color:var(--dim);margin-top:2px">월 환산 45,833원 · 77% 절감</div></div>
+          <div style="font-size:22px;font-weight:800;color:var(--blue-1);letter-spacing:-.02em">550,000원</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:36px;border-radius:22px;background:linear-gradient(135deg,#13131a,#1a1a23);border:1px solid var(--line);scroll-margin-top:80px" id="premium-pricing">
+    <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:36px" class="rec-grid">
+      <div>
+        <div style="display:inline-block;padding:10px 18px;background:linear-gradient(135deg,#a0a8be,#6c7490);color:#0a0e1a;font-size:16px;font-weight:800;letter-spacing:-.02em;border-radius:10px;margin-bottom:18px">프리미엄 채용공고</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:14px">가성비 좋은 상품 · 등록 제한 없음</p>
+        <div style="margin-bottom:20px;padding:12px 14px;background:rgba(255,255,255,.04);border-radius:9px;font-size:12.5px;color:var(--muted);line-height:1.6"><strong style="color:#a0a8be">노출 위치</strong><br>메인·업종·지역 페이지 하단 영역 (콘텐츠 검증 후 노출)</div>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:#c8ccda"><span style="color:#a0a8be;margin-right:8px">●</span>페이지 하단 영역 그리드 노출</li>
+          <li style="padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:#c8ccda"><span style="color:#a0a8be;margin-right:8px">●</span>그레이 톤 컴팩트 카드</li>
+          <li style="padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:#c8ccda"><span style="color:#a0a8be;margin-right:8px">●</span>광고 상세 페이지 단독 생성</li>
+          <li style="padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:#c8ccda"><span style="color:#a0a8be;margin-right:8px">●</span>구글 채용 검색 JobPosting 등록</li>
+          <li style="padding:10px 0;font-size:14px;color:#c8ccda"><span style="color:#a0a8be;margin-right:8px">●</span>월 평균 노출 8,000~14,000회 · CTR 1.1%</li>
+        </ul>
+        <div style="margin-top:16px;padding:10px 14px;background:rgba(160,168,190,.12);border:1px solid rgba(160,168,190,.32);border-radius:9px;font-size:12.5px;color:#a0a8be;font-weight:700;text-align:center">※ 등록 제한 없음 — 누구나 즉시 신청 가능</div>
+      </div>
+      <div>
+        <div style="padding:14px 18px;background:rgba(255,255,255,.04);border-radius:10px;text-align:center;font-size:13.5px;color:var(--muted);letter-spacing:.04em;font-weight:600;margin-bottom:14px">프리미엄 광고 진행 시</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:10px;margin-bottom:8px">
+          <div><div style="font-size:15px;font-weight:700">1개월</div><div style="font-size:11.5px;color:var(--dim);margin-top:2px">월 환산 130,000원</div></div>
+          <div style="font-size:22px;font-weight:800;letter-spacing:-.02em">130,000원</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:rgba(160,168,190,.06);border:1px solid rgba(160,168,190,.22);border-radius:10px;margin-bottom:8px">
+          <div><div style="font-size:15px;font-weight:700">6개월</div><div style="font-size:11.5px;color:var(--dim);margin-top:2px">월 환산 33,333원 · 74% 절감</div></div>
+          <div style="font-size:22px;font-weight:800;letter-spacing:-.02em">200,000원</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:rgba(160,168,190,.12);border:1px solid rgba(160,168,190,.4);border-radius:10px">
+          <div><div style="font-size:15px;font-weight:800">12개월 (1년) — BEST</div><div style="font-size:11.5px;color:var(--dim);margin-top:2px">월 환산 20,833원 · 84% 절감</div></div>
+          <div style="font-size:22px;font-weight:800;letter-spacing:-.02em">250,000원</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>@media(max-width:920px){{.rec-grid{{grid-template-columns:1fr!important;gap:24px!important}}}}</style>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">EXPECTED PERFORMANCE</span>
+    <h2 style="margin-top:8px">등급별 예상 효과</h2>
+    <p class="lead" style="margin:14px auto 0">2025년 1월~2026년 5월 본 사이트 자체 운영 데이터 기준입니다. 실제 효과는 업종·지역·광고 소재에 따라 변동될 수 있습니다.</p>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">월 평균 노출 수</h3><div class="note-text"><p>VVIP <strong style="color:#f4d29c">42,000~58,000회</strong> / VIP <strong style="color:var(--blue-1)">22,000~32,000회</strong> / 프리미엄 <strong>8,000~14,000회</strong></p><p>광고 등록 시점·경쟁 등록 수·페이지 트래픽에 따라 변동되며, 신축 권역(성수·동탄·송도) 광고는 평균보다 +15~25% 더 노출됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">평균 클릭률 (CTR)</h3><div class="note-text"><p>VVIP <strong style="color:#f4d29c">3.4%</strong> / VIP <strong style="color:var(--blue-1)">2.6%</strong> / 프리미엄 <strong>1.1%</strong></p><p>일반 디스플레이 광고 평균(0.46%) 대비 2~7배 높은 수치로, 채용 정보를 능동적으로 찾는 방문자의 의향 차이에서 비롯됩니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">지원·문의 전환율</h3><div class="note-text"><p>광고 상세 페이지(/ad/공고번호/)에 도달한 방문자의 <strong>11~16%</strong>가 이메일 지원 또는 문의 행동으로 전환됩니다.</p><p>샵 입장에서 월 30~60건의 실 지원 문의를 받는 것이 평균이며, 등급이 높을수록 적합한 지원자(경력·자격증·근무 시간 일치) 비율이 높아집니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">SEO·구글 채용 검색 노출</h3><div class="note-text"><p>모든 광고 상세 페이지는 <strong>JobPosting 스키마</strong>가 자동 적용되어 구글 채용 검색(Google Jobs)에 노출됩니다.</p><p>이를 통해 \"강남 스웨디시 구인\", \"홍대 아로마 알바\" 같은 검색 쿼리에서 광고가 직접 노출되어, 본 사이트 외부에서도 지원자가 유입됩니다.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+    <span class="kicker">HOW TO REGISTER</span>
+    <h2 style="margin-top:8px">광고 등록 절차</h2>
+  </div>
+  <div class="note-stack">
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">상담 신청</h3><div class="note-text"><p><a href="/contact-ads/" style="color:var(--blue-1);font-weight:700">광고문의</a> 폼에 희망 등급·기간·게재 시작일을 명시해 신청해주세요. 평일 1영업일 내 담당자가 안내드립니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">소재 검수</h3><div class="note-text"><p>샵 정보(상호·사업자등록증), 공고 내용(제목·근무 조건·연락처), 로고·배너 이미지(선택)를 제출해주세요. 검수는 평균 1영업일 이내 완료됩니다.</p><p>노동관계법령에 어긋나는 공고는 등록이 거부됩니다 (단가 과장, 19세 미만 채용, 신분증 보관 요구 등).</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">결제·계약</h3><div class="note-text"><p>세금계산서 발행 후 계좌이체로 결제 완료. 결제 확인 시점부터 광고 노출이 시작됩니다. 장기 계약 시 분납 협의 가능.</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">게재·리포트</h3><div class="note-text"><p>광고는 메인·업종·지역 페이지에 자동 노출되며, 광고 상세 페이지(/ad/공고번호/)도 함께 생성됩니다.</p><p>VVIP는 분기별 효과 리포트, VIP·프리미엄은 요청 시 월 1회 간이 리포트를 무료 제공합니다.</p></div></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div style="text-align:center;max-width:760px;margin:0 auto 30px">
+    <span class="kicker">FAQ</span>
+    <h2 style="margin-top:8px">광고주를 위한 자주 묻는 질문</h2>
+  </div>
+  <div style="max-width:860px;margin:0 auto">
+"""
+    for q,a in faqs:
+        body += f'<details><summary>{q}<span>+</span></summary><div>{a}</div></details>'
+    body += f"""
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:40px">
+  <div style="padding:50px 40px;border-radius:22px;background:linear-gradient(135deg,rgba(91,155,255,.1),rgba(44,84,168,.04));border:1px solid rgba(123,176,255,.18);text-align:center">
+    <span class="kicker">광고 등록 문의</span>
+    <h2 style="margin:10px 0 14px">전문 담당자가 상담해드립니다</h2>
+    <p class="lead" style="margin:0 auto 24px">희망 등급·기간·게재 시작일을 알려주시면 견적과 노출 위치 시뮬레이션을 함께 제공해드립니다.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn btn-primary" href="/contact-ads/">광고 등록 신청 →</a>
+      <a class="btn btn-ghost" href="/shop-sale-pricing/">업소매매 광고 가격 →</a>
+    </div>
+  </div>
+</section>
+"""
+    return page(title, desc, "/recruitment-pricing/", body, extra_jsonld=extra_ld)
