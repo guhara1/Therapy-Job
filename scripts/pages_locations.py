@@ -364,7 +364,7 @@ def build_region_hub(r):
 
 <section class="wrap" style="padding-top:20px">
   <h2>{r['kr']} 전체 행정구</h2>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:30px">{district_cards}</div>
+  <div class="dist-grid" style="margin-top:30px">{district_cards}</div>
 </section>
 
 {single_tier_block("vip", jobs_for_region_tier(r, "vip"))}

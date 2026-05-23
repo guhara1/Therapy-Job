@@ -163,10 +163,15 @@ details>div{padding-top:14px;color:#c8ccda;font-size:14px;line-height:1.78}
 .reveal{opacity:0;transform:translateY(20px);transition:.7s ease-out}
 .reveal.in{opacity:1;transform:none}
 /* MEDIA QUERY */
+.dist-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
 @media(max-width:720px){
   .wrap{padding:80px 18px}
   .note-card{flex-direction:column;gap:10px;padding:22px 20px}
   .note-num{font-size:38px;min-width:auto}
+  .dist-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .dist-grid .job-card{padding:16px 14px}
+  .dist-grid .job-card h3{font-size:18px}
+  .dist-grid .job-card p{font-size:12px}
 }
 @media(hover:none){
   .glass,.floating{backdrop-filter:none!important}
