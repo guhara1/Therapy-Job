@@ -324,42 +324,64 @@ def build_seekers_hub():
 # 업종별 구직 가이드
 # ─────────────────────────────────────────────
 def build_seeker_service(s):
-    title = f"{s['kr']} 구직 가이드 — 면접·단가·근무 환경 완벽 정리 | {COMPANY['brand_kr']}"
-    desc = f"{s['kr']} 마사지 관리사 구직자를 위한 종합 가이드. 평균 단가 {s['pay_range']}, 면접에서 자주 묻는 질문, 정착 전략까지 정리."
+    from data import SEEKER_DETAIL
+    d = SEEKER_DETAIL.get(s["slug"], {})
+    title = f"{s['kr']} 마사지 구직 가이드 — 적성·체력·수입·면접 완벽 정리 | {COMPANY['brand_kr']}"
+    desc = f"{s['kr']} 마사지 관리사 구직 가이드. {d.get('fit','')[:80]} 평균 {s['pay_avg']}, 업종 고유 면접 질문·커리어 경로까지."
+
+    interview = d.get("interview", [])
+    iv_html = "".join(f'<details><summary>{q}<span>+</span></summary><div>{a}</div></details>' for q,a in interview)
+    # 공통 면접 질문 2개 추가 (업종 무관)
+    iv_html += '<details><summary>가능한 근무 시간대는?<span>+</span></summary><div>주간(10~22시)·야간(14~02시) 중 선호와 가능 시간을 숫자로 명확히 답하세요. "상의 가능"보다 구체적 시간이 합격률을 높입니다.</div></details>'
+    iv_html += '<details><summary>첫 출근까지 일정은?<span>+</span></summary><div>면접 합격 후 평균 47시간 안에 첫 출근합니다. 견습이 필요한 신규 입직자는 +1주.</div></details>'
+
+    faqs = [(q, a) for q, a in interview]
 
     extra_ld = [
         breadcrumb_ld([("홈","/"),("구직 가이드","/seekers/"),(f"{s['kr']} 구직","/seekers/"+s["slug"]+"/")]),
+        faq_ld([(q, a) for q, a in interview]) if interview else None,
+        {
+            "@type":"Article","headline":title,"description":desc,
+            "author":{"@type":"Organization","@id":f"{COMPANY['base_url']}/#organization","name":f"{COMPANY['brand_kr']} 편집팀"},
+            "publisher":{"@id":f"{COMPANY['base_url']}/#organization"},
+            "mainEntityOfPage":{"@type":"WebPage","@id":f"{COMPANY['base_url']}/seekers/{s['slug']}/"},
+            "inLanguage":"ko-KR","articleSection":f"{s['kr']} 구직 가이드","datePublished":"2026-05-01","dateModified":"2026-05-22"
+        }
     ]
+    extra_ld = [x for x in extra_ld if x]
+
     body = f"""
 <section class="wrap" style="padding-bottom:40px">
-  <span class="kicker">{s['kicker']}</span>
+  <span class="kicker">{s['kicker']} · 구직 가이드</span>
   <h1 style="font-size:clamp(36px,5.5vw,60px);margin:14px 0 20px">{s['kr']} 구직<br><span class="grad">완벽 가이드</span></h1>
-  <p class="lead">{s['summary']}</p>
+  <p class="lead">{d.get('fit', s['summary'])}</p>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:28px">
+    <div style="padding:14px 20px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line)"><div class="kicker">평균 일급</div><div style="font-size:18px;font-weight:800;margin-top:4px">{s['pay_range']}</div></div>
+    <div style="padding:14px 20px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line)"><div class="kicker">월 환산</div><div style="font-size:18px;font-weight:800;margin-top:4px">{s['pay_avg']}</div></div>
+    <div style="padding:14px 20px;border-radius:14px;background:var(--grad-soft);border:1px solid var(--line)"><div class="kicker">현재 공고</div><div style="font-size:18px;font-weight:800;margin-top:4px">{s['openings']:,}건</div></div>
+  </div>
 </section>
 
 <section class="wrap" style="padding-top:0">
-  <h2>이 업종이 나에게 맞는가</h2>
+  <h2>{s['kr']}, 나에게 맞는 업종일까</h2>
   <div class="note-stack" style="margin-top:30px">
-    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">신체·체력 요건</h3><div class="note-text"><p>{s['kr']} 시술은 1일 평균 6~8명 시술이 표준입니다.</p><p>1회당 60~120분 — 체력 회복 루틴(스트레칭·식단·수면)이 직업적으로 필요합니다.</p></div></div></div>
-    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">필수 기술</h3><div class="note-text"><p>{', '.join(s['skills'])} — 이 3가지는 면접 시 시연을 요청받을 수 있습니다.</p><p>신규 입직자는 견습 1~2주 동안 위 기술을 익힙니다.</p></div></div></div>
-    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">수입 시뮬레이션</h3><div class="note-text"><p>주 5일 근무 기준 월 환산 {s['pay_avg']}.</p><p>인센티브 50% 구조에서 1일 7명 시술 · 객단가 9만원이면 월 약 470만원 수준입니다.</p></div></div></div>
-    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">단점·주의점</h3><div class="note-text"><p>장시간 시술로 손목·어깨 부담이 누적됩니다. 정기 마사지 교환과 스트레칭 루틴이 필수입니다.</p><p>야간 라인은 수면 패턴이 흐트러질 수 있어 적응 기간이 필요합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">적성 — 어떤 사람에게 맞나</h3><div class="note-text"><p>{d.get('fit','')}</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">신체·체력 요건</h3><div class="note-text"><p>{d.get('body','')}</p><p>필수 기술: {', '.join(s['skills'])} — 면접 시 시연을 요청받을 수 있습니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">수입 시뮬레이션</h3><div class="note-text"><p>{d.get('income','')}</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">단점·주의점</h3><div class="note-text"><p>{d.get('caution','')}</p></div></div></div>
+    <div class="note-card"><div class="note-num">05</div><div class="note-content"><h3 class="note-title">커리어 경로</h3><div class="note-text"><p>{d.get('career','')}</p></div></div></div>
   </div>
 </section>
 
 <section class="wrap" style="padding-top:0">
-  <h2>면접에서 자주 묻는 5가지</h2>
-  <div style="max-width:860px;margin:30px auto 0">
-    <details><summary>Q1. 가능한 근무 시간대는?<span>+</span></summary><div>샵 운영 시간과 본인 라이프 패턴을 맞춰야 합니다. 주간(10~22시)·야간(14~02시) 중 선호와 가능 시간을 명확히 답하세요.</div></details>
-    <details><summary>Q2. 기존 단골을 인수할 수 있나요?<span>+</span></summary><div>이전 샵 단골을 새 샵으로 데려오는 것은 권장되지 않습니다. 영업 분쟁의 원인이 됩니다. \"신규 단골은 빠르게 만들 자신이 있다\"가 정답입니다.</div></details>
-    <details><summary>Q3. 객단가 올리기 자신 있나요?<span>+</span></summary><div>{s['kr']}의 평균 객단가 상승 전략(코스 업셀·연장·추가 옵션 제안)을 1~2개 사례로 설명하세요.</div></details>
-    <details><summary>Q4. 인센티브 비율 협상은?<span>+</span></summary><div>전국 평균 45~55%입니다. 경력·자격증·과거 매출 실적이 있으면 50% 이상을 요청할 수 있습니다.</div></details>
-    <details><summary>Q5. 첫 출근까지 일정은?<span>+</span></summary><div>면접 합격 후 평균 47시간 안에 첫 출근합니다. 견습이 필요한 신규 입직자는 +1주.</div></details>
-  </div>
+  <h2>{s['kr']} 면접에서 자주 묻는 질문</h2>
+  <p class="lead" style="margin-bottom:24px">{s['kr']}는 업종 특성상 다음 질문·시연이 면접 합격을 좌우합니다.</p>
+  <div style="max-width:860px;margin:0 auto">{iv_html}</div>
 </section>
 
 <section class="wrap" style="padding-top:0;text-align:center">
   <a class="btn btn-primary" href="/jobs/{s['slug']}/">{s['kr']} 모집 중인 공고 보기 →</a>
+  <a class="btn btn-ghost" href="/pricing/" style="margin-left:8px">전체 급여 시세표</a>
 </section>
 """
     return page(title, desc, f"/seekers/{s['slug']}/", body, extra_jsonld=extra_ld)
@@ -414,17 +436,26 @@ def build_therapists_hub():
 # 국적별 관리사 페이지 (6개)
 # ─────────────────────────────────────────────
 def build_therapist(n):
-    title = f"{n['kr']} 마사지 관리사 채용 — 강점·평균 단가·합법 체류 | {COMPANY['brand_kr']}"
-    desc = f"{n['kr']} 출신 마사지 관리사의 채용 시장 특성, 강점, 평균 단가({n['common_pay']}), 합법 체류 조건을 정리합니다."
+    from data import THERAPIST_DETAIL
+    d = THERAPIST_DETAIL.get(n["slug"], {})
+    title = f"{n['kr']} 마사지 관리사 채용 — 선호 업종·평균 단가·체류 조건 | {COMPANY['brand_kr']}"
+    desc = f"{n['kr']} 마사지 관리사 채용 가이드. {d.get('trend','')[:80]} 평균 단가 {n['common_pay']}, 선호 업종·합법 체류 조건 정리."
 
     adv_p = "".join(f"<p>{a}</p>" for a in n["advantages"])
 
     extra_ld = [
         breadcrumb_ld([("홈","/"),("관리사","/therapists/"),(n["kr"],"/therapists/"+n["slug"]+"/")]),
+        {
+            "@type":"Article","headline":title,"description":desc,
+            "author":{"@type":"Organization","@id":f"{COMPANY['base_url']}/#organization","name":f"{COMPANY['brand_kr']} 편집팀"},
+            "publisher":{"@id":f"{COMPANY['base_url']}/#organization"},
+            "mainEntityOfPage":{"@type":"WebPage","@id":f"{COMPANY['base_url']}/therapists/{n['slug']}/"},
+            "inLanguage":"ko-KR","articleSection":f"{n['kr']} 관리사 채용","datePublished":"2026-05-01","dateModified":"2026-05-22"
+        }
     ]
     body = f"""
 <section class="wrap" style="padding-bottom:40px">
-  <span class="kicker">{n['en'].upper()}</span>
+  <span class="kicker">{n['en'].upper()} · 관리사 채용</span>
   <h1 style="font-size:clamp(36px,5.5vw,60px);margin:14px 0 20px">{n['kr']} 관리사<br><span class="grad">{n['demand']}</span></h1>
   <p class="lead">{n['summary']}</p>
   <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:30px">
@@ -434,17 +465,18 @@ def build_therapist(n):
 </section>
 
 <section class="wrap" style="padding-top:0">
-  <h2>현장에서 강점</h2>
+  <h2>{n['kr']} 관리사, 현장 평가</h2>
   <div class="note-stack" style="margin-top:30px">
-    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">시장 평가</h3><div class="note-text">{adv_p}</div></div></div>
-    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">선호 업종</h3><div class="note-text"><p>현재 가장 채용 매칭이 활발한 업종은 권역별·시즌별로 다릅니다.</p><p>본 사이트의 <a href=\"/jobs/\" style=\"color:var(--blue-1)\">전체 공고</a>에서 \"관리사 국적\" 필터를 활용하면 정확한 매칭이 가능합니다.</p></div></div></div>
-    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">합법 체류 확인</h3><div class="note-text"><p>채용 시 F-4·F-5·F-6·H-2 등 합법 체류 자격 확인은 필수입니다.</p><p>채용 후 비자 변경이 필요한 경우 행정사·변호사 자문을 권장합니다.</p></div></div></div>
-    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">한국 정착 지원</h3><div class="note-text"><p>한국어 교육·세금 처리·계약서 검토 등 정착 초기 도움이 필요한 경우, 운영팀이 가능한 범위에서 안내합니다.</p></div></div></div>
+    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">강점·시장 평가</h3><div class="note-text">{adv_p}<p>{d.get('trend','')}</p></div></div></div>
+    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">선호 업종·강세 권역</h3><div class="note-text"><p>{d.get('svc_pref','')}</p></div></div></div>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">체류 자격·채용 절차</h3><div class="note-text"><p>{d.get('visa','')}</p></div></div></div>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">{n['kr']} 관리사 단가 전략</h3><div class="note-text"><p>{d.get('tip','')}</p></div></div></div>
   </div>
 </section>
 
 <section class="wrap" style="padding-top:0;text-align:center">
-  <a class="btn btn-primary" href="/jobs/">{n['kr']} 관리사 모집 중인 공고 →</a>
+  <a class="btn btn-primary" href="/jobs/">{n['kr']} 관리사 모집 공고 →</a>
+  <a class="btn btn-ghost" href="/therapists/" style="margin-left:8px">전체 국적 비교</a>
 </section>
 """
     return page(title, desc, f"/therapists/{n['slug']}/", body, extra_jsonld=extra_ld)

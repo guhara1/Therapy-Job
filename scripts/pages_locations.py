@@ -565,23 +565,16 @@ def build_district(region, district_slug, district_kr):
       {blocks['market']}<p>{rkr} {region['districts_count']}개 행정구 가운데 {district_kr}은 {svc_strength.split('(')[0].strip()} 수요가 뚜렷한 권역으로 분류됩니다.</p>
     </div></div></div>
     <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">{district_kr} 관리사 정착 전략</h3><div class="note-text">
-      {blocks['strategy']}<p>본인 거주지에서 가까운 동의 샵을 우선 검토하면 출퇴근·체력 관리에 유리합니다. 공고 상세에서 정확한 위치와 근무 시간대를 확인하세요.</p>
+      {blocks['strategy']}
     </div></div></div>
-    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">안전 가이드 — 자문 트레이너</h3><div class="note-text">
-      <p>본 사이트의 안전·체력 관리 가이드라인은 박지연 자문 트레이너(KSPO 스포츠마사지 트레이너 · 재활케어 8년)가 작성·검수합니다.</p>
-      <p>{district_kr}처럼 {'야간 수요가 강한' if night else '주간 단골 비중이 높은'} 권역은 {'수면 패턴 관리와 새벽 종료 후 안전 귀가가' if night else '장시간 시술에 따른 손목·어깨 부담 관리가'} 특히 중요합니다.</p>
+    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">{district_kr} 권역 안전 포인트</h3><div class="note-text">
+      <p>{district_kr}처럼 {'야간·심야 수요가 강한 권역은 수면 패턴 관리와 새벽 종료 후 안전 귀가 동선' if night else '주간 단골 비중이 높은 권역은 장시간 반복 시술에 따른 손목·어깨 부담 관리'}이 특히 중요합니다. {customer.split(',')[0] if customer else '권역 고객'} 응대 특성에 맞춘 컨디션 관리가 정착의 변수입니다.</p>
+      <p style="font-size:12.5px;color:var(--muted)">전체 안전 가이드라인(박지연 자문 트레이너 감수)은 <a href="/notices/newcomer-safety/" style="color:var(--blue-1)">신규 입직자 안전 가이드</a>에서 확인하세요.</p>
     </div></div></div>
-    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">공고 게재·매칭 운영 원칙</h3><div class="note-text">
-      <p>{district_kr}의 모든 로드샵 채용 공고는 {COMPANY['brand_kr']} 운영팀이 사업자등록증·근무 조건을 검증한 뒤 게재하며, 노동관계법령과 직업안정법을 준수합니다.</p>
-      <p>관리사·샵 양측 모두 본인 동의 없이 정보가 제3자에게 공유되지 않으며, 분쟁 발생 시 운영팀이 중재합니다. 플랫폼 문의는 고객센터 {COMPANY['tel']} ({COMPANY['tel_hours']}).</p>
+    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">{district_kr} 데이터 출처</h3><div class="note-text">
+      <p>이 페이지의 {district_kr} 상권·고객층·업종 수요 분석은 {COMPANY['brand_kr']} 자체 매칭 로그와 {land.split('·')[0]} 일대 현장 조사를 종합한 1차 데이터이며, 분기별로 재조사해 갱신합니다.</p>
+      <p style="font-size:12.5px;color:var(--muted)">공고 검증·매칭 운영 원칙은 <a href="/about/" style="color:var(--blue-1)">테라피잡 소개</a>에 정리되어 있습니다.</p>
     </div></div></div>
-  </div>
-</section>
-
-<section class="wrap" style="padding-top:0">
-  <h2>데이터 · 방법론</h2>
-  <div style="padding:32px 36px;border-radius:18px;background:var(--grad-soft);border:1px solid rgba(123,176,255,.18);margin-top:30px">
-    <p style="color:#c8ccda;line-height:1.78">{district_kr} 권역의 상권·고객층·업종 수요 분석은 2025년 1월~2026년 5월 {COMPANY['brand_kr']} 자체 매칭 로그 23,700건과 샵 인터뷰 412건, 그리고 {land.split('·')[0]} 일대 현장 조사를 종합한 1차 데이터입니다. 동별 운영 샵 수와 권역 특성은 분기별로 재조사해 갱신합니다.</p>
   </div>
 </section>
 

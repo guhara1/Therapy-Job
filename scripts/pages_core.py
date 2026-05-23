@@ -1655,6 +1655,28 @@ def build_shop_sale():
 # ─────────────────────────────────────────────
 # 업소 매매 매물 상세 페이지 (/shop-sale/{id}/)
 # ─────────────────────────────────────────────
+def _shop_market_context(s):
+    """매물 소재 행정구의 고유 프로필로 권역 맥락 prose 생성 (매물마다 다름)"""
+    try:
+        from district_profiles import DISTRICT_PROFILES
+        p = DISTRICT_PROFILES.get(s.get("district_slug"), {})
+    except Exception:
+        p = {}
+    land = p.get("land", "")
+    customer = p.get("customer", "")
+    market = p.get("market", "")
+    parts = [f"<p>{s['region_kr']} {s['district_kr']} {s['location_sub']}에 위치한 {s['size_pyeong']}평 규모 {s['service_kr']} 매물입니다."]
+    if land:
+        parts[0] += f" {land.split('·')[0]}를 낀 상권으로, 1인~다인 운영 모두 가능한 구조입니다.</p>"
+    else:
+        parts[0] += " 1인~다인 운영 모두 가능한 구조입니다.</p>"
+    if market:
+        parts.append(f"<p><strong style=\"color:var(--text)\">권역 시장</strong> — {market}</p>")
+    if customer:
+        parts.append(f"<p>주 고객층은 {customer}으로, 인수 후에도 기존 단골 기반을 이어받을 수 있습니다.</p>")
+    return "".join(parts)
+
+
 def build_shop_sale_detail(shop):
     s = shop
     svc_colors = {
@@ -1822,7 +1844,7 @@ def build_shop_sale_detail(shop):
     <div class="note-content">
       <h3 class="note-title">{s['feature']}</h3>
       <div class="note-text">
-        <p>{s['region_kr']} {s['district_kr']} 권역 내 {s['service_kr']} 라인으로 운영되어 온 매물입니다. {s['location_sub']}에 위치해 교통 접근성이 우수하며, 평수 {s['size_pyeong']}평 규모로 1인~다인 운영 모두 가능한 구조입니다.</p>
+        {_shop_market_context(s)}
         <p>월매출 {s['monthly_revenue']} 범위로 안정적 운영 기반을 갖추고 있으며, 월 순익은 {s['monthly_profit']} 수준입니다. 권리금 {s['key_money']:,}만원에 보증금 {s['deposit']:,}만원, 월세 {s['rent']:,}만원으로 총 인수 비용은 {s['total']:,}만원입니다.</p>
         <p>본 매물은 권리·시설·고정 고객 인수를 포함하며, 자세한 시설 목록·직원 승계 여부·임대인 동의 사항은 매수 의향 확인 후 양도자가 직접 안내합니다.</p>
       </div>
@@ -1831,13 +1853,17 @@ def build_shop_sale_detail(shop):
 </section>
 
 <section class="wrap" style="padding-top:0">
-  <h2 style="font-size:24px;margin-bottom:18px">매수 전 체크사항</h2>
-  <div class="note-stack">
-    <div class="note-card"><div class="note-num">01</div><div class="note-content"><h3 class="note-title">임대차 승계·임대인 동의</h3><div class="note-text"><p>임대차 계약서 사본·잔여 기간·임대인의 신규 임차인 승계 의사를 사전에 확인해주세요. 「상가건물 임대차보호법」상 권리금 회수 기회가 보호되지만, 임대인이 정당한 사유로 거부 가능한 경우도 있어 미리 점검이 필요합니다.</p></div></div></div>
-    <div class="note-card"><div class="note-num">02</div><div class="note-content"><h3 class="note-title">매출·순익 자료</h3><div class="note-text"><p>최근 3~6개월 카드사 정산표·POS 매출·신고 매출 자료를 양도자에게 요청하세요. 표시 월매출({s['monthly_revenue']})·월 순익({s['monthly_profit']})은 양도자 자료 기반의 범위로, 실측 자료 확인이 필수입니다.</p></div></div></div>
-    <div class="note-card"><div class="note-num">03</div><div class="note-content"><h3 class="note-title">시설·장비 인수 목록</h3><div class="note-text"><p>침대·오일 워머·세탁기·정수기·POS·CCTV 등 인수 대상 시설·장비를 목록화하고 사진을 받아두세요. \"포함이라고 했는데 없다\"는 분쟁의 출발점이 됩니다.</p></div></div></div>
-    <div class="note-card"><div class="note-num">04</div><div class="note-content"><h3 class="note-title">관리사·직원 승계</h3><div class="note-text"><p>마사지샵의 핵심 자산 중 하나는 관리사·직원입니다. 권리금에 직원 승계가 포함되는지, 직원 동의는 받았는지, 4대 보험·퇴직금 정산 방식은 어떻게 할지 사전에 정리해야 거래가 매끄럽게 진행됩니다.</p></div></div></div>
-    <div class="note-card"><div class="note-num">05</div><div class="note-content"><h3 class="note-title">단골·고객 데이터 인계</h3><div class="note-text"><p>단골 명단·예약 시스템·SNS 계정·블로그 등 무형 자산의 인계 절차를 문서로 정리하세요. 개인정보보호법상 단순 명단 양도는 위법 가능성이 있어 변호사 자문을 권장드립니다.</p></div></div></div>
+  <h2 style="font-size:24px;margin-bottom:18px">이 매물 매수 전 확인할 점</h2>
+  <div class="note-card">
+    <div class="note-num">✓</div>
+    <div class="note-content">
+      <h3 class="note-title">{s['district_kr']} {s['service_kr']} 매물 핵심 점검</h3>
+      <div class="note-text">
+        <p>표시 월매출({s['monthly_revenue']})·월 순익({s['monthly_profit']})은 양도자 자료 기반 범위이므로, 최근 3~6개월 카드사 정산표·POS 매출 <strong style="color:var(--text)">실측 자료</strong>를 반드시 확인하세요.</p>
+        <p>{s['size_pyeong']}평 규모의 시설·장비({s['service_kr']} 베드·워머·세탁·정수기 등) 인수 목록과 임대차 잔여 기간·임대인 승계 동의를 매수 의향 확인 후 양도자에게 직접 요청할 수 있습니다.</p>
+        <p>임대차보호법·세무(권리금 5년 상각)·직원 승계·고객 데이터 인계 등 거래 공통 체크리스트 6가지는 <a href="/shop-sale-pricing/" style="color:var(--blue-1);font-weight:700">업소매매 가이드</a>에서 전문을 확인하세요.</p>
+      </div>
+    </div>
   </div>
 </section>
 
