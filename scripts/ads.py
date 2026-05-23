@@ -41,6 +41,20 @@ AD_CSS = """
 .ad-section-sub{font-size:13px;color:var(--muted);letter-spacing:.06em}
 .ad-section-order{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
 .ad-empty{padding:30px;text-align:center;border:1px dashed var(--line);border-radius:14px;color:var(--muted);font-size:13.5px}
+.ad-grid{display:grid;gap:14px}
+.ad-grid-vvip{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.ad-grid-vip{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.ad-grid-premium{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+@media(max-width:720px){
+  .ad-grid{grid-template-columns:repeat(2,1fr)!important;gap:10px}
+  .ad-vvip{padding:16px 14px}.ad-vip{padding:16px 14px}.ad-premium{padding:14px 12px}
+  .ad-vvip .ad-title{font-size:15px}.ad-vip .ad-title-sm{font-size:13.5px}.ad-premium .ad-title-xs{font-size:12.5px}
+  .ad-vvip .ad-rank{font-size:26px;top:12px;right:12px}.ad-vip .ad-rank-sm{font-size:20px;top:12px;right:12px}
+  .ad-vvip .ad-pay{font-size:15px}.ad-vip .ad-pay-sm{font-size:13px}
+  .ad-perk{font-size:10px;padding:2px 6px}
+  .ad-shop{font-size:12px}.ad-vip .ad-shop-sm{font-size:11px}
+}
+@media(max-width:380px){.ad-grid{gap:8px}.ad-vvip,.ad-vip,.ad-premium{padding:12px 10px}}
 </style>
 """
 
@@ -104,13 +118,7 @@ def render_tier_section(tier, jobs, max_count=None):
         cards_html = f'<div class="ad-empty">현재 해당 카테고리·지역에 등록된 {s["name"]}이 없습니다. 광고 등록 문의: <a href="/contact/" style="color:var(--blue-1)">고객센터 →</a></div>'
     else:
         cards = "".join(render_card(j, i) for i,j in enumerate(jobs))
-        if tier == "vvip":
-            grid_min = "280px"
-        elif tier == "vip":
-            grid_min = "240px"
-        else:
-            grid_min = "220px"
-        cards_html = f'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax({grid_min},1fr));gap:14px">{cards}</div>'
+        cards_html = f'<div class="ad-grid ad-grid-{tier}">{cards}</div>'
 
     return f"""<div class="ad-section-head">
   <div>
