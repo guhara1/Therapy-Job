@@ -16,8 +16,8 @@ COMPANY = {
     "tel_hours": "평일 10:00 ~ 19:00",
     "email": "help@therapyjob.club",
     "privacy_officer": "김수환",
-    "domain": "therapyjob.co.kr",
-    "base_url": "https://therapyjob.co.kr",
+    "domain": "therapyjob.club",
+    "base_url": "https://therapyjob.club",
     "tagline_short": "전국 마사지 구인구직 1번지",
     "tagline_long": "샵과 관리사를 연결하는 가장 빠른 길.",
 }

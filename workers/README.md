@@ -53,7 +53,7 @@
 | `TELEGRAM_CHAT_ID_1` | 봇 1 chat_id 숫자 | 필수 |
 | `TELEGRAM_BOT_TOKEN_2` | 봇 2 토큰 | 선택 (한 채널만이면 비워둬도 됨) |
 | `TELEGRAM_CHAT_ID_2` | 봇 2 chat_id | 선택 |
-| `ALLOWED_ORIGIN` | `https://therapyjob.co.kr` | 선택 (배포 도메인이 다르면 그에 맞춤) |
+| `ALLOWED_ORIGIN` | `https://therapyjob.club` | 선택 (배포 도메인이 다르면 그에 맞춤) |
 
 3. 저장 후 자동 재배포됨
 
@@ -78,7 +78,7 @@
 
 ## 4. 테스트
 
-1. 배포된 사이트 `https://therapyjob.co.kr/contact-ads/` 접속
+1. 배포된 사이트 `https://therapyjob.club/contact-ads/` 접속
 2. 폼 작성 후 **광고문의 보내기** 클릭
 3. 텔레그램에서 봇 1(또는 봇 1+2)에게 메시지 도착 확인
 4. 화면에 ✓ 성공 메시지 표시 확인

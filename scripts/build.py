@@ -216,7 +216,7 @@ def build_og_cover():
 </g>
 <text x="80" y="370" font-family="-apple-system,Pretendard,Apple SD Gothic Neo,sans-serif" font-size="64" font-weight="800" fill="#eef2fb" letter-spacing="-2">테라피잡</text>
 <text x="80" y="430" font-family="-apple-system,Pretendard,Apple SD Gothic Neo,sans-serif" font-size="34" font-weight="500" fill="#a0a8be" letter-spacing="-1">전국 마사지 구인구직 1번지</text>
-<text x="80" y="490" font-family="-apple-system,Pretendard,Apple SD Gothic Neo,sans-serif" font-size="22" font-weight="400" fill="#7bb0ff" letter-spacing="-.5">therapyjob.co.kr · 82개 행정구 풀커버</text>
+<text x="80" y="490" font-family="-apple-system,Pretendard,Apple SD Gothic Neo,sans-serif" font-size="22" font-weight="400" fill="#7bb0ff" letter-spacing="-.5">therapyjob.club · 82개 행정구 풀커버</text>
 <line x1="80" y1="540" x2="1120" y2="540" stroke="#7bb0ff" stroke-opacity=".24" stroke-width="1"/>
 <text x="80" y="580" font-family="-apple-system,Pretendard,Apple SD Gothic Neo,sans-serif" font-size="18" font-weight="600" fill="#a0a8be" letter-spacing="2">SWEDISH · AROMA · THAI · LOMI LOMI · SPORTS</text>
 </svg>"""

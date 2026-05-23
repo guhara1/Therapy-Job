@@ -30,5 +30,5 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-Sitemap: https://therapyjob.co.kr/sitemap.xml
-Host: therapyjob.co.kr
+Sitemap: https://therapyjob.club/sitemap.xml
+Host: therapyjob.club

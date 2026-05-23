@@ -8,13 +8,13 @@
  *   - TELEGRAM_CHAT_ID_1     (필수)  봇 1이 보낼 chat_id (또는 채널 @username)
  *   - TELEGRAM_BOT_TOKEN_2   (선택)  봇 2의 BotFather 토큰
  *   - TELEGRAM_CHAT_ID_2     (선택)  봇 2가 보낼 chat_id
- *   - ALLOWED_ORIGIN         (선택)  허용 도메인 (기본 https://therapyjob.co.kr)
+ *   - ALLOWED_ORIGIN         (선택)  허용 도메인 (기본 https://therapyjob.club)
  *
  * 같은 봇이 두 채팅(개인·그룹)으로 보내고 싶다면 TOKEN_2를 비우고
  * 코드 내부에서 동일 토큰으로 2번 호출하도록 수정하셔도 됩니다.
  */
 
-const DEFAULT_ALLOWED = "https://therapyjob.co.kr";
+const DEFAULT_ALLOWED = "https://therapyjob.club";
 
 export default {
   async fetch(request, env) {
