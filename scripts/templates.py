@@ -220,6 +220,9 @@ def head(title, description, path, og_image=None, extra_jsonld=None, schema_type
         f'<title>{title}</title>',
         f'<meta name="description" content="{description}">',
         f'<meta name="author" content="{COMPANY["brand_kr"]} 편집팀">',
+        # 검색엔진 소유 확인 — 메인 페이지에만
+        ('<meta name="naver-site-verification" content="db5ac75196256df4e2180371e36f4a10cfcebd02">' if path == "/" else ''),
+        ('<meta name="google-site-verification" content="9lzWIvuikK4jjCcC6mxwW-g1Q_fV_u77q-W8seThCE0">' if path == "/" else ''),
         f'<link rel="canonical" href="{canonical}">',
         f'<link rel="alternate" hreflang="ko-KR" href="{canonical}">',
         f'<link rel="alternate" hreflang="x-default" href="{canonical}">',
